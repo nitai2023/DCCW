@@ -1,15 +1,37 @@
+import React from 'react';
+import { HashRouter as Router, Switch, Link } from 'react-router-dom';
+import { renderRoutes } from 'react-router-config';
+import routes from '@/router';
+import Loading from '@/components/Loading';
 
-import './App.css'
+import styles from './App.module.scss';
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+  }
 
-
-function App() {
-
-
-  return (
-    <>
-      <h1 className='text-3xl font-bold underline'>追梦校园仓库端</h1>
-    </>
-  )
+  render(): JSX.Element {
+    return (
+      <Router>
+        <div className={styles.container}>
+          <div className={styles['title-wraper']}>
+            <Link to="/">
+              <span className={styles['link-title']}>Home</span>
+            </Link>
+            <span className={styles['link-line']}> | </span>
+            <Link to="/about">
+              <span className={styles['link-title']}>About</span>
+            </Link>
+          </div>
+          <Switch>
+            <React.Suspense fallback={<Loading></Loading>}>
+              {renderRoutes(routes)}
+            </React.Suspense>
+          </Switch>
+        </div>
+      </Router>
+    );
+  }
 }
 
-export default App
+export default App;
