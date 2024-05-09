@@ -7,11 +7,11 @@ import eslintPlugin from 'vite-plugin-eslint';
 export default defineConfig({
   plugins: [reactRefresh(), eslintPlugin()],
   resolve: {
-    alias: { '@': path.join(__dirname, 'src') }
+    alias: { '@': path.join(__dirname, 'src') },
   },
   css: {
     modules: {
-      generateScopedName: '[name]__[local]--[hash:base64:5]'
-    }
-  }
+      generateScopedName: '[name]__[local]--[hash:base64:5]',
+    },
+  },
 });
