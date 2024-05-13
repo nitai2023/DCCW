@@ -1,9 +1,9 @@
 // 封装axios
 import axios from 'axios';
 import QS from 'qs';
-export const baseURL = 'http://8.137.11.172:7121axios.create';
+export const baseURL = 'http://8.137.11.172:7121';
 const service = axios.create({
-  baseURL: 'http://8.137.11.172:7121', // 设置默认的请求地址
+  baseURL: baseURL, // 设置默认的请求地址
   timeout: 5000, // 设置默认的超时时间
 });
 service.interceptors.request.use(
