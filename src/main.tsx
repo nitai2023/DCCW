@@ -6,6 +6,7 @@ import { Home } from './views/Home';
 import { Login } from './views/login';
 import { Dashboard } from './views/Dashboard';
 import { PersonalCenter } from './views/dashboardViews/PersonalCenter';
+import { OrderManangement } from './views/dashboardViews/OrderManangement';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -22,6 +23,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/personalcenter',
         element: <PersonalCenter></PersonalCenter>,
+      },
+      {
+        path: '/dashboard/ordermanangement',
+        element: <OrderManangement></OrderManangement>,
       },
     ],
   },
