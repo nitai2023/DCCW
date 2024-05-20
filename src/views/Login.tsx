@@ -3,10 +3,18 @@ import { useState } from 'react';
 import { Button, FormGroup, TextField } from '@mui/material';
 import { Link } from 'react-router-dom';
 import styles from './Login.module.scss';
-
+import { userLoginAPI } from '../request/api';
+import { useNavigate } from 'react-router-dom';
 // 登录界面
 export function Login() {
   const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const navigate = useNavigate();
+  async function handleLogin() {
+    const res = (await userLoginAPI(loginForm)).data;
+    window.localStorage.setItem('userToken', res);
+    navigate('/dashboard');
+    console.log(res);
+  }
   return (
     <div className={styles.body}>
       <div className={styles.form}>
@@ -36,11 +44,14 @@ export function Login() {
             />
           </div>
           <div className={styles.MuiFormGroup_row}>
-            <Link to="/dashboard">
-              <Button type="submit" variant="contained" color="success">
-                登录
-              </Button>
-            </Link>
+            <Button
+              type="submit"
+              variant="contained"
+              color="success"
+              onClick={handleLogin}
+            >
+              登录
+            </Button>
             <Link to="/">
               <Button type="submit" variant="contained" color="primary">
                 回到主页

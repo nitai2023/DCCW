@@ -8,10 +8,10 @@ import {
   ListItemIcon,
   ListItemText,
   Divider,
+  ListItemButton,
 } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
-import CreateIcon from '@mui/icons-material/Create';
+import { Outlet } from 'react-router-dom';
 export function PersonalCenter() {
   return (
     <div
@@ -23,10 +23,17 @@ export function PersonalCenter() {
         alignItems: 'center',
       }}
     >
-      <div>
+      <div
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          borderBlockEnd: '1px solid black',
+        }}
+      >
         <AccountCircleIcon
           color="success"
-          style={{ width: '200px', height: '200px' }}
+          style={{ width: '150px', height: '150px' }}
         />
         <Typography variant="h3" noWrap>
           管理员
@@ -38,21 +45,10 @@ export function PersonalCenter() {
           ID:11111
         </Typography>
       </div>
-      <div>
-        <List sx={{ display: 'flex', flexDirection: 'row', width: '500px' }}>
-          <ListItem>
-            <MailIcon color="success" fontSize="large" />
-            我的消息
-          </ListItem>
-          <ListItem>
-            <CreateIcon color="success" fontSize="large" />
-            投诉与建议
-          </ListItem>
-          <ListItem>
-            <AccountCircleIcon color="success" fontSize="large" />
-            我的账号
-          </ListItem>
-        </List>
+      <div
+        style={{ width: '100%', height: '100%', backgroundColor: '#F1F1F1 ' }}
+      >
+        <Outlet></Outlet>
       </div>
     </div>
   );
