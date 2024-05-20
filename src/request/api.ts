@@ -1,6 +1,6 @@
 // 管理接口
 import service from './index';
-import { loginForm, updateManagerForm } from './model';
+import { loginForm, updateManagerForm, getCommodityForm } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
     method: 'POST',
@@ -25,5 +25,12 @@ export const updateManagerAPT = (form: updateManagerForm) => {
     method: 'PUT',
     url: '/manager/alterManager',
     data: form,
+  });
+};
+export const getCommodityAPI = (form: getCommodityForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/getCommodityList',
+    params: form,
   });
 };

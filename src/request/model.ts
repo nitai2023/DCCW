@@ -8,3 +8,8 @@ export interface updateManagerForm {
   password: string;
   phoneNum: string;
 }
+export interface getCommodityForm {
+  from: number;
+  size: number;
+  mod: number;
+}
