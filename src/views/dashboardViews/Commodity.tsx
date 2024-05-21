@@ -17,36 +17,40 @@ import {
   getCommodityByCategoryAPI,
 } from '../../request/api';
 export function Commodity() {
-  // 查询商品
-  const [type, setType] = useState({
+  //查询商品
+  const [select, setSelect] = useState({
     from: 1,
     size: 8,
-    mod: 2,
+    mod: 1,
+    category: '',
+    option: false,
   });
   const [commodity, setCommodity] = useState([]);
-  const [category, setCategory] = useState({
-    from: 1,
-    size: 8,
-    category: '',
-  });
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
     getCommodity();
-  }, [type]);
+  }, [select.mod, select.from, select.size]);
   useEffect(() => {
-    getCommodityByCategoryAPI(category).then((res) => {
+    getCommodityByCategoryAPI({
+      from: select.from,
+      size: select.size,
+      category: select.category,
+    }).then((res) => {
       setCommodity(res.data.commodityPreviewVoList);
     });
-  }, [category]);
+  }, [select.category, select.from, select.size]);
   function getCommodity() {
-    getCommodityAPI(type).then((res) => {
+    getCommodityAPI({
+      from: select.from,
+      size: select.size,
+      mod: select.mod,
+    }).then((res) => {
       setCommodity(res.data.commodityPreviewVoList);
     });
   }
   useEffect(() => {
     getCategoryAPI().then((res) => {
       setCategoryList(res.data);
-      console.log(categoryList);
     });
   }, []);
   return (
@@ -74,9 +78,9 @@ export function Commodity() {
             select
             label="查询类型"
             style={{ width: '200px' }}
-            value={type.mod}
+            value={select.mod}
             onChange={(e) => {
-              setType({ ...type, mod: Number(e.target.value) });
+              setSelect({ ...select, mod: Number(e.target.value) });
             }}
           >
             <MenuItem value={1}>价格</MenuItem>
@@ -91,9 +95,9 @@ export function Commodity() {
               defaultValue=""
               id="grouped-native-select"
               label="目录"
-              value={category.category}
+              value={select.category}
               onChange={(e) => {
-                setCategory({ ...category, category: e.target.value });
+                setSelect({ ...select, category: e.target.value });
               }}
             >
               <option aria-label="None" value="" />
@@ -149,6 +153,9 @@ export function Commodity() {
             style={{
               display: 'flex',
               justifyContent: 'center',
+            }}
+            onChange={(e, page) => {
+              setSelect({ ...select, from: (page - 1) * 8 + 1 });
             }}
           />
         )}
