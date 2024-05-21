@@ -13,3 +13,8 @@ export interface getCommodityForm {
   size: number;
   mod: number;
 }
+export interface getCommodityByCategoryForm {
+  from: number;
+  size: number;
+  category: string;
+}

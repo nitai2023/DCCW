@@ -2,21 +2,27 @@ import { Card, CardContent, Typography, CardMedia } from '@mui/material';
 export function ProductCard({ title, pictureUrl, price, originalPrice, unit }) {
   return (
     <Card
-      style={{ width: '200px', height: '250px', margin: '10px', padding: '0' }}
+      style={{ width: '300px', height: '280px', margin: '10px', padding: '0' }}
     >
-      <CardMedia component="img" height="140" image={pictureUrl} alt={title} />
+      <CardMedia
+        component="img"
+        height="140"
+        width="140"
+        image={pictureUrl}
+        alt={title}
+      />
       <CardContent>
-        <Typography gutterBottom variant="h5" component="div">
+        <Typography gutterBottom variant="h6" component="div">
           {title}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Price: {price} USD
+          价格: {price}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Original Price: {originalPrice} USD
+          原价: {originalPrice}
         </Typography>
         <Typography variant="body2" color="text.secondary">
-          Unit: {unit}
+          单位: {unit}
         </Typography>
       </CardContent>
     </Card>
