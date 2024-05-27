@@ -137,7 +137,7 @@ export function ManageAdmin() {
                   </Button>
                   <Button
                     variant="contained"
-                    color="success"
+                    color="primary"
                     onClick={() => {
                       setOpen(true);
                       setId(index);

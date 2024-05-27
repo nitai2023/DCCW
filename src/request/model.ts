@@ -18,3 +18,6 @@ export interface getCommodityByCategoryForm {
   size: number;
   category: string;
 }
+export interface deleteCommodityByIdForm {
+  commodityId: number;
+}

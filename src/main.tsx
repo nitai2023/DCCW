@@ -14,6 +14,7 @@ import { Voucher } from './views/dashboardViews/Voucher';
 import { Commodity } from './views/dashboardViews/Commodity';
 import { Batch } from './views/dashboardViews/batch';
 import { SellingPrice } from './views/dashboardViews/SellingPrice';
+import { VipCenter } from './views/dashboardViews/VipCenter';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -64,6 +65,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/sellingprice',
         element: <SellingPrice></SellingPrice>,
+      },
+      {
+        path: '/dashboard/vipcenter',
+        element: <VipCenter></VipCenter>,
       },
     ],
   },

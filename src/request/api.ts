@@ -5,6 +5,7 @@ import {
   updateManagerForm,
   getCommodityForm,
   getCommodityByCategoryForm,
+  deleteCommodityByIdForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -50,5 +51,18 @@ export const getCommodityByCategoryAPI = (form: getCommodityByCategoryForm) => {
     method: 'GET',
     url: '/commodity/getCommodityByCategory',
     params: form,
+  });
+};
+export const deleteCommodityByIdAPI = (form: deleteCommodityByIdForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity/deleteCommodity',
+    params: form,
+  });
+};
+export const getVipListAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/dict-vip-level/getVipList',
   });
 };

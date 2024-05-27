@@ -9,6 +9,8 @@ import {
   Select,
   InputLabel,
   FormControl,
+  FormControlLabel,
+  Switch,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
 import {
@@ -23,22 +25,25 @@ export function Commodity() {
     size: 8,
     mod: 1,
     category: '',
-    option: false,
+    option: true,
   });
   const [commodity, setCommodity] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
   useEffect(() => {
-    getCommodity();
-  }, [select.mod, select.from, select.size]);
-  useEffect(() => {
-    getCommodityByCategoryAPI({
-      from: select.from,
-      size: select.size,
-      category: select.category,
-    }).then((res) => {
-      setCommodity(res.data.commodityPreviewVoList);
-    });
-  }, [select.category, select.from, select.size]);
+    if (select.option) {
+      //分类查询商品
+      getCommodity();
+    } else {
+      //通过目录查询商品
+      getCommodityByCategoryAPI({
+        from: select.from,
+        size: select.size,
+        category: select.category,
+      }).then((res) => {
+        setCommodity(res.data.commodityPreviewVoList);
+      });
+    }
+  }, [select.mod, select.from, select.size, select.category, select.option]);
   function getCommodity() {
     getCommodityAPI({
       from: select.from,
@@ -73,45 +78,61 @@ export function Commodity() {
           商品列表
         </Typography>
         <div style={{ display: 'flex', alignItems: 'center' }}>
-          <TextField
-            id="outlined-select-currency"
-            select
-            label="查询类型"
-            style={{ width: '200px' }}
-            value={select.mod}
-            onChange={(e) => {
-              setSelect({ ...select, mod: Number(e.target.value) });
-            }}
-          >
-            <MenuItem value={1}>价格</MenuItem>
-            <MenuItem value={2}>折扣力度</MenuItem>
-            <MenuItem value={3}>最新上架</MenuItem>
-            <MenuItem value={4}>最热商品</MenuItem>
-          </TextField>
-          <FormControl sx={{ m: 1, minWidth: 200 }}>
-            <InputLabel htmlFor="grouped-native-select">目录</InputLabel>
-            <Select
-              native
-              defaultValue=""
-              id="grouped-native-select"
-              label="目录"
-              value={select.category}
+          <FormControlLabel
+            control={
+              <Switch
+                defaultChecked
+                value={select.option}
+                onChange={(e) =>
+                  setSelect({ ...select, option: e.target.checked })
+                }
+              />
+            }
+            label={select.option ? '类型查询' : '目录查询'}
+          />
+          {select.option ? (
+            <TextField
+              id="outlined-select-currency"
+              select
+              label="查询类型"
+              style={{ width: '200px' }}
+              value={select.mod}
               onChange={(e) => {
-                setSelect({ ...select, category: e.target.value });
+                setSelect({ ...select, mod: Number(e.target.value) });
               }}
             >
-              <option aria-label="None" value="" />
-              {categoryList.map((item) => (
-                <optgroup label={item.first_category}>
-                  {item.secondCategoryVoList.map((secondItem) => (
-                    <option value={secondItem.second_category_code}>
-                      {secondItem.second_category}
-                    </option>
-                  ))}
-                </optgroup>
-              ))}
-            </Select>
-          </FormControl>
+              <MenuItem value={1}>价格</MenuItem>
+              <MenuItem value={2}>折扣力度</MenuItem>
+              <MenuItem value={3}>最新上架</MenuItem>
+              <MenuItem value={4}>最热商品</MenuItem>
+            </TextField>
+          ) : (
+            <FormControl sx={{ m: 1, minWidth: 200 }}>
+              <InputLabel htmlFor="grouped-native-select">目录</InputLabel>
+              <Select
+                native
+                defaultValue=""
+                id="grouped-native-select"
+                label="目录"
+                value={select.category}
+                onChange={(e) => {
+                  setSelect({ ...select, category: e.target.value });
+                }}
+              >
+                <option aria-label="None" value="" />
+                {categoryList.map((item) => (
+                  <optgroup label={item.first_category}>
+                    {item.secondCategoryVoList.map((secondItem) => (
+                      <option value={secondItem.second_category_code}>
+                        {secondItem.second_category}
+                      </option>
+                    ))}
+                  </optgroup>
+                ))}
+              </Select>
+            </FormControl>
+          )}
+
           <TextField label="商品名称" style={{ width: '200px' }}></TextField>
           <Button
             variant="contained"
@@ -130,13 +151,15 @@ export function Commodity() {
         </div>
       </div>
       <Grid container spacing={4} alignItems="center" justifyContent="center">
-        {commodity.map((product) => (
-          <Grid item>
+        {commodity.map((product, index) => (
+          <Grid item key={index}>
             <ProductCard
+              commodityId={product.commodityId}
               title={product.title}
               pictureUrl={product.pictureUrl}
               price={product.price}
               originalPrice={product.originalPrice}
+              discount={product.discount}
               unit={product.unit}
             />
           </Grid>
