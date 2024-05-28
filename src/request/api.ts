@@ -6,6 +6,9 @@ import {
   getCommodityForm,
   getCommodityByCategoryForm,
   deleteCommodityByIdForm,
+  addCouponForm,
+  getSaleSpecificationsForm,
+  deleteCouponByIdForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -64,5 +67,32 @@ export const getVipListAPI = () => {
   return service({
     method: 'GET',
     url: '/dict-vip-level/getVipList',
+  });
+};
+export const addCouponAPI = (form: addCouponForm) => {
+  return service({
+    method: 'POST',
+    url: '/coupon/publishCoupon',
+    data: form,
+  });
+};
+export const getSaleSpecificationsAPI = (form: getSaleSpecificationsForm) => {
+  return service({
+    method: 'GET',
+    url: '/sale-specification/getSaleSpecifications',
+    params: form,
+  });
+};
+export const getCouponListAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/coupon/managerGetCouponList',
+  });
+};
+export const deleteCouponByIdAPI = (form: deleteCouponByIdForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/coupon/deleteCoupon',
+    params: form,
   });
 };

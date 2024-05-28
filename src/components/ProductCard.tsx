@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import {
   Card,
   CardContent,
@@ -7,7 +8,7 @@ import {
   Grid,
 } from '@mui/material';
 import { deleteCommodityByIdAPI } from '../request/api';
-import { Height } from '@mui/icons-material';
+import { DataDialog } from './SaleSpecifications';
 export function ProductCard({
   commodityId,
   title,
@@ -17,6 +18,7 @@ export function ProductCard({
   discount,
   unit,
 }) {
+  const [open, setOpen] = useState(false);
   return (
     <Card
       sx={{
@@ -32,9 +34,9 @@ export function ProductCard({
         alt={title}
         sx={{
           height: '140px',
+          transition: '0.5s ',
           '&:hover': {
             height: '230px',
-            transition: '0.5s ',
           },
         }}
       />
@@ -63,7 +65,16 @@ export function ProductCard({
               单位: {unit}
             </Typography>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
+            <Button
+              variant="outlined"
+              color="secondary"
+              onClick={() => setOpen(true)}
+            >
+              详情
+            </Button>
+          </Grid>
+          <Grid item xs={4}>
             <Button
               variant="contained"
               color="error"
@@ -74,7 +85,7 @@ export function ProductCard({
               删除
             </Button>
           </Grid>
-          <Grid item xs={6}>
+          <Grid item xs={4}>
             <Button
               variant="contained"
               color="primary"
@@ -87,6 +98,11 @@ export function ProductCard({
           </Grid>
         </Grid>
       </CardContent>
+      <DataDialog
+        open={open}
+        handleClose={() => setOpen(false)}
+        commodityId={commodityId}
+      />
     </Card>
   );
 }

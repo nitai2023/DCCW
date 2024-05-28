@@ -1,3 +1,10 @@
+import { useEffect, useState } from 'react';
+import dayjs from 'dayjs';
+import {
+  addCouponAPI,
+  getCouponListAPI,
+  deleteCouponByIdAPI,
+} from '../../request/api';
 import {
   Table,
   TableBody,
@@ -16,15 +23,15 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-import { useState } from 'react';
-import dayjs from 'dayjs';
+
 //优惠卷
 const initialDiscounts = [
   {
+    couponId: '',
     discountValue: 19,
     minAmount: 67,
-    startTime: '1994-07-13 10:28:20',
-    endTime: '1985-12-17 16:46:47',
+    startTime: '1994-07-13',
+    endTime: '1985-12-17',
     limitPerUser: 96,
     stock: 81,
   },
@@ -32,38 +39,42 @@ const initialDiscounts = [
 export function Voucher() {
   const [discounts, setDiscounts] = useState(initialDiscounts);
   const [open, setOpen] = useState(false);
+  const [update, setUpdate] = useState(false);
   const [newDiscount, setNewDiscount] = useState({
-    discountValue: '',
-    minAmount: '',
+    discountValue: 0,
+    minAmount: 0,
     startTime: '',
     endTime: '',
-    limitPerUser: '',
-    stock: '',
+    limitPerUser: 0,
+    stock: 0,
   });
-
-  const handleDelete = (index) => {
-    const updatedDiscounts = [...discounts];
-    updatedDiscounts.splice(index, 1);
-    setDiscounts(updatedDiscounts);
+  useEffect(() => {
+    getCouponListAPI().then((res) => {
+      setDiscounts(res.data);
+    });
+  }, [update]);
+  const handleDelete = (couponId: string) => {
+    deleteCouponByIdAPI({ couponId: couponId }).then((res) => {
+      setUpdate(!update);
+    });
   };
-
   const handleAddDiscount = () => {
-    setDiscounts([
-      ...discounts,
-      {
-        ...newDiscount,
-        startTime: dayjs(newDiscount.startTime).format('YYYY-MM-DD HH:mm:ss'),
-        endTime: dayjs(newDiscount.endTime).format('YYYY-MM-DD HH:mm:ss'),
-      },
-    ]);
+    addCouponAPI({
+      ...newDiscount,
+      startTime: dayjs(newDiscount.startTime).format('YYYY-MM-DD'),
+      endTime: dayjs(newDiscount.endTime).format('YYYY-MM-DD'),
+    }).then((res) => {
+      console.log(res);
+    });
     setNewDiscount({
-      discountValue: '',
-      minAmount: '',
+      discountValue: 0,
+      minAmount: 0,
       startTime: '',
       endTime: '',
-      limitPerUser: '',
-      stock: '',
+      limitPerUser: 0,
+      stock: 0,
     });
+    setUpdate(!update);
     setOpen(false);
   };
   return (
@@ -99,7 +110,7 @@ export function Voucher() {
               <TableCell>{discount.stock}</TableCell>
               <TableCell>
                 <IconButton
-                  onClick={() => handleDelete(index)}
+                  onClick={() => handleDelete(discount.couponId)}
                   color="secondary"
                 >
                   <DeleteIcon />
@@ -120,7 +131,10 @@ export function Voucher() {
             fullWidth
             value={newDiscount.discountValue}
             onChange={(e) =>
-              setNewDiscount({ ...newDiscount, discountValue: e.target.value })
+              setNewDiscount({
+                ...newDiscount,
+                discountValue: Number(e.target.value),
+              })
             }
           />
           <TextField
@@ -130,14 +144,20 @@ export function Voucher() {
             fullWidth
             value={newDiscount.minAmount}
             onChange={(e) =>
-              setNewDiscount({ ...newDiscount, minAmount: e.target.value })
+              setNewDiscount({
+                ...newDiscount,
+                minAmount: Number(e.target.value),
+              })
             }
           />
           <TextField
             margin="dense"
             label="开始时间"
-            type="datetime-local"
+            type="date"
             fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
             value={newDiscount.startTime}
             onChange={(e) =>
               setNewDiscount({ ...newDiscount, startTime: e.target.value })
@@ -146,8 +166,11 @@ export function Voucher() {
           <TextField
             margin="dense"
             label="结束时间"
-            type="datetime-local"
+            type="date"
             fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
             value={newDiscount.endTime}
             onChange={(e) =>
               setNewDiscount({ ...newDiscount, endTime: e.target.value })
@@ -160,7 +183,10 @@ export function Voucher() {
             fullWidth
             value={newDiscount.limitPerUser}
             onChange={(e) =>
-              setNewDiscount({ ...newDiscount, limitPerUser: e.target.value })
+              setNewDiscount({
+                ...newDiscount,
+                limitPerUser: Number(e.target.value),
+              })
             }
           />
           <TextField
@@ -170,7 +196,7 @@ export function Voucher() {
             fullWidth
             value={newDiscount.stock}
             onChange={(e) =>
-              setNewDiscount({ ...newDiscount, stock: e.target.value })
+              setNewDiscount({ ...newDiscount, stock: Number(e.target.value) })
             }
           />
         </DialogContent>

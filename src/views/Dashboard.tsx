@@ -143,28 +143,6 @@ export function Dashboard() {
                   </ListItemButton>
                 </ListItem>
               </Link>
-              <Link to="/dashboard/batch">
-                <ListItem>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <EqualizerIcon color="success" fontSize="large" />
-                    </ListItemIcon>
-                    批次
-                    <ListItemText />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
-              <Link to="/dashboard/sellingprice">
-                <ListItem>
-                  <ListItemButton>
-                    <ListItemIcon>
-                      <PeopleIcon color="success" fontSize="large" />
-                    </ListItemIcon>
-                    售卖价格
-                    <ListItemText />
-                  </ListItemButton>
-                </ListItem>
-              </Link>
               <Link to="/dashboard/vipcenter">
                 <ListItem>
                   <ListItemButton>
