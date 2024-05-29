@@ -165,6 +165,17 @@ export function Dashboard() {
                   </ListItemButton>
                 </ListItem>
               </Link>
+              <Link to="/dashboard/chat">
+                <ListItem>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PeopleIcon color="success" fontSize="large" />
+                    </ListItemIcon>
+                    聊天
+                    <ListItemText />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             </List>
           </div>
         </aside>

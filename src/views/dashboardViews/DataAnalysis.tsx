@@ -3,7 +3,7 @@ import ReactECharts from 'echarts-for-react';
 import { useEffect, useState } from 'react';
 import { getCommodityAnalysisAPI } from '../../request/api';
 export function DataAnalysis() {
-  const [salesData, setSalesData] = useState({});
+  const [salesData, setSalesData] = useState([]);
   useEffect(() => {
     getCommodityAnalysisAPI({ graphicType: 'bar', span: 'month' }).then(
       (res) => {
