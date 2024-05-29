@@ -154,6 +154,17 @@ export function Dashboard() {
                   </ListItemButton>
                 </ListItem>
               </Link>
+              <Link to="/dashboard/riderinformationmanagement">
+                <ListItem>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PeopleIcon color="success" fontSize="large" />
+                    </ListItemIcon>
+                    骑手信息管理
+                    <ListItemText />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             </List>
           </div>
         </aside>

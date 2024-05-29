@@ -13,6 +13,7 @@ import { ManageAdmin } from './views/dashboardViews/ManageAdmin';
 import { Voucher } from './views/dashboardViews/Voucher';
 import { Commodity } from './views/dashboardViews/Commodity';
 import { VipCenter } from './views/dashboardViews/VipCenter';
+import { RiderInformationManagement } from './views/dashboardViews/RiderInformationManagement';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -59,6 +60,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/vipcenter',
         element: <VipCenter></VipCenter>,
+      },
+      {
+        path: '/dashboard/riderinformationmanagement',
+        element: <RiderInformationManagement></RiderInformationManagement>,
       },
     ],
   },

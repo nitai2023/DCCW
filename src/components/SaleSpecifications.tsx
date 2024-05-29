@@ -44,10 +44,19 @@ export function DataDialog({ open, handleClose, commodityId }) {
     edit: false,
     add: false,
   });
+  const [form, setForm] = useState({
+    ssId: '',
+    originalPrice: 0,
+    price: 0,
+    unit: '',
+    saleOrRent: true,
+    isDefault: true,
+    purchaseLimit: 0,
+    remark: '',
+  });
   useEffect(() => {
     getSaleSpecificationsAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
-      console.log(res.data);
     });
   }, []);
   function handleChange() {
@@ -64,8 +73,6 @@ export function DataDialog({ open, handleClose, commodityId }) {
           <Table>
             <TableHead>
               <TableRow>
-                <TableCell>规格ID</TableCell>
-                <TableCell>商品ID</TableCell>
                 <TableCell>原价</TableCell>
                 <TableCell>价格</TableCell>
                 <TableCell>折扣</TableCell>
@@ -81,8 +88,6 @@ export function DataDialog({ open, handleClose, commodityId }) {
             <TableBody>
               {data.map((row, index) => (
                 <TableRow key={row.specificationId}>
-                  <TableCell>{row.specificationId}</TableCell>
-                  <TableCell>{row.commodityId}</TableCell>
                   <TableCell>{row.originalPrice}</TableCell>
                   <TableCell>{row.price}</TableCell>
                   <TableCell>{row.discount}</TableCell>
@@ -97,6 +102,16 @@ export function DataDialog({ open, handleClose, commodityId }) {
                       color="primary"
                       onClick={() => {
                         setDialog({ ...dialog, index: index, edit: true });
+                        setForm(() => ({
+                          ssId: row.specificationId,
+                          originalPrice: row.originalPrice,
+                          price: row.price,
+                          unit: row.unit,
+                          isDefault: row.isDefault,
+                          remark: row.remark,
+                          saleOrRent: row.saleOrRent,
+                          purchaseLimit: row.purchaseLimit,
+                        }));
                       }}
                     >
                       <EditIcon />
@@ -138,7 +153,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="originalPrice"
             type="number"
             fullWidth
-            value={data[dialog.index].originalPrice}
+            value={form.originalPrice}
             onChange={handleChange}
           />
           <TextField
@@ -147,7 +162,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="price"
             type="number"
             fullWidth
-            value={data[dialog.index].price}
+            value={form.price}
             onChange={handleChange}
           />
           <TextField
@@ -155,7 +170,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             label="Unit"
             name="unit"
             fullWidth
-            value={data[dialog.index].unit}
+            value={form.unit}
             onChange={handleChange}
           />
           <TextField
@@ -163,14 +178,14 @@ export function DataDialog({ open, handleClose, commodityId }) {
             label="Remark"
             name="remark"
             fullWidth
-            value={data[dialog.index].remark}
+            value={form.remark}
             onChange={handleChange}
           />
           <FormControlLabel
             control={
               <Checkbox
                 name="saleOrRent"
-                checked={data[dialog.index].saleOrRent}
+                checked={form.saleOrRent}
                 onChange={handleChange}
               />
             }
@@ -182,14 +197,14 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="sortNum"
             type="number"
             fullWidth
-            value={data[dialog.index].sortNum}
+            value={form.sortNum}
             onChange={handleChange}
           />
           <FormControlLabel
             control={
               <Checkbox
                 name="isDefault"
-                checked={data[dialog.index].isDefault}
+                checked={form.isDefault}
                 onChange={handleChange}
               />
             }
@@ -201,7 +216,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="purchaseLimit"
             type="number"
             fullWidth
-            value={data[dialog.index].purchaseLimit}
+            value={form.purchaseLimit}
             onChange={handleChange}
           />
         </DialogContent>
@@ -215,7 +230,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             取消
           </Button>
           <Button onClick={handleSubmit} color="primary">
-            编辑
+            保存
           </Button>
         </DialogActions>
       </Dialog>

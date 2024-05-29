@@ -9,6 +9,7 @@ import {
   addCouponForm,
   getSaleSpecificationsForm,
   deleteCouponByIdForm,
+  getCommodityAnalysisForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -93,6 +94,13 @@ export const deleteCouponByIdAPI = (form: deleteCouponByIdForm) => {
   return service({
     method: 'DELETE',
     url: '/coupon/deleteCoupon',
+    params: form,
+  });
+};
+export const getCommodityAnalysisAPI = (form: getCommodityAnalysisForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getCommodity',
     params: form,
   });
 };

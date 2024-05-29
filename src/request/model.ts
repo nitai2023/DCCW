@@ -35,3 +35,7 @@ export interface getSaleSpecificationsForm {
 export interface deleteCouponByIdForm {
   couponId: string;
 }
+export interface getCommodityAnalysisForm {
+  graphicType: string;
+  span: string;
+}

@@ -26,6 +26,7 @@ export function Commodity() {
     mod: 1,
     category: '',
     option: true,
+    total: 0,
   });
   const [commodity, setCommodity] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -41,6 +42,10 @@ export function Commodity() {
         category: select.category,
       }).then((res) => {
         setCommodity(res.data.commodityPreviewVoList);
+        setSelect({
+          ...select,
+          total: res.data.total,
+        });
       });
     }
   }, [select.mod, select.from, select.size, select.category, select.option]);
@@ -51,6 +56,10 @@ export function Commodity() {
       mod: select.mod,
     }).then((res) => {
       setCommodity(res.data.commodityPreviewVoList);
+      setSelect({
+        ...select,
+        total: res.data.total,
+      });
     });
   }
   useEffect(() => {
@@ -121,10 +130,10 @@ export function Commodity() {
               >
                 <option aria-label="None" value="" />
                 {categoryList.map((item) => (
-                  <optgroup label={item.first_category}>
+                  <optgroup label={item.firstCategory}>
                     {item.secondCategoryVoList.map((secondItem) => (
-                      <option value={secondItem.second_category_code}>
-                        {secondItem.second_category}
+                      <option value={secondItem.secondCategoryCode}>
+                        {secondItem.secondCategory}
                       </option>
                     ))}
                   </optgroup>
@@ -170,7 +179,7 @@ export function Commodity() {
           <div></div>
         ) : (
           <Pagination
-            count={10}
+            count={Math.ceil(select.total / 8)}
             variant="outlined"
             color="primary"
             style={{
