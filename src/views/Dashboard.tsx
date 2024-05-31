@@ -176,6 +176,17 @@ export function Dashboard() {
                   </ListItemButton>
                 </ListItem>
               </Link>
+              <Link to="/dashboard/order">
+                <ListItem>
+                  <ListItemButton>
+                    <ListItemIcon>
+                      <PeopleIcon color="success" fontSize="large" />
+                    </ListItemIcon>
+                    订单
+                    <ListItemText />
+                  </ListItemButton>
+                </ListItem>
+              </Link>
             </List>
           </div>
         </aside>

@@ -10,6 +10,7 @@ import {
   getSaleSpecificationsForm,
   deleteCouponByIdForm,
   getCommodityAnalysisForm,
+  getOrdersForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -101,6 +102,13 @@ export const getCommodityAnalysisAPI = (form: getCommodityAnalysisForm) => {
   return service({
     method: 'GET',
     url: '/analysis/getCommodity',
+    params: form,
+  });
+};
+export const getOrdersAPI = (form: getOrdersForm) => {
+  return service({
+    method: 'GET',
+    url: '/orders/getAll',
     params: form,
   });
 };

@@ -15,6 +15,7 @@ import { Commodity } from './views/dashboardViews/Commodity';
 import { VipCenter } from './views/dashboardViews/VipCenter';
 import { RiderInformationManagement } from './views/dashboardViews/RiderInformationManagement';
 import { Chat } from './views/dashboardViews/Chat';
+import { Order } from './views/dashboardViews/Order';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
       {
         path: '/dashboard/chat',
         element: <Chat></Chat>,
+      },
+      {
+        path: '/dashboard/order',
+        element: <Order></Order>,
       },
     ],
   },

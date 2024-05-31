@@ -17,21 +17,25 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
+  FormControlLabel,
   DialogTitle,
   Avatar,
   Grid,
+  Switch,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
+import { number } from 'echarts';
 export function RiderInformationManagement() {
-  const [page, setPage] = useState({ pageNum: 1, pageSize: 10 });
+  const [page, setPage] = useState({ pageNum: 1, pageSize: 10, total: 0 });
+  const [select, setSelect] = useState(true);
   const [open, setOpen] = useState(false);
   const [riders, setRiders] = useState([]);
   const [rider, setRider] = useState({});
   useEffect(() => {
-    getRiderInfo();
-  }, []);
+    select ? getRiderInfo() : getApplyInfo();
+  }, [select]);
+
   function getRiderInfo() {
     axios
       .get(
@@ -39,8 +43,21 @@ export function RiderInformationManagement() {
       )
       .then((res) => {
         setRiders(res.data.data.list);
-        console.log(res);
+        setPage({ ...page, total: res.data.data.total });
       });
+  }
+  function getApplyInfo() {
+    axios
+      .get(
+        `http://182.92.128.37:8501//rider/getApplyInfo/${page.pageNum}/${page.pageSize}`
+      )
+      .then((res) => {
+        setRiders(res.data.data.list);
+      });
+  }
+  function updateRider() {
+    console.log(rider);
+    axios.post(`http://182.92.128.37:8501//rider/updateRider`, rider);
   }
   return (
     <Box
@@ -55,74 +72,108 @@ export function RiderInformationManagement() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h3">骑手信息</Typography>
         <Box>
-          <TextField></TextField>
-          <Button
-            variant="contained"
-            color="success"
-            style={{ height: '56px' }}
-          >
-            添加
-          </Button>
+          <FormControlLabel
+            control={<Switch defaultChecked />}
+            value={select}
+            onChange={(e) => setSelect(e.target.checked)}
+            label={select ? '骑手信息' : '认证查询'}
+          />
         </Box>
       </Box>
-      <TableContainer component={Paper}>
-        <Table>
-          <TableHead>
-            <TableRow>
-              <TableCell>Avatar</TableCell>
-              <TableCell>Is Apply</TableCell>
-              <TableCell>Is Student</TableCell>
-              <TableCell>Nick Name</TableCell>
-              <TableCell>Open ID</TableCell>
-              <TableCell>Phone</TableCell>
-              <TableCell>Real Name</TableCell>
-              <TableCell>Action</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {riders.map((user, index) => (
-              <TableRow key={index}>
-                <TableCell>
-                  <img
-                    src={user.avatarUrl || 'default-avatar.png'}
-                    alt="Avatar"
-                    style={{ width: 50, height: 50 }}
-                  />
-                </TableCell>
-                <TableCell>{user.isApply ? 'Yes' : 'No'}</TableCell>
-                <TableCell>{user.isStudent}</TableCell>
-                <TableCell>{user.nickName}</TableCell>
-                <TableCell>{user.openId}</TableCell>
-                <TableCell>{user.phone}</TableCell>
-                <TableCell>{user.realName}</TableCell>
-                <TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        setOpen(true);
-                        setRider(user);
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => {
-                        console.log('删除');
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableCell>
+      {select ? (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>Avatar</TableCell>
+                <TableCell>Is Apply</TableCell>
+                <TableCell>Is Student</TableCell>
+                <TableCell>Nick Name</TableCell>
+                <TableCell>Open ID</TableCell>
+                <TableCell>Phone</TableCell>
+                <TableCell>Real Name</TableCell>
+                <TableCell>Action</TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-        </Table>
-      </TableContainer>
+            </TableHead>
+            <TableBody>
+              {riders.map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell>
+                    <img
+                      src={user.avatarUrl || 'default-avatar.png'}
+                      alt="Avatar"
+                      style={{ width: 50, height: 50 }}
+                    />
+                  </TableCell>
+                  <TableCell>{user.isApply ? 'Yes' : 'No'}</TableCell>
+                  <TableCell>{user.isStudent}</TableCell>
+                  <TableCell>{user.nickName}</TableCell>
+                  <TableCell>{user.openId}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.realName}</TableCell>
+                  <TableCell>
+                    <TableCell>
+                      <IconButton
+                        color="primary"
+                        onClick={() => {
+                          setOpen(true);
+                          setRider(user);
+                        }}
+                      >
+                        <EditIcon />
+                      </IconButton>
+                      <IconButton
+                        color="error"
+                        onClick={() => {
+                          console.log('删除');
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </TableCell>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      ) : (
+        <TableContainer component={Paper}>
+          <Table>
+            <TableHead>
+              <TableRow>
+                <TableCell>idCardCode</TableCell>
+                <TableCell>idCardSrc</TableCell>
+                <TableCell>isStudent</TableCell>
+                <TableCell>phone</TableCell>
+                <TableCell>realName</TableCell>
+                <TableCell>riderId</TableCell>
+                <TableCell>studentIdCode</TableCell>
+                <TableCell>Action</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {riders.map((user, index) => (
+                <TableRow key={index}>
+                  <TableCell>{user.idCardCode}</TableCell>
+                  <TableCell>{user.idCardSrc}</TableCell>
+                  <TableCell>{user.isStudent}</TableCell>
+                  <TableCell>{user.phone}</TableCell>
+                  <TableCell>{user.realName}</TableCell>
+                  <TableCell>{user.riderId}</TableCell>
+                  <TableCell>{user.studentIdCode}</TableCell>
+                  <TableCell>
+                    <Button>通过</Button>
+                    <Button>拒绝</Button>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+      )}
       <Pagination
-        count={10}
+        count={1 + page.total / 10}
         variant="outlined"
         color="primary"
         sx={{
@@ -167,7 +218,7 @@ export function RiderInformationManagement() {
                 name="isApply"
                 value={rider.isApply}
                 onChange={(e) => {
-                  setRider({ ...rider, isApply: e.target.value });
+                  setRider({ ...rider, isApply: Number(e.target.value) });
                 }}
                 fullWidth
               />
@@ -241,7 +292,13 @@ export function RiderInformationManagement() {
           </Grid>
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
+          <Button
+            onClick={() => {
+              updateRider();
+              setOpen(false);
+            }}
+            color="primary"
+          >
             提交
           </Button>
           <Button

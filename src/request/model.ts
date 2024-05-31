@@ -39,3 +39,7 @@ export interface getCommodityAnalysisForm {
   graphicType: string;
   span: string;
 }
+export interface getOrdersForm {
+  pageSize: string;
+  pageNumber: string;
+}
