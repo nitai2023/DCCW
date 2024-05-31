@@ -1,20 +1,27 @@
 import { useState, useEffect } from 'react';
 import { getAllManagerAPI, updateManagerAPT } from '../../request/api';
-import Table from '@mui/material/Table';
-import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
-import TableHead from '@mui/material/TableHead';
-import TableRow from '@mui/material/TableRow';
-import Paper from '@mui/material/Paper';
-import Typography from '@mui/material/Typography';
-import Button from '@mui/material/Button';
-import Dialog from '@mui/material/Dialog';
-import DialogActions from '@mui/material/DialogActions';
-import DialogContent from '@mui/material/DialogContent';
-import DialogContentText from '@mui/material/DialogContentText';
-import DialogTitle from '@mui/material/DialogTitle';
-import TextField from '@mui/material/TextField';
+
+import {
+  Box,
+  DialogActions,
+  IconButton,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  Typography,
+  Button,
+  Dialog,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+} from '@mui/material';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 const rows = [
   {
     accountId: 'ac63fbdc-c2c3-4007-9d62-3751331c1a04',
@@ -59,7 +66,7 @@ export function ManageAdmin() {
   };
 
   return (
-    <div>
+    <Box sx={{ p: 2 }}>
       <div
         style={{
           display: 'flex',
@@ -132,19 +139,19 @@ export function ManageAdmin() {
                 <TableCell align="left">{row.phoneNum}</TableCell>
                 <TableCell align="left">{row.createTime}</TableCell>
                 <TableCell align="left">
-                  <Button variant="contained" color="error">
-                    删除
-                  </Button>
-                  <Button
-                    variant="contained"
-                    color="primary"
-                    onClick={() => {
-                      setOpen(true);
-                      setId(index);
-                    }}
-                  >
-                    修改
-                  </Button>
+                  <TableCell>
+                    <IconButton color="primary" onClick={() => setOpen(true)}>
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        console.log('删除');
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
                 </TableCell>
               </TableRow>
             ))}
@@ -153,7 +160,7 @@ export function ManageAdmin() {
       </TableContainer>
       <Dialog
         open={open}
-        fullWidth={'true'}
+        fullWidth
         maxWidth={'md'}
         onClose={() => setOpen(false)}
         aria-labelledby="alert-dialog-title"
@@ -211,6 +218,6 @@ export function ManageAdmin() {
           </Button>
         </DialogActions>
       </Dialog>
-    </div>
+    </Box>
   );
 }

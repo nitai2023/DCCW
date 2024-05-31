@@ -20,6 +20,7 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
@@ -78,137 +79,142 @@ export function Voucher() {
     setOpen(false);
   };
   return (
-    <TableContainer component={Paper}>
-      <Button
-        variant="contained"
-        color="primary"
-        startIcon={<AddIcon />}
-        onClick={() => setOpen(true)}
-      >
-        新增优惠券
-      </Button>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>折扣值</TableCell>
-            <TableCell>最小金额</TableCell>
-            <TableCell>开始时间</TableCell>
-            <TableCell>结束时间</TableCell>
-            <TableCell>每用户限制</TableCell>
-            <TableCell>库存</TableCell>
-            <TableCell>操作</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {discounts.map((discount, index) => (
-            <TableRow key={index}>
-              <TableCell>{discount.discountValue}</TableCell>
-              <TableCell>{discount.minAmount}</TableCell>
-              <TableCell>{discount.startTime}</TableCell>
-              <TableCell>{discount.endTime}</TableCell>
-              <TableCell>{discount.limitPerUser}</TableCell>
-              <TableCell>{discount.stock}</TableCell>
-              <TableCell>
-                <IconButton
-                  onClick={() => handleDelete(discount.couponId)}
-                  color="secondary"
-                >
-                  <DeleteIcon />
-                </IconButton>
-              </TableCell>
+    <Box sx={{ p: 2 }}>
+      <TableContainer component={Paper}>
+        <Button
+          variant="contained"
+          color="primary"
+          startIcon={<AddIcon />}
+          onClick={() => setOpen(true)}
+        >
+          新增优惠券
+        </Button>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>折扣值</TableCell>
+              <TableCell>最小金额</TableCell>
+              <TableCell>开始时间</TableCell>
+              <TableCell>结束时间</TableCell>
+              <TableCell>每用户限制</TableCell>
+              <TableCell>库存</TableCell>
+              <TableCell>操作</TableCell>
             </TableRow>
-          ))}
-        </TableBody>
-      </Table>
-      <Dialog open={open} onClose={() => setOpen(false)}>
-        <DialogTitle>新增优惠券</DialogTitle>
-        <DialogContent>
-          <TextField
-            autoFocus
-            margin="dense"
-            label="折扣值"
-            type="number"
-            fullWidth
-            value={newDiscount.discountValue}
-            onChange={(e) =>
-              setNewDiscount({
-                ...newDiscount,
-                discountValue: Number(e.target.value),
-              })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="最小金额"
-            type="number"
-            fullWidth
-            value={newDiscount.minAmount}
-            onChange={(e) =>
-              setNewDiscount({
-                ...newDiscount,
-                minAmount: Number(e.target.value),
-              })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="开始时间"
-            type="date"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newDiscount.startTime}
-            onChange={(e) =>
-              setNewDiscount({ ...newDiscount, startTime: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="结束时间"
-            type="date"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={newDiscount.endTime}
-            onChange={(e) =>
-              setNewDiscount({ ...newDiscount, endTime: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="每用户限制"
-            type="number"
-            fullWidth
-            value={newDiscount.limitPerUser}
-            onChange={(e) =>
-              setNewDiscount({
-                ...newDiscount,
-                limitPerUser: Number(e.target.value),
-              })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="库存"
-            type="number"
-            fullWidth
-            value={newDiscount.stock}
-            onChange={(e) =>
-              setNewDiscount({ ...newDiscount, stock: Number(e.target.value) })
-            }
-          />
-        </DialogContent>
-        <DialogActions>
-          <Button onClick={() => setOpen(false)} color="primary">
-            取消
-          </Button>
-          <Button onClick={handleAddDiscount} color="primary">
-            添加
-          </Button>
-        </DialogActions>
-      </Dialog>
-    </TableContainer>
+          </TableHead>
+          <TableBody>
+            {discounts.map((discount, index) => (
+              <TableRow key={index}>
+                <TableCell>{discount.discountValue}</TableCell>
+                <TableCell>{discount.minAmount}</TableCell>
+                <TableCell>{discount.startTime}</TableCell>
+                <TableCell>{discount.endTime}</TableCell>
+                <TableCell>{discount.limitPerUser}</TableCell>
+                <TableCell>{discount.stock}</TableCell>
+                <TableCell>
+                  <IconButton
+                    onClick={() => handleDelete(discount.couponId)}
+                    color="secondary"
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+        <Dialog open={open} onClose={() => setOpen(false)}>
+          <DialogTitle>新增优惠券</DialogTitle>
+          <DialogContent>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="折扣值"
+              type="number"
+              fullWidth
+              value={newDiscount.discountValue}
+              onChange={(e) =>
+                setNewDiscount({
+                  ...newDiscount,
+                  discountValue: Number(e.target.value),
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="最小金额"
+              type="number"
+              fullWidth
+              value={newDiscount.minAmount}
+              onChange={(e) =>
+                setNewDiscount({
+                  ...newDiscount,
+                  minAmount: Number(e.target.value),
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="开始时间"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newDiscount.startTime}
+              onChange={(e) =>
+                setNewDiscount({ ...newDiscount, startTime: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="结束时间"
+              type="date"
+              fullWidth
+              InputLabelProps={{
+                shrink: true,
+              }}
+              value={newDiscount.endTime}
+              onChange={(e) =>
+                setNewDiscount({ ...newDiscount, endTime: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="每用户限制"
+              type="number"
+              fullWidth
+              value={newDiscount.limitPerUser}
+              onChange={(e) =>
+                setNewDiscount({
+                  ...newDiscount,
+                  limitPerUser: Number(e.target.value),
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="库存"
+              type="number"
+              fullWidth
+              value={newDiscount.stock}
+              onChange={(e) =>
+                setNewDiscount({
+                  ...newDiscount,
+                  stock: Number(e.target.value),
+                })
+              }
+            />
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpen(false)} color="primary">
+              取消
+            </Button>
+            <Button onClick={handleAddDiscount} color="primary">
+              添加
+            </Button>
+          </DialogActions>
+        </Dialog>
+      </TableContainer>
+    </Box>
   );
 }
