@@ -1,0 +1,234 @@
+.chatApp {
+    height: calc(100vh - 64px) !important;
+  }
+  
+  .myInfo {
+    background-color: #f5f5f5;
+    display: flex;
+    width: 100%;
+    height: 100px;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.2);
+  }
+  
+  .avatar {
+    width: 100px;
+    height: 100px;
+  }
+  
+  .minAvatar {
+    width: 50px;
+    height: 50px;
+  }
+  
+  .name {
+    margin-left: 10px;
+    font-size: 20px;
+    font-weight: 700;
+  }
+  
+  .talkWindow {
+    margin-bottom: 10px;
+    display: flex;
+    width: 100%;
+    height: calc(100% - 100px);
+  }
+  
+  .left {
+    width: 250px;
+    height: 100%;
+    background-color: #f5f5f5;
+  }
+  
+  .right {
+    flex: 1;
+  }
+  
+  .conversation {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+  }
+  
+  .msgBox {
+    width: 150px;
+  }
+  
+  .up {
+    height: 30px;
+    display: flex;
+    justify-content: space-between;
+  }
+  
+  .notRead {
+    margin-left: 60px;
+    display: inline-block;
+    font-size: 15px;
+    font-weight: 700;
+  }
+  
+  .mid {
+    font-size: 10px;
+    color: grey;
+    height: 20px;
+  }
+  
+  .down {
+    color: #b9b9b7;
+    font-size: x-small;
+  }
+  
+  .talkBox {
+    height: 100%;
+    width: 1005;
+    display: flex;
+    flex-direction: column;
+    align-content: space-between;
+    justify-content: space-between;
+  }
+  
+  .messages {
+    width: 100%;
+    flex:1;
+    background-color: #f0f0f0;
+    overflow-y: auto; /* 启用垂直滚动条 */
+  }
+  
+  .talkingWith {
+    color: #fff;
+    padding-top: 2px;
+    padding-left: 10px;
+    font-size: 20px;
+    font-weight: 700;
+    height: 50px;
+    background-color: #5eb69c;
+  }
+  
+  .message {
+    background-color: #fff;
+  }
+  
+  .send-box {
+    height: 100px;
+    display: flex;
+  }
+  
+  .message-input {
+    flex: 1; /* 文本域自动填充剩余空间 */
+    resize: none; /* 禁止调整大小 */
+  }
+  
+  .send-button {
+    padding: 8px 16px;
+    background-color: #007bff; /* 设置按钮背景颜色 */
+    color: white; /* 设置按钮文本颜色 */
+    border: none;
+    cursor: pointer;
+  }
+  
+  /* 设置消息的基本样式 */
+  /* 设置消息的基本样式 */
+  .message {
+    display: flex;
+    align-items: center;
+    margin: 10px 0; /* 添加垂直间距 */
+  }
+  
+  /* 针对不同消息发送者的样式 */
+  .my-message {
+    justify-content: flex-end; /* 自己的消息头像和文本靠右 */
+    text-align: right; /* 文本右对齐 */
+    background-color: green;
+  }
+  
+  .other-message {
+    justify-content: flex-start; /* 对方的消息头像和文本靠左 */
+    text-align: left; /* 文本左对齐 */
+  }
+  
+  /* 设置头像图片的样式 */
+  .minAvatar {
+    width: 40px; /* 根据需要调整大小 */
+    height: 40px;
+    border-radius: 50%; /* 使图片变成圆形 */
+    margin: 0 10px; /* 添加左右间距 */
+  }
+  
+  /* 设置消息文本的样式 */
+  .message-text {
+    max-width: 60%; /* 设置文本最大宽度 */
+    word-wrap: break-word; /* 自动换行 */
+  }
+  
+  //
+  //
+  //
+  .personMessage_padd {
+    margin: 0px 10px 0px 10px;
+    width: 100%;
+    height: 40px;
+  }
+  
+  .person_line_padd {
+    margin: 10px 10px 10px 10px;
+  }
+  
+  .personMessageMain {
+    /* background-color: aqua; */
+    height: 58%;
+    margin-top: 5px;
+    max-height: 58%;
+    min-height: 58%;
+    margin-left: 10px;
+    width: 99%;
+    min-width: 99%;
+    max-width: 99%;
+    float: left;
+  }
+  
+  .personMessage_textArea {
+    /* padding: 40px 0px 0px 10px; */
+    margin: 40px 10px 10px 10px;
+    min-height: 115px;
+    max-width: 98%;
+    min-width: 98%;
+    border: 0;
+    background-color: #f1f2f3;
+    max-height: 115px;
+    resize: none;
+    font-size: 15px;
+    overflow: auto;
+  }
+  .personMessage_textArea:focus {
+    outline: none;
+    white-space: pre-wrap;
+    font-size: 15px;
+  }
+  /* 富文本框的样式 */
+  .ql-toolbar.ql-snow {
+    border: 0;
+    display: none;
+  }
+  .ql-editor {
+    padding: 0;
+    min-height: 115px;
+    max-height: 115px;
+  }
+  .ql-container.ql-snow {
+    border: 0;
+  }
+  .ql-container {
+    min-height: 115px;
+    max-height: 115px;
+  }
+  
+  /* 输入框滚动条样式 */
+  /* .personMessage_textArea::-webkit-scrollbar {
+      height: 0;
+      width: 0;
+      color: transparent;
+  } */
+  textarea.ant-input {
+    min-height: 110px;
+  }
+  
