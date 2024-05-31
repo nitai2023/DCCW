@@ -14,7 +14,7 @@ import { Voucher } from './views/dashboardViews/Voucher';
 import { Commodity } from './views/dashboardViews/Commodity';
 import { VipCenter } from './views/dashboardViews/VipCenter';
 import { RiderInformationManagement } from './views/dashboardViews/RiderInformationManagement';
-import { Chat } from './views/dashboardViews/Chat';
+import { Chat } from './views/dashboardViews/chat/Chat';
 import { Order } from './views/dashboardViews/Order';
 const router = createBrowserRouter([
   {

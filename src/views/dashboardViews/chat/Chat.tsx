@@ -1,39 +1,39 @@
-import { Avatar, Box } from "@mui/material";
-import useWebSocket from "../../../../request/WebSocket";
-import { useEffect, useState } from "react";
+import { Avatar, Box } from '@mui/material';
+import useWebSocket from '../../../request/WebSocket';
+import { useEffect, useState } from 'react';
 import {
   ConversationItem,
   getConversationsAPI,
   getMessageAPI,
   MessageType,
-} from "../../../../request/chat";
-import dayjs from "dayjs";
-import "./Chat.scss";
-import { getUserInfoAPI, UserInfo } from "../../../../request/user";
+} from '../../../request/chat';
+import dayjs from 'dayjs';
+import './Chat.scss';
+import { getUserInfoAPI, UserInfo } from '../../../request/user';
 
 export function Chat() {
-  const baseURL = "8.137.11.172:7121";
+  const baseURL = '8.137.11.172:7121';
 
   const authorization =
-    "eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjoiQVQwMDAzIiwidXNlcm5hbWUiOiIwMDRkYjQ3YS02ZGE3LTRlNWUtODhhMS0wN2YzNDZjODk0NjMiLCJqdGkiOiJ0b2tlbklkIiwiaWF0IjoxNzE0MTg1Mjc0LCJleHAiOjMzMjUwMTg1Mjc0fQ.WM6mQkRBoCgMNAmpO57-IItVzGy6MDp6gXzBXmhNj88";
+    'eyJhbGciOiJIUzI1NiJ9.eyJhdXRoIjoiQVQwMDAzIiwidXNlcm5hbWUiOiIwMDRkYjQ3YS02ZGE3LTRlNWUtODhhMS0wN2YzNDZjODk0NjMiLCJqdGkiOiJ0b2tlbklkIiwiaWF0IjoxNzE0MTg1Mjc0LCJleHAiOjMzMjUwMTg1Mjc0fQ.WM6mQkRBoCgMNAmpO57-IItVzGy6MDp6gXzBXmhNj88';
 
   const [webSocket, sendMessage, lastMessage, isConnected] = useWebSocket({
     url: `ws://${baseURL}/webSocket/chat/${authorization}`, //这里放长链接
     onOpen: () => {
       //连接成功
-      console.log("WebSocket connected");
+      console.log('WebSocket connected');
     },
     onClose: () => {
       //连接关闭
-      console.log("WebSocket disconnected");
+      console.log('WebSocket disconnected');
     },
     onError: (event) => {
       //连接异常
-      console.error("WebSocket error:", event);
+      console.error('WebSocket error:', event);
     },
     onMessage: (message) => {
       //收到消息
-      console.log("WebSocket received message:", message);
+      console.log('WebSocket received message:', message);
     },
   });
 
@@ -76,7 +76,7 @@ export function Chat() {
     sendMessage(
       `{"authorization": "${authorization}","conversationId": "${talkWith?.conversationId}","content": "${content}","messageType":"1","recipientId": "${talkWith?.talkWithId}"}`
     );
-    setContent("");
+    setContent('');
   }
 
   useEffect(() => {
@@ -116,7 +116,7 @@ export function Chat() {
                       <span className="notRead">{item.unreadCount}</span>
                     )}
                     <text className="mid">
-                      {dayjs(item.lastTime).format("hh:mm")}
+                      {dayjs(item.lastTime).format('hh:mm')}
                     </text>
                   </div>
 
@@ -135,8 +135,8 @@ export function Chat() {
                       key={index}
                       className={`message ${
                         userInfo?.userId === item.senderId
-                          ? "my-message"
-                          : "other-message"
+                          ? 'my-message'
+                          : 'other-message'
                       }`}
                     >
                       {userInfo?.userId !== item.senderId && (
