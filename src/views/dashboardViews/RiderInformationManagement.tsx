@@ -83,7 +83,7 @@ export function RiderInformationManagement() {
       {select ? (
         <TableContainer component={Paper}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
               <TableRow>
                 <TableCell>Avatar</TableCell>
                 <TableCell>Is Apply</TableCell>
@@ -307,7 +307,7 @@ export function RiderInformationManagement() {
             }}
             color="primary"
           >
-            Close
+            取消
           </Button>
         </DialogActions>
       </Dialog>

@@ -11,6 +11,9 @@ import {
   deleteCouponByIdForm,
   getCommodityAnalysisForm,
   getOrdersForm,
+  getOrderByIdForm,
+  changeUpgradeConditionForm,
+  deleteAdviseByIdForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -109,6 +112,33 @@ export const getOrdersAPI = (form: getOrdersForm) => {
   return service({
     method: 'GET',
     url: '/orders/getAll',
+    params: form,
+  });
+};
+export const getOrderDetailsAPI = (form: getOrderByIdForm) => {
+  return service({
+    method: 'GET',
+    url: '/orders',
+    params: form,
+  });
+};
+export const changeUpgradeConditionAPI = (form: changeUpgradeConditionForm) => {
+  return service({
+    method: 'POST',
+    url: '/dict-vip-level/changeUpgradeCondition',
+    data: form,
+  });
+};
+export const getAdvisesAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/advise/getAdvises',
+  });
+};
+export const deleteAdviseByIdAPI = (form: deleteAdviseByIdForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/advise/deleteById',
     params: form,
   });
 };

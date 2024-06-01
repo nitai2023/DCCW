@@ -19,12 +19,14 @@ import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import FeedIcon from '@mui/icons-material/Feed';
 import ContactEmergencyIcon from '@mui/icons-material/ContactEmergency';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
-import EqualizerIcon from '@mui/icons-material/Equalizer';
+import ManageAccountsIcon from '@mui/icons-material/ManageAccounts';
 import PeopleIcon from '@mui/icons-material/People';
 // import LocalFireDepartmentIcon from '@mui/icons-material/LocalFireDepartment';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
 import CreateIcon from '@mui/icons-material/Create';
+import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
+import AssignmentIcon from '@mui/icons-material/Assignment';
 import { useState } from 'react';
 const drawerWidth = 240;
 
@@ -114,7 +116,7 @@ export function Dashboard() {
                 <ListItem>
                   <ListItemButton>
                     <ListItemIcon>
-                      <MailIcon color="success" fontSize="large" />
+                      <ManageAccountsIcon color="success" fontSize="large" />
                     </ListItemIcon>
                     管理员管理
                     <ListItemText />
@@ -158,7 +160,7 @@ export function Dashboard() {
                 <ListItem>
                   <ListItemButton>
                     <ListItemIcon>
-                      <PeopleIcon color="success" fontSize="large" />
+                      <DirectionsBikeIcon color="success" fontSize="large" />
                     </ListItemIcon>
                     骑手信息管理
                     <ListItemText />
@@ -169,7 +171,7 @@ export function Dashboard() {
                 <ListItem>
                   <ListItemButton>
                     <ListItemIcon>
-                      <PeopleIcon color="success" fontSize="large" />
+                      <MailIcon color="success" fontSize="large" />
                     </ListItemIcon>
                     聊天
                     <ListItemText />
@@ -180,7 +182,7 @@ export function Dashboard() {
                 <ListItem>
                   <ListItemButton>
                     <ListItemIcon>
-                      <PeopleIcon color="success" fontSize="large" />
+                      <AssignmentIcon color="success" fontSize="large" />
                     </ListItemIcon>
                     订单
                     <ListItemText />

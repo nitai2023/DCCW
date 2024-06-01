@@ -11,6 +11,7 @@ import {
   FormControl,
   FormControlLabel,
   Switch,
+  Box,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
 import {
@@ -68,7 +69,7 @@ export function Commodity() {
     });
   }, []);
   return (
-    <div
+    <Box
       style={{
         display: 'flex',
         flexDirection: 'column',
@@ -76,17 +77,17 @@ export function Commodity() {
         height: '100%',
       }}
     >
-      <div
+      <Box
         style={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
         }}
       >
-        <Typography variant="h3" gutterBottom component="div">
+        <Typography variant="h3" gutterBottom>
           商品列表
         </Typography>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <Box style={{ display: 'flex', alignItems: 'center' }}>
           <FormControlLabel
             control={
               <Switch
@@ -157,8 +158,8 @@ export function Commodity() {
           >
             添加商品
           </Button>
-        </div>
-      </div>
+        </Box>
+      </Box>
       <Grid container spacing={4} alignItems="center" justifyContent="center">
         {commodity.map((product, index) => (
           <Grid item key={index}>
@@ -174,9 +175,9 @@ export function Commodity() {
           </Grid>
         ))}
       </Grid>
-      <div>
+      <Box>
         {commodity.length === 0 ? (
-          <div></div>
+          <Box></Box>
         ) : (
           <Pagination
             count={Math.ceil(select.total / 8)}
@@ -191,7 +192,7 @@ export function Commodity() {
             }}
           />
         )}
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }
