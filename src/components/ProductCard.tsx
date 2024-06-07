@@ -6,9 +6,16 @@ import {
   CardMedia,
   Button,
   Grid,
+  Tab,
+  Box,
+  Dialog,
+  DialogContent,
 } from '@mui/material';
 import { deleteCommodityByIdAPI } from '../request/api';
-import { DataDialog } from './SaleSpecifications';
+import { BatchDialog } from './SaleSpecifications';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 //商品卡片
 export function ProductCard({
   commodityId,
@@ -20,6 +27,11 @@ export function ProductCard({
   unit,
 }) {
   const [open, setOpen] = useState(false);
+  const [value, setValue] = useState('1');
+
+  const handleChange = (e, newValue: string) => {
+    setValue(newValue);
+  };
   return (
     <Card
       sx={{
@@ -99,11 +111,27 @@ export function ProductCard({
           </Grid>
         </Grid>
       </CardContent>
-      <DataDialog
+      <Dialog
         open={open}
-        handleClose={() => setOpen(false)}
-        commodityId={commodityId}
-      />
+        onClose={() => setOpen(false)}
+        fullWidth
+        maxWidth={'xl'}
+      >
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="商品规格" value="1" />
+              <Tab label="商品批次" value="2" />
+            </TabList>
+          </Box>
+          <DialogContent>
+            <TabPanel value="1">
+              <BatchDialog commodityId={commodityId} />
+            </TabPanel>
+            <TabPanel value="2">商品批次</TabPanel>
+          </DialogContent>
+        </TabContext>
+      </Dialog>
     </Card>
   );
 }

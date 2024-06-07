@@ -56,8 +56,13 @@ export function RiderInformationManagement() {
       });
   }
   function updateRider() {
-    console.log(rider);
     axios.post(`http://182.92.128.37:8501//rider/updateRider`, rider);
+  }
+  function processApply(id: string, isApply: number) {
+    axios.post(`http://182.92.128.37:8501//rider/processApply`, {
+      isApply: isApply,
+      riderId: id,
+    });
   }
   return (
     <Box
@@ -85,14 +90,13 @@ export function RiderInformationManagement() {
           <Table>
             <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
               <TableRow>
-                <TableCell>Avatar</TableCell>
-                <TableCell>Is Apply</TableCell>
-                <TableCell>Is Student</TableCell>
-                <TableCell>Nick Name</TableCell>
-                <TableCell>Open ID</TableCell>
-                <TableCell>Phone</TableCell>
-                <TableCell>Real Name</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>头像</TableCell>
+                <TableCell>昵称</TableCell>
+                <TableCell>姓名</TableCell>
+                <TableCell>是否通过认证</TableCell>
+                <TableCell>是否是学生</TableCell>
+                <TableCell>电话</TableCell>
+                <TableCell>操作</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
@@ -105,13 +109,12 @@ export function RiderInformationManagement() {
                       style={{ width: 50, height: 50 }}
                     />
                   </TableCell>
+                  <TableCell>{user.nickName}</TableCell>
+                  <TableCell>{user.realName}</TableCell>
                   <TableCell>{user.isApply ? 'Yes' : 'No'}</TableCell>
                   <TableCell>{user.isStudent}</TableCell>
-                  <TableCell>{user.nickName}</TableCell>
-                  <TableCell>{user.openId}</TableCell>
                   <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.realName}</TableCell>
-                  <TableCell>
+                  <TableCell align="right">
                     <TableCell>
                       <IconButton
                         color="primary"
@@ -143,28 +146,38 @@ export function RiderInformationManagement() {
             <TableHead>
               <TableRow>
                 <TableCell>idCardCode</TableCell>
-                <TableCell>idCardSrc</TableCell>
-                <TableCell>isStudent</TableCell>
-                <TableCell>phone</TableCell>
-                <TableCell>realName</TableCell>
-                <TableCell>riderId</TableCell>
+                <TableCell>骑手ID</TableCell>
+                <TableCell>姓名</TableCell>
+                <TableCell>是否是学生</TableCell>
+                <TableCell>电话</TableCell>
                 <TableCell>studentIdCode</TableCell>
-                <TableCell>Action</TableCell>
+                <TableCell>操作</TableCell>
               </TableRow>
             </TableHead>
             <TableBody>
               {riders.map((user, index) => (
                 <TableRow key={index}>
                   <TableCell>{user.idCardCode}</TableCell>
-                  <TableCell>{user.idCardSrc}</TableCell>
+                  <TableCell>{user.riderId}</TableCell>
+                  <TableCell>{user.realName}</TableCell>
                   <TableCell>{user.isStudent}</TableCell>
                   <TableCell>{user.phone}</TableCell>
-                  <TableCell>{user.realName}</TableCell>
-                  <TableCell>{user.riderId}</TableCell>
                   <TableCell>{user.studentIdCode}</TableCell>
                   <TableCell>
-                    <Button>通过</Button>
-                    <Button>拒绝</Button>
+                    <Button
+                      onClick={() => {
+                        processApply(user.riderId, 1);
+                      }}
+                    >
+                      通过
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        processApply(user.riderId, -1);
+                      }}
+                    >
+                      拒绝
+                    </Button>
                   </TableCell>
                 </TableRow>
               ))}
@@ -181,6 +194,7 @@ export function RiderInformationManagement() {
           display: 'flex',
           justifyContent: 'center',
           alignSelf: 'end',
+          marginTop: '10px',
         }}
       />
       <Dialog

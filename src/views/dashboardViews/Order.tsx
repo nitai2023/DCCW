@@ -55,15 +55,6 @@ export function Order() {
           'http://school-life-dev.oss-cn-chengdu.aliyuncs.com/e/6/5/e65324be-dd22-4cb0-90dc-91b74c64fd43.png?Expires=4870498134&OSSAccessKeyId=LTAI5tQM5NcbgCPDjtxorDFD&Signature=B2UY7L8vkF0FiHcP%2BbfcnGiN4ZY%3D,http://school-life-dev.oss-cn-chengdu.aliyuncs.com/e/6/5/e65324be-dd22-4cb0-90dc-91b74c64fd43.png?Expires=4870498134&OSSAccessKeyId=LTAI5tQM5NcbgCPDjtxorDFD&Signature=B2UY7L8vkF0FiHcP%2BbfcnGiN4ZY%3D',
         taste: '口味613',
       },
-      {
-        saleNum: 2,
-        totalMoney: null,
-        lastPrice: null,
-        commodityName: '商品408',
-        pictureUrls:
-          'http://school-life-dev.oss-cn-chengdu.aliyuncs.com/e/6/5/e65324be-dd22-4cb0-90dc-91b74c64fd43.png?Expires=4870498134&OSSAccessKeyId=LTAI5tQM5NcbgCPDjtxorDFD&Signature=B2UY7L8vkF0FiHcP%2BbfcnGiN4ZY%3D,http://school-life-dev.oss-cn-chengdu.aliyuncs.com/e/6/5/e65324be-dd22-4cb0-90dc-91b74c64fd43.png?Expires=4870498134&OSSAccessKeyId=LTAI5tQM5NcbgCPDjtxorDFD&Signature=B2UY7L8vkF0FiHcP%2BbfcnGiN4ZY%3D',
-        taste: '口味408',
-      },
     ],
   });
   const [open, setOpen] = useState(false);
@@ -87,18 +78,17 @@ export function Order() {
   };
   return (
     <Box sx={{ p: 2 }}>
-      <Typography>订单</Typography>
       <TableContainer component={Paper} sx={{ marginBottom: '20px' }}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
             <TableRow>
-              <TableCell>ordersId</TableCell>
-              <TableCell>submitTime</TableCell>
-              <TableCell>riderId</TableCell>
-              <TableCell>shipName</TableCell>
-              <TableCell>phoneNum</TableCell>
-              <TableCell>address</TableCell>
-              <TableCell>orderStatusCode</TableCell>
+              <TableCell>订单ID</TableCell>
+              <TableCell>建立时间</TableCell>
+              <TableCell>骑手ID</TableCell>
+              <TableCell>收货人</TableCell>
+              <TableCell>电话</TableCell>
+              <TableCell>地址</TableCell>
+              <TableCell>订单状态</TableCell>
               <TableCell>操作</TableCell>
             </TableRow>
           </TableHead>

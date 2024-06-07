@@ -61,3 +61,9 @@ export interface searchCommoditiesForm {
   size: number;
   searchKeyWord: string;
 }
+export interface addManagerForm {
+  nickname: string;
+  avatarUrl: string;
+  password: string;
+  phoneNum: string;
+}

@@ -37,8 +37,8 @@ const initialData = [
     deleted: false,
   },
 ];
-//商品详情
-export function DataDialog({ open, handleClose, commodityId }) {
+//商品规格
+export function BatchDialog({ commodityId }) {
   const [data, setData] = useState(initialData);
   const [dialog, setDialog] = useState({
     index: 0,
@@ -67,80 +67,69 @@ export function DataDialog({ open, handleClose, commodityId }) {
     console.log(555);
   }
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={false} fullWidth>
-      <DialogTitle>商品规格详情</DialogTitle>
-      {/* 商品规格 */}
-      <DialogContent>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>原价</TableCell>
-                <TableCell>价格</TableCell>
-                <TableCell>折扣</TableCell>
-                <TableCell>单位</TableCell>
-                <TableCell>备注</TableCell>
-                <TableCell>出售或出租</TableCell>
-                <TableCell>排序号</TableCell>
-                <TableCell>是否默认</TableCell>
-                <TableCell>购买限制</TableCell>
-                <TableCell>操作</TableCell>
+    <Box>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>原价</TableCell>
+              <TableCell>价格</TableCell>
+              <TableCell>折扣</TableCell>
+              <TableCell>单位</TableCell>
+              <TableCell>备注</TableCell>
+              <TableCell>出售或出租</TableCell>
+              <TableCell>排序号</TableCell>
+              <TableCell>是否默认</TableCell>
+              <TableCell>购买限制</TableCell>
+              <TableCell>操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((row, index) => (
+              <TableRow key={row.specificationId}>
+                <TableCell>{row.originalPrice}</TableCell>
+                <TableCell>{row.price}</TableCell>
+                <TableCell>{row.discount}</TableCell>
+                <TableCell>{row.unit}</TableCell>
+                <TableCell>{row.remark}</TableCell>
+                <TableCell>{row.saleOrRent ? '是' : '否'}</TableCell>
+                <TableCell>{row.sortNum}</TableCell>
+                <TableCell>{row.isDefault ? '是' : '否'}</TableCell>
+                <TableCell>{row.purchaseLimit}</TableCell>
+                <TableCell>
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      setDialog({ ...dialog, index: index, edit: true });
+                      setSpecification(() => ({
+                        ssId: row.specificationId,
+                        originalPrice: row.originalPrice,
+                        price: row.price,
+                        unit: row.unit,
+                        isDefault: row.isDefault,
+                        remark: row.remark,
+                        saleOrRent: row.saleOrRent,
+                        purchaseLimit: row.purchaseLimit,
+                      }));
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => {
+                      console.log('删除');
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
               </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row, index) => (
-                <TableRow key={row.specificationId}>
-                  <TableCell>{row.originalPrice}</TableCell>
-                  <TableCell>{row.price}</TableCell>
-                  <TableCell>{row.discount}</TableCell>
-                  <TableCell>{row.unit}</TableCell>
-                  <TableCell>{row.remark}</TableCell>
-                  <TableCell>{row.saleOrRent ? '是' : '否'}</TableCell>
-                  <TableCell>{row.sortNum}</TableCell>
-                  <TableCell>{row.isDefault ? '是' : '否'}</TableCell>
-                  <TableCell>{row.purchaseLimit}</TableCell>
-                  <TableCell>
-                    <IconButton
-                      color="primary"
-                      onClick={() => {
-                        setDialog({ ...dialog, index: index, edit: true });
-                        setSpecification(() => ({
-                          ssId: row.specificationId,
-                          originalPrice: row.originalPrice,
-                          price: row.price,
-                          unit: row.unit,
-                          isDefault: row.isDefault,
-                          remark: row.remark,
-                          saleOrRent: row.saleOrRent,
-                          purchaseLimit: row.purchaseLimit,
-                        }));
-                      }}
-                    >
-                      <EditIcon />
-                    </IconButton>
-                    <IconButton
-                      color="error"
-                      onClick={() => {
-                        console.log('删除');
-                      }}
-                    >
-                      <DeleteIcon />
-                    </IconButton>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="success">
-          添加
-        </Button>
-        <Button onClick={handleClose} color="primary">
-          关闭
-        </Button>
-      </DialogActions>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+
       <Dialog
         open={dialog.edit}
         onClose={() => {
@@ -231,6 +220,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Dialog>
+    </Box>
   );
 }
+//商品批次

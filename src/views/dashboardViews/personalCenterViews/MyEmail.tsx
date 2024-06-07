@@ -1,42 +1,28 @@
-import Accordion from '@mui/material/Accordion';
-import AccordionSummary from '@mui/material/AccordionSummary';
-import AccordionDetails from '@mui/material/AccordionDetails';
-import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import { userMessagePreviewinfoAPI } from '../../../request/api';
-import Button from '@mui/material/Button';
+import { Tab, Box } from '@mui/material';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
 import { useEffect, useState } from 'react';
 export function MyEmail() {
-  const [Category, setCategory] = useState([]);
-  useEffect(() => {
-    userMessagePreviewinfoAPI().then((res) => {
-      console.log(res.data.announcementVoList);
-      setCategory(res.data.announcementVoList);
-    });
-  }, []);
-  const messageItems = Category.map((item) => (
-    <Accordion>
-      <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
-        aria-controls="panel1a-content"
-        id="panel1a-header"
-      >
-        <Typography>{item.title}</Typography>
-      </AccordionSummary>
-      <AccordionDetails>
-        <Typography>{item.content}</Typography>
-        <Button variant="contained" color="error">
-          删除
-        </Button>
-      </AccordionDetails>
-    </Accordion>
-  ));
+  const [value, setValue] = useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
   return (
-    <div style={{ padding: '20px' }}>
-      <Typography variant="h3" gutterBottom component="div">
-        我的消息
-      </Typography>
-      <div>{messageItems}</div>
-    </div>
+    <Box sx={{ width: '100%', typography: 'body1' }}>
+      <TabContext value={value}>
+        <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <TabList onChange={handleChange} aria-label="lab API tabs example">
+            <Tab label="Item One" value="1" />
+            <Tab label="Item Two" value="2" />
+            <Tab label="Item Three" value="3" />
+          </TabList>
+        </Box>
+        <TabPanel value="1">Item One</TabPanel>
+        <TabPanel value="2">Item Two</TabPanel>
+        <TabPanel value="3">Item Three</TabPanel>
+      </TabContext>
+    </Box>
   );
 }

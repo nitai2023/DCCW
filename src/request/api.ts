@@ -15,6 +15,7 @@ import {
   changeUpgradeConditionForm,
   deleteAdviseByIdForm,
   searchCommoditiesForm,
+  addManagerForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -148,5 +149,12 @@ export const searchCommoditiesAPI = (form: searchCommoditiesForm) => {
     method: 'GET',
     url: '/commodity/searchCommodities',
     params: form,
+  });
+};
+export const addManagerAPI = (form: addManagerForm) => {
+  return service({
+    method: 'POST',
+    url: '/manager/addManager',
+    data: form,
   });
 };
