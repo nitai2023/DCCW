@@ -32,7 +32,7 @@ const rows = [
     createTime: '2024-05-07',
   },
 ];
-
+// 管理员管理
 export function ManageAdmin() {
   const [data, setData] = useState(rows);
   const [open, setOpen] = useState(false);

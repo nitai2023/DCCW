@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { number } from 'echarts';
+// 骑手信息管理
 export function RiderInformationManagement() {
   const [page, setPage] = useState({ pageNum: 1, pageSize: 10, total: 0 });
   const [select, setSelect] = useState(true);

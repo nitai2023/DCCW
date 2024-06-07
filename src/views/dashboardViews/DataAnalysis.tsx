@@ -2,6 +2,7 @@ import { Box, Typography } from '@mui/material';
 import ReactECharts from 'echarts-for-react';
 import { useEffect, useState } from 'react';
 import { getCommodityAnalysisAPI } from '../../request/api';
+// 数据分析
 export function DataAnalysis() {
   const [salesData, setSalesData] = useState([]);
   useEffect(() => {

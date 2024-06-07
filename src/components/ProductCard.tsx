@@ -9,6 +9,7 @@ import {
 } from '@mui/material';
 import { deleteCommodityByIdAPI } from '../request/api';
 import { DataDialog } from './SaleSpecifications';
+//商品卡片
 export function ProductCard({
   commodityId,
   title,

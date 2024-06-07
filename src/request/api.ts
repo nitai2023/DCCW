@@ -14,6 +14,7 @@ import {
   getOrderByIdForm,
   changeUpgradeConditionForm,
   deleteAdviseByIdForm,
+  searchCommoditiesForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -139,6 +140,13 @@ export const deleteAdviseByIdAPI = (form: deleteAdviseByIdForm) => {
   return service({
     method: 'DELETE',
     url: '/advise/deleteById',
+    params: form,
+  });
+};
+export const searchCommoditiesAPI = (form: searchCommoditiesForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/searchCommodities',
     params: form,
   });
 };

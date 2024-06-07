@@ -18,7 +18,9 @@ import {
   getCommodityAPI,
   getCategoryAPI,
   getCommodityByCategoryAPI,
+  searchCommoditiesAPI,
 } from '../../request/api';
+//商品
 export function Commodity() {
   //查询商品
   const [select, setSelect] = useState({
@@ -28,6 +30,7 @@ export function Commodity() {
     category: '',
     option: true,
     total: 0,
+    SearchKeyWord: '',
   });
   const [commodity, setCommodity] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
@@ -143,11 +146,28 @@ export function Commodity() {
             </FormControl>
           )}
 
-          <TextField label="商品名称" style={{ width: '200px' }}></TextField>
+          <TextField
+            label="商品名称"
+            style={{ width: '200px' }}
+            value={select.SearchKeyWord}
+            onChange={(e) => {
+              setSelect({ ...select, SearchKeyWord: e.target.value });
+            }}
+          ></TextField>
           <Button
             variant="contained"
             color="primary"
             style={{ height: '56px', width: '100px', marginRight: '10px' }}
+            onClick={() => {
+              searchCommoditiesAPI({
+                from: select.from,
+                size: select.size,
+                searchKeyWord: select.SearchKeyWord,
+              }).then((res) => {
+                console.log(res);
+                setCommodity(res.data.commodityVoList);
+              });
+            }}
           >
             查询
           </Button>
@@ -160,9 +180,15 @@ export function Commodity() {
           </Button>
         </Box>
       </Box>
-      <Grid container spacing={4} alignItems="center" justifyContent="center">
+      <Grid
+        container
+        spacing={4}
+        alignItems="center"
+        justifyContent="center"
+        sx={{ width: '100%', marginLeft: '0', marginTop: '-10px' }}
+      >
         {commodity.map((product, index) => (
-          <Grid item key={index}>
+          <Grid item key={index} spacing={4}>
             <ProductCard
               commodityId={product.commodityId}
               title={product.title}

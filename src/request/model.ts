@@ -56,3 +56,8 @@ export interface changeUpgradeConditionForm {
 export interface deleteAdviseByIdForm {
   adviseId: string;
 }
+export interface searchCommoditiesForm {
+  from: number;
+  size: number;
+  searchKeyWord: string;
+}

@@ -17,6 +17,7 @@ import {
   FormControlLabel,
   Checkbox,
   TextField,
+  Box,
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
@@ -36,7 +37,7 @@ const initialData = [
     deleted: false,
   },
 ];
-
+//商品详情
 export function DataDialog({ open, handleClose, commodityId }) {
   const [data, setData] = useState(initialData);
   const [dialog, setDialog] = useState({
@@ -44,7 +45,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
     edit: false,
     add: false,
   });
-  const [form, setForm] = useState({
+  const [specification, setSpecification] = useState({
     ssId: '',
     originalPrice: 0,
     price: 0,
@@ -68,6 +69,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
   return (
     <Dialog open={open} onClose={handleClose} maxWidth={false} fullWidth>
       <DialogTitle>商品规格详情</DialogTitle>
+      {/* 商品规格 */}
       <DialogContent>
         <TableContainer component={Paper}>
           <Table>
@@ -102,7 +104,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
                       color="primary"
                       onClick={() => {
                         setDialog({ ...dialog, index: index, edit: true });
-                        setForm(() => ({
+                        setSpecification(() => ({
                           ssId: row.specificationId,
                           originalPrice: row.originalPrice,
                           price: row.price,
@@ -153,7 +155,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="originalPrice"
             type="number"
             fullWidth
-            value={form.originalPrice}
+            value={specification.originalPrice}
             onChange={handleChange}
           />
           <TextField
@@ -162,7 +164,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="price"
             type="number"
             fullWidth
-            value={form.price}
+            value={specification.price}
             onChange={handleChange}
           />
           <TextField
@@ -170,7 +172,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
             label="Unit"
             name="unit"
             fullWidth
-            value={form.unit}
+            value={specification.unit}
             onChange={handleChange}
           />
           <TextField
@@ -178,45 +180,40 @@ export function DataDialog({ open, handleClose, commodityId }) {
             label="Remark"
             name="remark"
             fullWidth
-            value={form.remark}
+            value={specification.remark}
             onChange={handleChange}
           />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="saleOrRent"
-                checked={form.saleOrRent}
-                onChange={handleChange}
-              />
-            }
-            label="Sale or Rent"
-          />
-          <TextField
-            margin="dense"
-            label="Sort Number"
-            name="sortNum"
-            type="number"
-            fullWidth
-            value={form.sortNum}
-            onChange={handleChange}
-          />
-          <FormControlLabel
-            control={
-              <Checkbox
-                name="isDefault"
-                checked={form.isDefault}
-                onChange={handleChange}
-              />
-            }
-            label="Default"
-          />
+          <Box>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="saleOrRent"
+                  checked={specification.saleOrRent}
+                  onChange={handleChange}
+                />
+              }
+              label="Sale or Rent"
+            />
+          </Box>
+          <Box>
+            <FormControlLabel
+              control={
+                <Checkbox
+                  name="isDefault"
+                  checked={specification.isDefault}
+                  onChange={handleChange}
+                />
+              }
+              label="Default"
+            />
+          </Box>
           <TextField
             margin="dense"
             label="Purchase Limit"
             name="purchaseLimit"
             type="number"
             fullWidth
-            value={form.purchaseLimit}
+            value={specification.purchaseLimit}
             onChange={handleChange}
           />
         </DialogContent>
