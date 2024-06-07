@@ -7,7 +7,11 @@ import { userLoginAPI } from '../request/api';
 import { useNavigate } from 'react-router-dom';
 // 登录界面
 export function Login() {
-  const [loginForm, setLoginForm] = useState({ username: '', password: '' });
+  const [loginForm, setLoginForm] = useState({
+    loginType: 1,
+    username: '',
+    password: '',
+  });
   const navigate = useNavigate();
   async function handleLogin() {
     const res = (await userLoginAPI(loginForm)).data;

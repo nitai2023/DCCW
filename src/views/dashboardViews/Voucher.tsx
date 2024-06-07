@@ -65,18 +65,17 @@ export function Voucher() {
       startTime: dayjs(newDiscount.startTime).format('YYYY-MM-DD'),
       endTime: dayjs(newDiscount.endTime).format('YYYY-MM-DD'),
     }).then((res) => {
-      console.log(res);
+      setNewDiscount({
+        discountValue: 0,
+        minAmount: 0,
+        startTime: '',
+        endTime: '',
+        limitPerUser: 0,
+        stock: 0,
+      });
+      setUpdate(!update);
+      setOpen(false);
     });
-    setNewDiscount({
-      discountValue: 0,
-      minAmount: 0,
-      startTime: '',
-      endTime: '',
-      limitPerUser: 0,
-      stock: 0,
-    });
-    setUpdate(!update);
-    setOpen(false);
   };
   return (
     <Box sx={{ p: 2 }}>

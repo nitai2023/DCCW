@@ -1,8 +1,10 @@
 export interface loginForm {
+  loginType: number;
   username: string;
   password: string;
 }
 export interface updateManagerForm {
+  accountId: string;
   nickname: string;
   avatarUrl: string;
   password: string;
@@ -42,4 +44,20 @@ export interface getCommodityAnalysisForm {
 export interface getOrdersForm {
   pageSize: string;
   pageNumber: string;
+}
+export interface getOrderByIdForm {
+  orderId: string;
+}
+export interface changeUpgradeConditionForm {
+  vipLevelCode: string;
+  spendMin: number;
+  spendMax: number;
+}
+export interface deleteAdviseByIdForm {
+  adviseId: string;
+}
+export interface searchCommoditiesForm {
+  from: number;
+  size: number;
+  searchKeyWord: string;
 }

@@ -31,21 +31,18 @@ const rows = [
     phoneNum: '15228621357',
     createTime: '2024-05-07',
   },
-  {
-    accountId: 'c74dbd70-7738-4460-9b7c-fe30c505edba',
-    nickname: '牛鱼非',
-    avatarUrl:
-      'https://avatar-img-liuhaha.oss-cn-beijing.aliyuncs.com/b/6/a/b6a1bc30-358a-4213-b27e-4b9ee450b6ef.png',
-    account: '685875a5bbeb4fcb9150146dc738aaaf',
-    phoneNum: '15228621357',
-    createTime: '2024-04-28',
-  },
 ];
-
+// 管理员管理
 export function ManageAdmin() {
   const [data, setData] = useState(rows);
   const [open, setOpen] = useState(false);
-  const [id, setId] = useState(0);
+  const [changeAdmin, setChangeAdmin] = useState({
+    accountId: 'ac63fbdc-c2c3-4007-9d62-3751331c1a04',
+    nickname: '乔艳',
+    avatarUrl: 'http://dummyimage.com/100x100',
+    password: '123456789',
+    phoneNum: '15228621357',
+  });
   useEffect(() => {
     //请求数据
     getAllManagerAPI().then((res) => {
@@ -57,7 +54,7 @@ export function ManageAdmin() {
   };
   const updateManager = () => {
     //更新管理员信息
-    updateManagerAPT(data[id]).then((res) => {
+    updateManagerAPT(changeAdmin).then((res) => {
       console.log(res);
     });
   };
@@ -95,11 +92,8 @@ export function ManageAdmin() {
       </div>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-          <TableHead>
+          <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
             <TableRow>
-              <TableCell align="left" style={{ width: '10%' }}>
-                accountId
-              </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
                 nickname
               </TableCell>
@@ -116,12 +110,12 @@ export function ManageAdmin() {
                 createTime
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                行为
+                操作
               </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
+            {data.map((row) => (
               <TableRow
                 key={row.accountId}
                 sx={{
@@ -130,9 +124,6 @@ export function ManageAdmin() {
                   },
                 }}
               >
-                <TableCell component="th" scope="row">
-                  {row.accountId}
-                </TableCell>
                 <TableCell align="left">{row.nickname}</TableCell>
                 <TableCell align="left">{row.avatarUrl}</TableCell>
                 <TableCell align="left">{row.account}</TableCell>
@@ -140,7 +131,19 @@ export function ManageAdmin() {
                 <TableCell align="left">{row.createTime}</TableCell>
                 <TableCell align="left">
                   <TableCell>
-                    <IconButton color="primary" onClick={() => setOpen(true)}>
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        setOpen(true);
+                        setChangeAdmin({
+                          ...changeAdmin,
+                          accountId: row.accountId,
+                          nickname: row.nickname,
+                          avatarUrl: row.avatarUrl,
+                          phoneNum: row.phoneNum,
+                        });
+                      }}
+                    >
                       <EditIcon />
                     </IconButton>
                     <IconButton
@@ -170,50 +173,79 @@ export function ManageAdmin() {
         <DialogContent>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              label={data[id].accountId}
+              value={changeAdmin.accountId}
               variant="outlined"
               style={{ width: '100%', marginTop: '10px' }}
+              onChange={(e) => {
+                setChangeAdmin({
+                  ...changeAdmin,
+                  accountId: e.target.value,
+                });
+              }}
             />
           </DialogContentText>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              label={data[id].nickname}
+              value={changeAdmin.nickname}
               variant="outlined"
               style={{ width: '100%' }}
+              onChange={(e) => {
+                setChangeAdmin({
+                  ...changeAdmin,
+                  nickname: e.target.value,
+                });
+              }}
             />
           </DialogContentText>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              label={data[id].avatarUrl}
+              value={changeAdmin.avatarUrl}
               variant="outlined"
               style={{ width: '100%' }}
+              onChange={(e) => {
+                setChangeAdmin({
+                  ...changeAdmin,
+                  avatarUrl: e.target.value,
+                });
+              }}
             />
           </DialogContentText>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              label={data[id].account}
+              value={changeAdmin.password}
               variant="outlined"
               style={{ width: '100%' }}
+              onChange={(e) => {
+                setChangeAdmin({
+                  ...changeAdmin,
+                  password: e.target.value,
+                });
+              }}
             />
           </DialogContentText>
           <DialogContentText id="alert-dialog-description">
             <TextField
-              label={data[id].phoneNum}
+              value={changeAdmin.phoneNum}
               variant="outlined"
               style={{ width: '100%' }}
-            />
-          </DialogContentText>
-          <DialogContentText id="alert-dialog-description">
-            <TextField
-              label={data[id].createTime}
-              variant="outlined"
-              style={{ width: '100%' }}
+              onChange={(e) => {
+                setChangeAdmin({
+                  ...changeAdmin,
+                  phoneNum: e.target.value,
+                });
+              }}
             />
           </DialogContentText>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen(false)}>取消</Button>
-          <Button onClick={() => setOpen(false)} autoFocus>
+          <Button
+            onClick={() => {
+              updateManager();
+              setOpen(false);
+            }}
+            autoFocus
+          >
             修改
           </Button>
         </DialogActions>

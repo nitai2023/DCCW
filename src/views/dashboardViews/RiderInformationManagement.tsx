@@ -25,7 +25,7 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { number } from 'echarts';
+// 骑手信息管理
 export function RiderInformationManagement() {
   const [page, setPage] = useState({ pageNum: 1, pageSize: 10, total: 0 });
   const [select, setSelect] = useState(true);
@@ -83,7 +83,7 @@ export function RiderInformationManagement() {
       {select ? (
         <TableContainer component={Paper}>
           <Table>
-            <TableHead>
+            <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
               <TableRow>
                 <TableCell>Avatar</TableCell>
                 <TableCell>Is Apply</TableCell>
@@ -307,7 +307,7 @@ export function RiderInformationManagement() {
             }}
             color="primary"
           >
-            Close
+            取消
           </Button>
         </DialogActions>
       </Dialog>

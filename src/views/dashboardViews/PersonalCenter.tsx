@@ -1,17 +1,7 @@
-import {
-  AppBar,
-  Toolbar,
-  Typography,
-  Drawer,
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-  Divider,
-  ListItemButton,
-} from '@mui/material';
+import { Typography } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Outlet } from 'react-router-dom';
+//个人中心
 export function PersonalCenter() {
   return (
     <div
