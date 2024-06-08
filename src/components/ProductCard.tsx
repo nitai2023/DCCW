@@ -12,7 +12,7 @@ import {
   DialogContent,
 } from '@mui/material';
 import { deleteCommodityByIdAPI } from '../request/api';
-import { BatchDialog } from './SaleSpecifications';
+import { SpecificationDialog, BatchDialog } from './SaleSpecifications';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
@@ -124,11 +124,13 @@ export function ProductCard({
               <Tab label="商品批次" value="2" />
             </TabList>
           </Box>
-          <DialogContent>
+          <DialogContent sx={{ minHeight: '300px' }}>
             <TabPanel value="1">
+              <SpecificationDialog commodityId={commodityId} />
+            </TabPanel>
+            <TabPanel value="2">
               <BatchDialog commodityId={commodityId} />
             </TabPanel>
-            <TabPanel value="2">商品批次</TabPanel>
           </DialogContent>
         </TabContext>
       </Dialog>

@@ -67,3 +67,52 @@ export interface addManagerForm {
   password: string;
   phoneNum: string;
 }
+export interface getCommodityBatchForm {
+  commodityId: string;
+}
+export interface addSaleSpecificationForm {
+  commodityId: string;
+  originalPrice: number;
+  price: number;
+  unit: string;
+  remark: string;
+  saleOrRent: boolean;
+  isDefault: boolean;
+  purchaseLimit: number;
+}
+export interface alterSaleSpecificationsForm {
+  ssId: string;
+  originalPrice: number;
+  price: number;
+  unit: string;
+  remark: string;
+  saleOrRent: boolean;
+  isDefault: boolean;
+  purchaseLimit: number;
+}
+export interface deleteSaleSpecificationByIdForm {
+  ssId: string;
+}
+export interface alterCommodityBatchForm {
+  commodityBatchId: string;
+  position: string;
+  produceTime: string;
+  expiredTime: string;
+  changeStock: number;
+}
+export interface addCommodityBatchForm {
+  commodityId: string;
+  position: string;
+  produceTime: string;
+  expiredTime: string;
+  stock: number;
+}
+export interface deleteCommodityBatchByIdForm {
+  commodityBatchId: string;
+}
+export interface removeExpiredBatchForm {
+  batchId: string;
+}
+export interface removeExpiringBatchForm {
+  batchId: string;
+}

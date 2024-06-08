@@ -1,4 +1,5 @@
 // 管理接口
+import { Form } from 'react-router-dom';
 import service from './index';
 import {
   loginForm,
@@ -16,6 +17,15 @@ import {
   deleteAdviseByIdForm,
   searchCommoditiesForm,
   addManagerForm,
+  getCommodityBatchForm,
+  addSaleSpecificationForm,
+  alterSaleSpecificationsForm,
+  deleteSaleSpecificationByIdForm,
+  deleteCommodityBatchByIdForm,
+  alterCommodityBatchForm,
+  addCommodityBatchForm,
+  removeExpiredBatchForm,
+  removeExpiringBatchForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -156,5 +166,86 @@ export const addManagerAPI = (form: addManagerForm) => {
     method: 'POST',
     url: '/manager/addManager',
     data: form,
+  });
+};
+export const getCommodityBatchAPI = (form: getCommodityBatchForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getCommodityBatch',
+    params: form,
+  });
+};
+export const addSaleSpecificationAPI = (form: addSaleSpecificationForm) => {
+  return service({
+    method: 'POST',
+    url: '/sale-specification/addSaleSpecification',
+    data: form,
+  });
+};
+export const alterSaleSpecificationsAPI = (
+  form: alterSaleSpecificationsForm
+) => {
+  return service({
+    method: 'PUT',
+    url: '/sale-specification/alterSaleSpecifications',
+    data: form,
+  });
+};
+export const deleteSaleSpecificationByIdAPI = (
+  form: deleteSaleSpecificationByIdForm
+) => {
+  return service({
+    method: 'DELETE',
+    url: '/sale-specification/deleteSaleSpecification',
+    params: form,
+  });
+};
+export const alterCommodityBatchAPI = (form: alterCommodityBatchForm) => {
+  return service({
+    method: 'PUT',
+    url: '/commodity-batch/alterCommodityBatch',
+    data: form,
+  });
+};
+export const deleteCommodityBatchByIdAPI = (
+  form: deleteCommodityBatchByIdForm
+) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/deleteCommodityBatch',
+    params: form,
+  });
+};
+export const addCommodityBatchAPI = (form: addCommodityBatchForm) => {
+  return service({
+    method: 'POST',
+    url: '/commodity-batch/addCommodityBatch',
+    data: form,
+  });
+};
+export const getExpiringBatchAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getExpiringBatch',
+  });
+};
+export const getExpiredBatchAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getExpiredBatch',
+  });
+};
+export const removeExpiredBatchAPI = (form: removeExpiredBatchForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/removeExpiredBatch',
+    params: form,
+  });
+};
+export const removeExpiringBatchAPI = (form: removeExpiringBatchForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/removeExpiringBatch',
+    params: form,
   });
 };

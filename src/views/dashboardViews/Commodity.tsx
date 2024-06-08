@@ -12,17 +12,44 @@ import {
   FormControlLabel,
   Switch,
   Box,
+  Badge,
+  Dialog,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddIcon from '@mui/icons-material/Add';
 import {
   getCommodityAPI,
   getCategoryAPI,
   getCommodityByCategoryAPI,
   searchCommoditiesAPI,
+  getExpiredBatchAPI,
+  getExpiringBatchAPI,
+  removeExpiredBatchAPI,
+  removeExpiringBatchAPI,
 } from '../../request/api';
 //商品
 export function Commodity() {
   //查询商品
+  const [value, setValue] = useState('1');
+
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
   const [select, setSelect] = useState({
     from: 1,
     size: 8,
@@ -32,8 +59,22 @@ export function Commodity() {
     total: 0,
     SearchKeyWord: '',
   });
+  const [warnDialog, setWarnDialog] = useState(false);
   const [commodity, setCommodity] = useState([]);
   const [categoryList, setCategoryList] = useState([]);
+  const [expiringBatch, setExpiringBatch] = useState([]);
+  const [expiredBatch, setExpiredBatch] = useState([]);
+  const [warnTotal, setWarnTotal] = useState(0);
+  useEffect(() => {
+    getExpiringBatchAPI().then((res) => {
+      setExpiringBatch(res.data);
+      setWarnTotal(res.data.length);
+    });
+    getExpiredBatchAPI().then((res) => {
+      setExpiredBatch(res.data);
+      setWarnTotal(res.data.length + warnTotal);
+    });
+  }, []);
   useEffect(() => {
     if (select.option) {
       //分类查询商品
@@ -91,6 +132,15 @@ export function Commodity() {
           商品列表
         </Typography>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
+          <Badge
+            badgeContent={warnTotal}
+            color="error"
+            sx={{ mr: 3 }}
+            onClick={() => setWarnDialog(true)}
+          >
+            <ShoppingCartIcon color="primary" />
+          </Badge>
+
           <FormControlLabel
             control={
               <Switch
@@ -219,6 +269,92 @@ export function Commodity() {
           />
         )}
       </Box>
+      <Dialog
+        open={warnDialog}
+        onClose={() => setWarnDialog(false)}
+        fullWidth
+        maxWidth={'xl'}
+      >
+        <TabContext value={value}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+            <TabList onChange={handleChange} aria-label="lab API tabs example">
+              <Tab label="即将过期商品" value="1" />
+              <Tab label="已经过期商品" value="2" />
+            </TabList>
+          </Box>
+          <TabPanel value="1">
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>批次ID</TableCell>
+                    <TableCell>位置</TableCell>
+                    <TableCell>商品名称</TableCell>
+                    <TableCell>到期剩余时间</TableCell>
+                    <TableCell>操作</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {expiringBatch.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.managerId}</TableCell>
+                      <TableCell>{row.position}</TableCell>
+                      <TableCell>{row.commodityName}</TableCell>
+                      <TableCell>{row.timeLeft}</TableCell>
+                      <TableCell
+                        onClick={() => {
+                          removeExpiringBatchAPI(row.batchId);
+                        }}
+                      >
+                        <IconButton color="error">
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </TabPanel>
+
+          <TabPanel value="2">
+            {' '}
+            <TableContainer component={Paper}>
+              <Table>
+                <TableHead>
+                  <TableRow>
+                    <TableCell>批次ID</TableCell>
+                    <TableCell>位置</TableCell>
+                    <TableCell>商品名称</TableCell>
+                    <TableCell>已过期时间</TableCell>
+                    <TableCell>操作</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {expiredBatch.map((row, index) => (
+                    <TableRow key={index}>
+                      <TableCell>{row.managerId}</TableCell>
+                      <TableCell>{row.position}</TableCell>
+                      <TableCell>{row.commodityName}</TableCell>
+                      <TableCell>{row.timeLeft}</TableCell>
+                      <TableCell>
+                        <IconButton
+                          color="error"
+                          onClick={() => {
+                            removeExpiredBatchAPI(row.batchId);
+                          }}
+                        >
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+          </TabPanel>
+        </TabContext>
+      </Dialog>
     </Box>
   );
 }
