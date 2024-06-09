@@ -116,3 +116,17 @@ export interface removeExpiredBatchForm {
 export interface removeExpiringBatchForm {
   batchId: string;
 }
+export interface getClothesForm {
+  graphicType: string;
+  span: string;
+}
+export interface getUserForm {
+  span: string;
+}
+export interface getOrdersIntervalForm {
+  span: string;
+  granularity: string;
+}
+export interface getSearchKeyWordsForm {
+  searchKeyword: string;
+}

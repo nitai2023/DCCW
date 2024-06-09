@@ -1,5 +1,4 @@
 // 管理接口
-import { Form } from 'react-router-dom';
 import service from './index';
 import {
   loginForm,
@@ -26,6 +25,10 @@ import {
   addCommodityBatchForm,
   removeExpiredBatchForm,
   removeExpiringBatchForm,
+  getClothesForm,
+  getUserForm,
+  getOrdersIntervalForm,
+  getSearchKeyWordsForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -247,5 +250,51 @@ export const removeExpiringBatchAPI = (form: removeExpiringBatchForm) => {
     method: 'DELETE',
     url: '/commodity-batch/removeExpiringBatch',
     params: form,
+  });
+};
+export const getClothesAPI = (form: getClothesForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getClothes',
+    params: form,
+  });
+};
+export const getUserAPI = (form: getUserForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getUser',
+    params: form,
+  });
+};
+export const getAddressInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getAddressInfo',
+  });
+};
+export const getConsumptionInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getConsumptionInfo',
+  });
+};
+export const getOrdersIntervalAPI = (form: getOrdersIntervalForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getOrdersInterval',
+    params: form,
+  });
+};
+export const getSearchKeyWordsAPI = (form: getSearchKeyWordsForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/getSearchKeyWords',
+    params: form,
+  });
+};
+export const getManagerInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/manager/getManagerInfo',
   });
 };

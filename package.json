@@ -20,6 +20,7 @@
     "dayjs": "^1.11.11",
     "echarts": "^5.5.0",
     "echarts-for-react": "^3.0.2",
+    "html-react-parser": "^5.1.10",
     "jwt-decode": "^4.0.0",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.4",
