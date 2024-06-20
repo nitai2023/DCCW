@@ -70,6 +70,7 @@ export function DataAnalysis() {
     setLoading(true);
     getCommodityAnalysisAPI({ graphicType, span: time })
       .then((res) => {
+        console.log(graphicType);
         if (res && res.data) {
           setSalesData(res.data);
           setError(null);
@@ -189,13 +190,8 @@ export function DataAnalysis() {
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {loading ? (
-              <Typography>加载中...</Typography>
-            ) : error ? (
-              <Typography>{error}</Typography>
-            ) : (
+            {salesData ? (
               <Box key={graphicType}>
-                {' '}
                 {/* 使用 key 属性强制重绘 */}
                 <ReactECharts
                   option={
@@ -232,7 +228,7 @@ export function DataAnalysis() {
                               name: '销售量',
                               type: 'pie',
                               data: Object.keys(salesData).map((key) => ({
-                                value: salesData[key],
+                                value: salesData[Number(key)],
                                 name: key,
                               })),
                             },
@@ -242,6 +238,8 @@ export function DataAnalysis() {
                   style={{ height: 400, width: '100%' }}
                 />
               </Box>
+            ) : (
+              <Typography variant="body1">暂无数据</Typography>
             )}
           </TabPanel>
           <TabPanel value="2">
@@ -289,7 +287,7 @@ export function DataAnalysis() {
                     graphicType === 'bar'
                       ? {
                           title: {
-                            text: '商品销售数据',
+                            text: '服装销售数据',
                           },
                           tooltip: {},
                           legend: {
@@ -309,7 +307,7 @@ export function DataAnalysis() {
                         }
                       : {
                           title: {
-                            text: '商品销售数据',
+                            text: '服装销售数据',
                           },
                           tooltip: {
                             trigger: 'item',
@@ -319,7 +317,7 @@ export function DataAnalysis() {
                               name: '销售量',
                               type: 'pie',
                               data: Object.keys(clothesData).map((key) => ({
-                                value: clothesData[key],
+                                value: clothesData[Number(key)],
                                 name: key,
                               })),
                             },
@@ -394,7 +392,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(addressData).map((key) => ({
-                      value: addressData[key],
+                      value: addressData[Number(key)],
                       name: key,
                     })),
                   },
@@ -415,7 +413,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(consumptionData).map((key) => ({
-                      value: consumptionData[key],
+                      value: consumptionData[Number(key)],
                       name: key,
                     })),
                   },

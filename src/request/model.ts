@@ -21,18 +21,18 @@ export interface getCommodityByCategoryForm {
   category: string;
 }
 export interface deleteCommodityByIdForm {
-  commodityId: number;
+  commodityId: string;
 }
 export interface addCouponForm {
   discountValue: number;
   minAmount: number;
   startTime: string;
   endTime: string;
-  limitPerUser: number;
-  stock: number;
+  limitPerUser: number | null;
+  stock: number | null;
 }
 export interface getSaleSpecificationsForm {
-  commodityId: number;
+  commodityId: string;
 }
 export interface deleteCouponByIdForm {
   couponId: string;
@@ -129,4 +129,17 @@ export interface getOrdersIntervalForm {
 }
 export interface getSearchKeyWordsForm {
   searchKeyword: string;
+}
+export interface publishCommodityForm {
+  commodityName: string;
+  secondCategoryCode: string;
+  title: string;
+  pictureUrls: string;
+  brand: string;
+  taste: string;
+  weight: number;
+}
+export interface deleteManagerForm {
+  deleteManager: string;
+  replaceManager: string;
 }

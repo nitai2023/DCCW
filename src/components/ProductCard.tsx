@@ -17,6 +17,15 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 //商品卡片
+interface ProductCardProps {
+  commodityId: string;
+  title: string;
+  pictureUrl: string;
+  price: number;
+  originalPrice: number;
+  discount: number;
+  unit: string;
+}
 export function ProductCard({
   commodityId,
   title,
@@ -25,11 +34,11 @@ export function ProductCard({
   originalPrice,
   discount,
   unit,
-}) {
+}: ProductCardProps) {
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('1');
 
-  const handleChange = (e, newValue: string) => {
+  const handleChange = (e: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   return (

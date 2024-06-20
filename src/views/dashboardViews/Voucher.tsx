@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import dayjs from 'dayjs';
 import {
   addCouponAPI,
   getCouponListAPI,
@@ -26,53 +25,40 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 
 //优惠卷
-const initialDiscounts = [
-  {
-    couponId: '',
-    discountValue: 19,
-    minAmount: 67,
-    startTime: '1994-07-13',
-    endTime: '1985-12-17',
-    limitPerUser: 96,
-    stock: 81,
-  },
-];
+interface IDiscounts {
+  couponId: string;
+  discountValue: number;
+  minAmount: number;
+  startTime: string;
+  endTime: string;
+  limitPerUser: number;
+  stock: number;
+}
+interface INewDiscount {
+  discountValue: number;
+  minAmount: number;
+  startTime: string | '2000-01-01';
+  endTime: string | '2100-01-01';
+  limitPerUser: number | null;
+  stock: number | null;
+}
 export function Voucher() {
-  const [discounts, setDiscounts] = useState(initialDiscounts);
-  const [open, setOpen] = useState(false);
-  const [update, setUpdate] = useState(false);
-  const [newDiscount, setNewDiscount] = useState({
-    discountValue: 0,
-    minAmount: 0,
-    startTime: '',
-    endTime: '',
-    limitPerUser: 0,
-    stock: 0,
-  });
+  const [discounts, setDiscounts] = useState<IDiscounts[]>([]);
+  const [open, setOpen] = useState<boolean>(false);
+  const [update, setUpdate] = useState<boolean>(false);
+  const [newDiscount, setNewDiscount] = useState<INewDiscount | null>(null);
   useEffect(() => {
     getCouponListAPI().then((res) => {
       setDiscounts(res.data);
     });
   }, [update]);
   const handleDelete = (couponId: string) => {
-    deleteCouponByIdAPI({ couponId: couponId }).then((res) => {
+    deleteCouponByIdAPI({ couponId: couponId }).then(() => {
       setUpdate(!update);
     });
   };
   const handleAddDiscount = () => {
-    addCouponAPI({
-      ...newDiscount,
-      startTime: dayjs(newDiscount.startTime).format('YYYY-MM-DD'),
-      endTime: dayjs(newDiscount.endTime).format('YYYY-MM-DD'),
-    }).then((res) => {
-      setNewDiscount({
-        discountValue: 0,
-        minAmount: 0,
-        startTime: '',
-        endTime: '',
-        limitPerUser: 0,
-        stock: 0,
-      });
+    addCouponAPI(newDiscount!).then(() => {
       setUpdate(!update);
       setOpen(false);
     });
@@ -101,24 +87,28 @@ export function Voucher() {
             </TableRow>
           </TableHead>
           <TableBody>
-            {discounts.map((discount, index) => (
-              <TableRow key={index}>
-                <TableCell>{discount.discountValue}</TableCell>
-                <TableCell>{discount.minAmount}</TableCell>
-                <TableCell>{discount.startTime}</TableCell>
-                <TableCell>{discount.endTime}</TableCell>
-                <TableCell>{discount.limitPerUser}</TableCell>
-                <TableCell>{discount.stock}</TableCell>
-                <TableCell>
-                  <IconButton
-                    onClick={() => handleDelete(discount.couponId)}
-                    color="secondary"
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {discounts ? (
+              discounts!.map((discount, index) => (
+                <TableRow key={index}>
+                  <TableCell>{discount.discountValue}</TableCell>
+                  <TableCell>{discount.minAmount}</TableCell>
+                  <TableCell>{discount.startTime}</TableCell>
+                  <TableCell>{discount.endTime}</TableCell>
+                  <TableCell>{discount.limitPerUser}</TableCell>
+                  <TableCell>{discount.stock}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      onClick={() => handleDelete(discount.couponId)}
+                      color="secondary"
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))
+            ) : (
+              <></>
+            )}
           </TableBody>
         </Table>
         <Dialog open={open} onClose={() => setOpen(false)}>
@@ -130,10 +120,9 @@ export function Voucher() {
               label="折扣值"
               type="number"
               fullWidth
-              value={newDiscount.discountValue}
               onChange={(e) =>
                 setNewDiscount({
-                  ...newDiscount,
+                  ...newDiscount!,
                   discountValue: Number(e.target.value),
                 })
               }
@@ -143,10 +132,9 @@ export function Voucher() {
               label="最小金额"
               type="number"
               fullWidth
-              value={newDiscount.minAmount}
               onChange={(e) =>
                 setNewDiscount({
-                  ...newDiscount,
+                  ...newDiscount!,
                   minAmount: Number(e.target.value),
                 })
               }
@@ -159,9 +147,11 @@ export function Voucher() {
               InputLabelProps={{
                 shrink: true,
               }}
-              value={newDiscount.startTime}
               onChange={(e) =>
-                setNewDiscount({ ...newDiscount, startTime: e.target.value })
+                setNewDiscount({
+                  ...newDiscount!,
+                  startTime: e.target.value,
+                })
               }
             />
             <TextField
@@ -172,9 +162,8 @@ export function Voucher() {
               InputLabelProps={{
                 shrink: true,
               }}
-              value={newDiscount.endTime}
               onChange={(e) =>
-                setNewDiscount({ ...newDiscount, endTime: e.target.value })
+                setNewDiscount({ ...newDiscount!, endTime: e.target.value })
               }
             />
             <TextField
@@ -182,10 +171,9 @@ export function Voucher() {
               label="每用户限制"
               type="number"
               fullWidth
-              value={newDiscount.limitPerUser}
               onChange={(e) =>
                 setNewDiscount({
-                  ...newDiscount,
+                  ...newDiscount!,
                   limitPerUser: Number(e.target.value),
                 })
               }
@@ -195,10 +183,9 @@ export function Voucher() {
               label="库存"
               type="number"
               fullWidth
-              value={newDiscount.stock}
               onChange={(e) =>
                 setNewDiscount({
-                  ...newDiscount,
+                  ...newDiscount!,
                   stock: Number(e.target.value),
                 })
               }

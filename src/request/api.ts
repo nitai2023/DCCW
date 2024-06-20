@@ -29,6 +29,8 @@ import {
   getUserForm,
   getOrdersIntervalForm,
   getSearchKeyWordsForm,
+  publishCommodityForm,
+  deleteManagerForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -296,5 +298,19 @@ export const getManagerInfoAPI = () => {
   return service({
     method: 'GET',
     url: '/manager/getManagerInfo',
+  });
+};
+export const publishCommodityAPI = (form: publishCommodityForm) => {
+  return service({
+    method: 'POST',
+    url: '/commodity/publishCommodity',
+    data: form,
+  });
+};
+export const deleteManagerAPI = (form: deleteManagerForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/manager/deleteManager',
+    params: form,
   });
 };

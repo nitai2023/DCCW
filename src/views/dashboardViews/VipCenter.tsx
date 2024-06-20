@@ -17,19 +17,28 @@ import {
   DialogTitle,
 } from '@mui/material';
 // 会员中心
+import { changeUpgradeConditionForm } from '../../request/model';
+interface VipList {
+  vipLevelCode: string;
+  vipLevelName: string;
+  discountRate: number;
+  spendMin: number;
+  description: string;
+  spendMax: number;
+}
 export function VipCenter() {
-  const [rows, setRows] = useState([]);
-  const [changeVip, setChangeVip] = useState({});
-  const [open, setOpen] = useState(false);
+  const [rows, setRows] = useState<VipList[]>([]);
+  const [changeVip, setChangeVip] = useState<changeUpgradeConditionForm | null>(
+    null
+  );
+  const [open, setOpen] = useState<boolean>(false);
   useEffect(() => {
     getVipListAPI().then((res) => {
       setRows(res.data);
     });
   }, [changeVip]);
   const handleChange = () => {
-    changeUpgradeConditionAPI(changeVip).then((res) => {
-      setChangeVip({});
-    });
+    changeUpgradeConditionAPI(changeVip!);
   };
   return (
     <div>
@@ -124,11 +133,11 @@ export function VipCenter() {
             label="spendMin"
             type="number"
             sx={{ margin: '5px' }}
-            value={changeVip.spendMin}
+            value={changeVip?.spendMin}
             onChange={(e) => {
               setChangeVip({
-                ...changeVip,
-                spendMin: e.target.value,
+                ...changeVip!,
+                spendMin: Number(e.target.value),
               });
             }}
           />
@@ -137,11 +146,11 @@ export function VipCenter() {
             label="spendMax"
             type="number"
             sx={{ margin: '5px' }}
-            value={changeVip.spendMax}
+            value={changeVip?.spendMax}
             onChange={(e) => {
               setChangeVip({
-                ...changeVip,
-                spendMax: e.target.value,
+                ...changeVip!,
+                spendMax: Number(e.target.value),
               });
             }}
           />

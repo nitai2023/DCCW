@@ -24,6 +24,9 @@ import {
   Paper,
   IconButton,
   Autocomplete,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
 import parse from 'html-react-parser';
@@ -32,7 +35,6 @@ import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 import {
   getCommodityAPI,
@@ -45,16 +47,68 @@ import {
   removeExpiringBatchAPI,
   getSearchKeyWordsAPI,
   getManagerInfoAPI,
+  publishCommodityAPI,
 } from '../../request/api';
+import { publishCommodityForm } from '../../request/model';
 //商品
+interface IAdminInfo {
+  accountId: string;
+  nickname: string;
+  avatarUrl: string;
+  account: string;
+  phoneNum: string;
+  createTime: string;
+  accountTypeCode: string;
+}
+interface ICommodity {
+  commodityId: string;
+  monthSales: number;
+  title: string;
+  score: number;
+  pictureUrl: string;
+  deleted: boolean;
+  originalPrice: number;
+  discount: number;
+  price: number;
+  unit: string;
+  purchaseLimit: number | null;
+}
+interface ISecondCategory {
+  secondCategoryCode: string;
+  secondCategory: string;
+}
+interface ICategoryList {
+  firstCategoryCode: string;
+  firstCategory: string;
+  pic: string;
+  secondCategoryVoList: ISecondCategory[];
+}
+interface IExpiredBatch {
+  managerId: string;
+  commodityId: string;
+  batchId: string;
+  commodityName: string;
+  position: string;
+  timeLeft: string;
+}
+interface IExpiringBatch {
+  managerId: string;
+  commodityId: string;
+  batchId: string;
+  commodityName: string;
+  position: string;
+  timeLeft: string;
+}
 export function Commodity() {
   //查询商品
-  const [adminInfo, setAdminInfo] = useState({});
-  const [value, setValue] = useState('1');
-  const [suggestions, setSuggestions] = useState([]);
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue);
-  };
+  const [adminInfo, setAdminInfo] = useState<IAdminInfo | null>(null);
+  const [addDialog, setAddDialog] = useState<boolean>(false);
+  const [addCommodity, setAddCommodity] = useState<publishCommodityForm | null>(
+    null
+  );
+  const [value, setValue] = useState<string>('1');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   const [select, setSelect] = useState({
     from: 1,
     size: 8,
@@ -64,12 +118,15 @@ export function Commodity() {
     total: 0,
     SearchKeyWord: '',
   });
-  const [warnDialog, setWarnDialog] = useState(false);
-  const [commodity, setCommodity] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
-  const [expiringBatch, setExpiringBatch] = useState([]);
-  const [expiredBatch, setExpiredBatch] = useState([]);
-  const [warnTotal, setWarnTotal] = useState(0);
+  const [warnDialog, setWarnDialog] = useState<boolean>(false);
+  const [commodity, setCommodity] = useState<ICommodity[]>([]);
+  const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
+  const [expiringBatch, setExpiringBatch] = useState<IExpiringBatch[]>([]);
+  const [expiredBatch, setExpiredBatch] = useState<IExpiredBatch[]>([]);
+  const [warnTotal, setWarnTotal] = useState<number>(0);
+  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
   useEffect(() => {
     getExpiringBatchAPI().then((res) => {
       setExpiringBatch(res.data);
@@ -129,6 +186,13 @@ export function Commodity() {
       setCategoryList(res.data);
     });
   }, []);
+  function handleAdd() {
+    if (addCommodity) {
+      publishCommodityAPI(addCommodity).then(() => {
+        setAddCommodity(null);
+      });
+    }
+  }
   return (
     <Box
       style={{
@@ -149,7 +213,7 @@ export function Commodity() {
           商品列表
         </Typography>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
-          {adminInfo.accountTypeCode == 'AT0002' ? (
+          {adminInfo && adminInfo.accountTypeCode == 'AT0002' ? (
             <Badge
               badgeContent={warnTotal}
               color="error"
@@ -252,7 +316,11 @@ export function Commodity() {
           <Button
             variant="contained"
             color="success"
-            style={{ height: '56px', width: '100px' }}
+            style={{ height: '56px', width: '130px' }}
+            startIcon={<AddIcon />}
+            onClick={() => {
+              setAddDialog(true);
+            }}
           >
             添加商品
           </Button>
@@ -297,7 +365,7 @@ export function Commodity() {
           />
         )}
       </Box>
-      {adminInfo.accountTypeCode == 'AT0002' ? (
+      {adminInfo && adminInfo.accountTypeCode == 'AT0002' ? (
         <Dialog
           open={warnDialog}
           onClose={() => setWarnDialog(false)}
@@ -335,7 +403,7 @@ export function Commodity() {
                         <TableCell>{row.timeLeft}</TableCell>
                         <TableCell
                           onClick={() => {
-                            removeExpiringBatchAPI(row.batchId);
+                            removeExpiringBatchAPI({ batchId: row.batchId });
                           }}
                         >
                           <IconButton color="error">
@@ -372,7 +440,7 @@ export function Commodity() {
                           <IconButton
                             color="error"
                             onClick={() => {
-                              removeExpiredBatchAPI(row.batchId);
+                              removeExpiredBatchAPI({ batchId: row.batchId });
                             }}
                           >
                             <DeleteIcon />
@@ -389,6 +457,104 @@ export function Commodity() {
       ) : (
         <></>
       )}
+      <Dialog open={addDialog} onClose={setAddDialog}>
+        <DialogTitle>添加商品</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="商品名称"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                commodityName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="二级目录"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                secondCategoryCode: e.target.value,
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="标题"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, title: e.target.value })
+            }
+          />
+
+          <TextField
+            margin="dense"
+            label="图片地址"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, pictureUrls: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="品牌"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, brand: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="味道"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, taste: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="重量"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                weight: Number(e.target.value),
+              })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setAddDialog(false);
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button onClick={handleAdd} color="primary">
+            添加
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }

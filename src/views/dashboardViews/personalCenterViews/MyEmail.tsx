@@ -2,7 +2,7 @@ import { Tab, Box } from '@mui/material';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 
 export function MyEmail() {
   const [value, setValue] = useState('1');

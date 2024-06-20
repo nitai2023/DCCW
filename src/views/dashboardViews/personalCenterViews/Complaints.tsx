@@ -16,24 +16,39 @@ import {
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import { useEffect, useState } from 'react';
 import { getAdvisesAPI, deleteAdviseByIdAPI } from '../../../request/api';
+interface IData {
+  adviseId: string;
+  adviseContent: string;
+  adviseImages: string;
+  adviseStatusCode1: string;
+  adviseStatus1: string;
+  adviseStatusCode2: string;
+  adviseStatus2: string;
+  adviseStatusCode3: string;
+  adviseStatus3: string;
+  submitTime: string;
+  adviserName: string;
+  gender: boolean;
+  phoneNum: string;
+}
 export function Complaints() {
   const [Category, setCategory] = useState('');
-  const [data, setData] = useState([]);
-  const handleChange = (event) => {
-    setCategory(event.target.value);
+  const [data, setData] = useState<IData[]>([]);
+  const handleChange = (e: React.ChangeEvent<{ value: unknown }>) => {
+    setCategory(e.target.value as string);
   };
   useEffect(() => {
     getAdvisesAPI().then((res) => {
       setData(res.data);
     });
   }, []);
-  const deleteAdvise = (adviseId) => {
+  const deleteAdvise = (adviseId: string) => {
     deleteAdviseByIdAPI({ adviseId: adviseId });
   };
   return (
     <Box style={{ padding: '20px' }}>
       <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
-        <Typography variant="h3" gutterBottom component="Box">
+        <Typography variant="h3" gutterBottom>
           投诉列表
         </Typography>
         <Box sx={{ display: 'flex', alignItem: 'center' }}>
@@ -44,7 +59,7 @@ export function Complaints() {
               id="demo-simple-select"
               value={Category}
               label="what can I say"
-              onChange={handleChange}
+              onChange={() => handleChange}
             >
               <MenuItem value={10}>骑手配送</MenuItem>
               <MenuItem value={20}>小程序功能</MenuItem>

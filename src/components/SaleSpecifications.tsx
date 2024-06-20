@@ -8,6 +8,13 @@ import {
   deleteCommodityBatchByIdAPI,
   addCommodityBatchAPI,
 } from '../request/api';
+import {
+  getSaleSpecificationsForm,
+  alterCommodityBatchForm,
+  alterSaleSpecificationsForm,
+  addSaleSpecificationForm,
+  addCommodityBatchForm,
+} from '../request/model';
 import { useEffect, useState } from 'react';
 import {
   Table,
@@ -32,56 +39,68 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
 
+interface IData {
+  specificationId: string;
+  commodityId: string;
+  originalPrice: number;
+  price: number;
+  discount: number;
+  unit: string;
+  remark: string;
+  saleOrRent: boolean;
+  sortNum: number;
+  isDefault: boolean;
+  purchaseLimit: number;
+  deleted: boolean;
+}
+interface IBatchData {
+  batchId: string;
+  position: string;
+  commodityId: string;
+  produceTime: string;
+  expiredTime: string;
+  stock: number;
+}
 //售卖规格
-export function SpecificationDialog({ commodityId }) {
-  const [data, setData] = useState([]);
+export function SpecificationDialog({
+  commodityId,
+}: getSaleSpecificationsForm) {
+  const [data, setData] = useState<IData[]>([]);
   const [dialog, setDialog] = useState({
     index: 0,
     edit: false,
     add: false,
   });
-  const [editSpecification, setEditSpecification] = useState({
-    ssId: '',
-    originalPrice: 0,
-    price: 0,
-    unit: '',
-    saleOrRent: true,
-    isDefault: true,
-    purchaseLimit: 0,
-    remark: '',
-  });
-  const [addSpecification, setAddSpecification] = useState({
-    commodityId: '',
-    originalPrice: 0,
-    price: 0,
-    unit: '',
-    saleOrRent: false,
-    isDefault: false,
-    purchaseLimit: 0,
-    remark: '',
-  });
+  const [editSpecification, setEditSpecification] =
+    useState<alterSaleSpecificationsForm | null>(null);
+  const [addSpecification, setAddSpecification] =
+    useState<addSaleSpecificationForm | null>(null);
   useEffect(() => {
     getSaleSpecificationsAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
   }, []);
   function handleSubmit() {
-    alterSaleSpecificationsAPI(editSpecification).then((res) => {
-      setDialog({
-        index: 0,
-        edit: false,
-        add: false,
+    if (editSpecification) {
+      alterSaleSpecificationsAPI(editSpecification).then(() => {
+        setDialog({
+          index: 0,
+          edit: false,
+          add: false,
+        });
       });
-    });
+    }
   }
   function handleAdd() {
-    addSaleSpecificationAPI(addSpecification).then((res) => {
-      setDialog({
-        index: 0,
-        edit: false,
-        add: false,
+    if (addSpecification) {
+      addSaleSpecificationAPI(addSpecification).then(() => {
+        setDialog({
+          index: 0,
+          edit: false,
+          add: false,
+        });
       });
-    });
+    }
   }
   return (
     <Box>
@@ -110,49 +129,50 @@ export function SpecificationDialog({ commodityId }) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {data.map((row, index) => (
-              <TableRow key={row.specificationId}>
-                <TableCell>{row.originalPrice}</TableCell>
-                <TableCell>{row.price}</TableCell>
-                <TableCell>{row.discount}</TableCell>
-                <TableCell>{row.unit}</TableCell>
-                <TableCell>{row.remark}</TableCell>
-                <TableCell>{row.saleOrRent ? '是' : '否'}</TableCell>
-                <TableCell>{row.sortNum}</TableCell>
-                <TableCell>{row.isDefault ? '是' : '否'}</TableCell>
-                <TableCell>{row.purchaseLimit}</TableCell>
-                <TableCell>
-                  <IconButton
-                    color="primary"
-                    onClick={() => {
-                      setDialog({ ...dialog, index: index, edit: true });
-                      setEditSpecification(() => ({
-                        ssId: row.specificationId,
-                        originalPrice: row.originalPrice,
-                        price: row.price,
-                        unit: row.unit,
-                        isDefault: row.isDefault,
-                        remark: row.remark,
-                        saleOrRent: row.saleOrRent,
-                        purchaseLimit: row.purchaseLimit,
-                      }));
-                    }}
-                  >
-                    <EditIcon />
-                  </IconButton>
-                  <IconButton
-                    color="error"
-                    onClick={() => {
-                      deleteSaleSpecificationByIdAPI({
-                        ssId: row.specificationId,
-                      });
-                    }}
-                  >
-                    <DeleteIcon />
-                  </IconButton>
-                </TableCell>
-              </TableRow>
-            ))}
+            {data &&
+              data.map((row, index) => (
+                <TableRow key={row.specificationId}>
+                  <TableCell>{row.originalPrice}</TableCell>
+                  <TableCell>{row.price}</TableCell>
+                  <TableCell>{row.discount}</TableCell>
+                  <TableCell>{row.unit}</TableCell>
+                  <TableCell>{row.remark}</TableCell>
+                  <TableCell>{row.saleOrRent ? '是' : '否'}</TableCell>
+                  <TableCell>{row.sortNum}</TableCell>
+                  <TableCell>{row.isDefault ? '是' : '否'}</TableCell>
+                  <TableCell>{row.purchaseLimit}</TableCell>
+                  <TableCell>
+                    <IconButton
+                      color="primary"
+                      onClick={() => {
+                        setDialog({ ...dialog, index: index, edit: true });
+                        setEditSpecification(() => ({
+                          ssId: row.specificationId,
+                          originalPrice: row.originalPrice,
+                          price: row.price,
+                          unit: row.unit,
+                          isDefault: row.isDefault,
+                          remark: row.remark,
+                          saleOrRent: row.saleOrRent,
+                          purchaseLimit: row.purchaseLimit,
+                        }));
+                      }}
+                    >
+                      <EditIcon />
+                    </IconButton>
+                    <IconButton
+                      color="error"
+                      onClick={() => {
+                        deleteSaleSpecificationByIdAPI({
+                          ssId: row.specificationId,
+                        });
+                      }}
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                  </TableCell>
+                </TableRow>
+              ))}
           </TableBody>
         </Table>
       </TableContainer>
@@ -163,110 +183,115 @@ export function SpecificationDialog({ commodityId }) {
         }}
       >
         <DialogTitle>Edit Item</DialogTitle>
-        <DialogContent>
-          <TextField
-            margin="dense"
-            label="Original Price"
-            name="originalPrice"
-            type="number"
-            fullWidth
-            value={editSpecification.originalPrice}
-            onChange={(e) => {
-              setEditSpecification({
-                ...editSpecification,
-                originalPrice: Number(e.target.value),
-              });
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="Price"
-            name="price"
-            type="number"
-            fullWidth
-            value={editSpecification.price}
-            onChange={(e) => {
-              setEditSpecification({
-                ...editSpecification,
-                price: Number(e.target.value),
-              });
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="Unit"
-            name="unit"
-            fullWidth
-            value={editSpecification.unit}
-            onChange={(e) => {
-              setEditSpecification({
-                ...editSpecification,
-                unit: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="Remark"
-            name="remark"
-            fullWidth
-            value={editSpecification.remark}
-            onChange={(e) => {
-              setEditSpecification({
-                ...editSpecification,
-                remark: e.target.value,
-              });
-            }}
-          />
-          <Box>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="saleOrRent"
-                  checked={editSpecification.saleOrRent}
-                  onChange={(e) => {
-                    setEditSpecification({
-                      ...editSpecification,
-                      saleOrRent: e.target.checked,
-                    });
-                  }}
+        {editSpecification && (
+          <>
+            <DialogContent>
+              <TextField
+                margin="dense"
+                label="Original Price"
+                name="originalPrice"
+                type="number"
+                fullWidth
+                value={editSpecification.originalPrice}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    originalPrice: Number(e.target.value),
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Price"
+                name="price"
+                type="number"
+                fullWidth
+                value={editSpecification.price}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    price: Number(e.target.value),
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Unit"
+                name="unit"
+                fullWidth
+                value={editSpecification.unit}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    unit: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Remark"
+                name="remark"
+                fullWidth
+                value={editSpecification.remark}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    remark: e.target.value,
+                  });
+                }}
+              />
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="saleOrRent"
+                      checked={editSpecification.saleOrRent}
+                      onChange={(e) => {
+                        setEditSpecification({
+                          ...editSpecification,
+                          saleOrRent: e.target.checked,
+                        });
+                      }}
+                    />
+                  }
+                  label="Sale or Rent"
                 />
-              }
-              label="Sale or Rent"
-            />
-          </Box>
-          <Box>
-            <FormControlLabel
-              control={
-                <Checkbox
-                  name="isDefault"
-                  checked={editSpecification.isDefault}
-                  onChange={(e) => {
-                    setEditSpecification({
-                      ...editSpecification,
-                      isDefault: e.target.checked,
-                    });
-                  }}
+              </Box>
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="isDefault"
+                      checked={editSpecification.isDefault}
+                      onChange={(e) => {
+                        setEditSpecification({
+                          ...editSpecification,
+                          isDefault: e.target.checked,
+                        });
+                      }}
+                    />
+                  }
+                  label="Default"
                 />
-              }
-              label="Default"
-            />
-          </Box>
-          <TextField
-            margin="dense"
-            label="Purchase Limit"
-            name="purchaseLimit"
-            type="number"
-            fullWidth
-            value={editSpecification.purchaseLimit}
-            onChange={(e) => {
-              setEditSpecification({
-                ...editSpecification,
-                purchaseLimit: Number(e.target.value),
-              });
-            }}
-          />
-        </DialogContent>
+              </Box>
+              <TextField
+                margin="dense"
+                label="Purchase Limit"
+                name="purchaseLimit"
+                type="number"
+                fullWidth
+                value={editSpecification.purchaseLimit}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    purchaseLimit: Number(e.target.value),
+                  });
+                }}
+              />
+            </DialogContent>
+          </>
+        )}
+
         <DialogActions>
           <Button
             onClick={() => {
@@ -295,10 +320,9 @@ export function SpecificationDialog({ commodityId }) {
             name="originalPrice"
             type="number"
             fullWidth
-            value={addSpecification.originalPrice}
             onChange={(e) => {
               setAddSpecification({
-                ...addSpecification,
+                ...addSpecification!,
                 originalPrice: Number(e.target.value),
               });
             }}
@@ -309,10 +333,9 @@ export function SpecificationDialog({ commodityId }) {
             name="price"
             type="number"
             fullWidth
-            value={addSpecification.price}
             onChange={(e) => {
               setAddSpecification({
-                ...addSpecification,
+                ...addSpecification!,
                 price: Number(e.target.value),
               });
             }}
@@ -322,10 +345,9 @@ export function SpecificationDialog({ commodityId }) {
             label="Unit"
             name="unit"
             fullWidth
-            value={addSpecification.unit}
             onChange={(e) => {
               setAddSpecification({
-                ...addSpecification,
+                ...addSpecification!,
                 unit: e.target.value,
               });
             }}
@@ -335,10 +357,9 @@ export function SpecificationDialog({ commodityId }) {
             label="Remark"
             name="remark"
             fullWidth
-            value={addSpecification.remark}
             onChange={(e) => {
               setAddSpecification({
-                ...addSpecification,
+                ...addSpecification!,
                 remark: e.target.value,
               });
             }}
@@ -348,10 +369,9 @@ export function SpecificationDialog({ commodityId }) {
               control={
                 <Checkbox
                   name="saleOrRent"
-                  checked={addSpecification.saleOrRent}
                   onChange={(e) => {
                     setAddSpecification({
-                      ...addSpecification,
+                      ...addSpecification!,
                       saleOrRent: e.target.checked,
                     });
                   }}
@@ -365,10 +385,9 @@ export function SpecificationDialog({ commodityId }) {
               control={
                 <Checkbox
                   name="isDefault"
-                  checked={addSpecification.isDefault}
                   onChange={(e) => {
                     setAddSpecification({
-                      ...addSpecification,
+                      ...addSpecification!,
                       isDefault: e.target.checked,
                     });
                   }}
@@ -383,10 +402,9 @@ export function SpecificationDialog({ commodityId }) {
             name="purchaseLimit"
             type="number"
             fullWidth
-            value={addSpecification.purchaseLimit}
             onChange={(e) => {
               setAddSpecification({
-                ...addSpecification,
+                ...addSpecification!,
                 purchaseLimit: Number(e.target.value),
               });
             }}
@@ -410,31 +428,31 @@ export function SpecificationDialog({ commodityId }) {
   );
 }
 //商品批次
-export function BatchDialog({ commodityId }) {
-  const [data, setData] = useState([]);
+export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
+  const [data, setData] = useState<IBatchData[]>([]);
   const [dialog, setDialog] = useState({
     index: 0,
     edit: false,
     add: false,
   });
-  const [addBatch, setAddBatch] = useState({
-    commodityId: '',
-    position: '',
-    produceTime: '',
-    expiredTime: '',
-    stock: 0,
-  });
-  const [editBatch, setEditBatch] = useState({});
+  const [addBatch, setAddBatch] = useState<addCommodityBatchForm | null>(null);
+  const [editBatch, setEditBatch] = useState<alterCommodityBatchForm | null>(
+    null
+  );
   useEffect(() => {
     getCommodityBatchAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
   }, []);
   function handleSubmit() {
-    alterCommodityBatchAPI(editBatch);
+    if (editBatch) {
+      alterCommodityBatchAPI(editBatch);
+    }
   }
   function handleAdd() {
-    addCommodityBatchAPI(addBatch);
+    if (addBatch) {
+      addCommodityBatchAPI(addBatch);
+    }
   }
   return (
     <Box>
@@ -494,7 +512,9 @@ export function BatchDialog({ commodityId }) {
                   <IconButton
                     color="error"
                     onClick={() => {
-                      deleteCommodityBatchByIdAPI(row.batchId);
+                      deleteCommodityBatchByIdAPI({
+                        commodityBatchId: row.batchId,
+                      });
                     }}
                   >
                     <DeleteIcon />
@@ -513,54 +533,61 @@ export function BatchDialog({ commodityId }) {
       >
         <DialogTitle>更改批次</DialogTitle>
         <DialogContent>
-          <TextField
-            margin="dense"
-            label="位置"
-            name="originalPrice"
-            type="text"
-            fullWidth
-            value={editBatch.position}
-            onChange={(e) =>
-              setEditBatch({ ...editBatch, position: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="开始时间"
-            type="date"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={editBatch.produceTime}
-            onChange={(e) =>
-              setEditBatch({ ...editBatch, produceTime: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="结束时间"
-            type="date"
-            fullWidth
-            InputLabelProps={{
-              shrink: true,
-            }}
-            value={editBatch.expiredTime}
-            onChange={(e) =>
-              setEditBatch({ ...editBatch, expiredTime: e.target.value })
-            }
-          />
-          <TextField
-            margin="dense"
-            label="Price"
-            name="price"
-            type="number"
-            fullWidth
-            value={editBatch.changeStock}
-            onChange={(e) =>
-              setEditBatch({ ...editBatch, changeStock: e.target.value })
-            }
-          />
+          {editBatch && (
+            <>
+              <TextField
+                margin="dense"
+                label="位置"
+                name="originalPrice"
+                type="text"
+                fullWidth
+                value={editBatch.position}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, position: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="开始时间"
+                type="date"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={editBatch.produceTime}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, produceTime: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="结束时间"
+                type="date"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={editBatch.expiredTime}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, expiredTime: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="Price"
+                name="price"
+                type="number"
+                fullWidth
+                value={editBatch.changeStock}
+                onChange={(e) =>
+                  setEditBatch({
+                    ...editBatch,
+                    changeStock: Number(e.target.value),
+                  })
+                }
+              />
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <Button
@@ -590,9 +617,8 @@ export function BatchDialog({ commodityId }) {
             name="originalPrice"
             type="text"
             fullWidth
-            value={addBatch.position}
             onChange={(e) =>
-              setAddBatch({ ...addBatch, position: e.target.value })
+              setAddBatch({ ...addBatch!, position: e.target.value })
             }
           />
           <TextField
@@ -603,9 +629,8 @@ export function BatchDialog({ commodityId }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={addBatch.produceTime}
             onChange={(e) =>
-              setAddBatch({ ...addBatch, produceTime: e.target.value })
+              setAddBatch({ ...addBatch!, produceTime: e.target.value })
             }
           />
           <TextField
@@ -616,9 +641,8 @@ export function BatchDialog({ commodityId }) {
             InputLabelProps={{
               shrink: true,
             }}
-            value={addBatch.expiredTime}
             onChange={(e) =>
-              setAddBatch({ ...addBatch, expiredTime: e.target.value })
+              setAddBatch({ ...addBatch!, expiredTime: e.target.value })
             }
           />
           <TextField
@@ -627,9 +651,8 @@ export function BatchDialog({ commodityId }) {
             name="price"
             type="number"
             fullWidth
-            value={addBatch.changeStock}
             onChange={(e) =>
-              setAddBatch({ ...addBatch, stock: e.target.value })
+              setAddBatch({ ...addBatch!, stock: Number(e.target.value) })
             }
           />
         </DialogContent>

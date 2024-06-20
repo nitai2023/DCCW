@@ -3,8 +3,9 @@ import {
   getAllManagerAPI,
   updateManagerAPT,
   addManagerAPI,
+  deleteManagerAPI,
 } from '../../request/api';
-
+import { addManagerForm, updateManagerForm } from '../../request/model';
 import {
   Box,
   DialogActions,
@@ -30,33 +31,38 @@ import {
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
-const rows = [
-  {
-    accountId: 'ac63fbdc-c2c3-4007-9d62-3751331c1a04',
-    nickname: '乔艳',
-    avatarUrl: 'http://dummyimage.com/100x100',
-    account: 'c4c81470e54e4968ae75b7aaf843a81f',
-    phoneNum: '15228621357',
-    createTime: '2024-05-07',
-  },
-];
+interface IData {
+  accountId: string;
+  nickname: string;
+  avatarUrl: string;
+  account: string;
+  phoneNum: string;
+  createTime: string;
+}
+interface IOpen {
+  changeAdmin: boolean;
+  addAdmin: boolean;
+  deleteAdmin: boolean;
+}
+interface IDeleteAdmin {
+  deleteManager: string;
+  replaceManager: string;
+  nickname: string;
+}
+
 // 管理员管理
 export function ManageAdmin() {
-  const [data, setData] = useState(rows);
-  const [open, setOpen] = useState({
+  const [data, setData] = useState<IData[]>([]);
+  const [open, setOpen] = useState<IOpen>({
     changeAdmin: false,
     addAdmin: false,
     deleteAdmin: false,
   });
-  const [changeAdmin, setChangeAdmin] = useState({
-    accountId: 'ac63fbdc-c2c3-4007-9d62-3751331c1a04',
-    nickname: '乔艳',
-    avatarUrl: 'http://dummyimage.com/100x100',
-    password: '123456789',
-    phoneNum: '15228621357',
-  });
-  const [deleteAdmin, setDeleteAdmin] = useState({});
-  const [addAdmin, setAddAdmin] = useState({});
+  const [changeAdmin, setChangeAdmin] = useState<updateManagerForm | null>(
+    null
+  );
+  const [deleteAdmin, setDeleteAdmin] = useState<IDeleteAdmin | null>(null);
+  const [addAdmin, setAddAdmin] = useState<addManagerForm | null>(null);
   useEffect(() => {
     //请求数据
     getAllManagerAPI().then((res) => {
@@ -65,23 +71,27 @@ export function ManageAdmin() {
   }, []);
   const deleteManager = () => {
     //删除管理员
-    deleteManagerAPI({
-      deleteManager: deleteAdmin.deleteManager,
-      replaceManager: deleteAdmin.replaceManager,
-    });
+    if (deleteAdmin) {
+      deleteManagerAPI({
+        deleteManager: deleteAdmin.deleteManager,
+        replaceManager: deleteAdmin.replaceManager,
+      });
+    }
   };
   const updateManager = () => {
     //更新管理员信息
-    updateManagerAPT(changeAdmin);
+    updateManagerAPT(changeAdmin!);
   };
   const addManager = () => {
     //添加管理员
-    addManagerAPI(addAdmin);
+    if (addAdmin) {
+      addManagerAPI(addAdmin);
+    }
   };
   return (
     <Box sx={{ p: 2 }}>
-      <div
-        style={{
+      <Box
+        sx={{
           display: 'flex',
           justifyContent: 'space-between',
           alignItems: 'center',
@@ -95,7 +105,7 @@ export function ManageAdmin() {
         >
           管理员管理
         </Typography>
-        <div style={{ padding: '10px' }}>
+        <Box sx={{ padding: '10px' }}>
           <Button
             variant="contained"
             color="primary"
@@ -104,8 +114,8 @@ export function ManageAdmin() {
           >
             新增管理员
           </Button>
-        </div>
-      </div>
+        </Box>
+      </Box>
       <TableContainer component={Paper}>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
@@ -159,6 +169,7 @@ export function ManageAdmin() {
                           nickname: row.nickname,
                           avatarUrl: row.avatarUrl,
                           phoneNum: row.phoneNum,
+                          password: '',
                         });
                       }}
                     >
@@ -168,7 +179,7 @@ export function ManageAdmin() {
                       color="error"
                       onClick={() => {
                         setDeleteAdmin({
-                          ...deleteAdmin,
+                          ...deleteAdmin!,
                           deleteManager: row.accountId,
                         });
                         setOpen({ ...open, deleteAdmin: true });
@@ -193,74 +204,78 @@ export function ManageAdmin() {
       >
         <DialogTitle id="alert-dialog-title">修改信息</DialogTitle>
         <DialogContent>
-          <DialogContentText
-            id="alert-dialog-description"
-            sx={{ marginTop: 2 }}
-          >
-            <TextField
-              label="昵称"
-              value={changeAdmin.nickname}
-              variant="outlined"
-              style={{ width: '100%' }}
-              onChange={(e) => {
-                setChangeAdmin({
-                  ...changeAdmin,
-                  nickname: e.target.value,
-                });
-              }}
-            />
-          </DialogContentText>
-          <DialogContentText
-            id="alert-dialog-description"
-            sx={{ marginTop: 2 }}
-          >
-            <TextField
-              label="头像链接"
-              value={changeAdmin.avatarUrl}
-              variant="outlined"
-              style={{ width: '100%' }}
-              onChange={(e) => {
-                setChangeAdmin({
-                  ...changeAdmin,
-                  avatarUrl: e.target.value,
-                });
-              }}
-            />
-          </DialogContentText>
-          <DialogContentText
-            id="alert-dialog-description"
-            sx={{ marginTop: 2 }}
-          >
-            <TextField
-              label="密码"
-              value={changeAdmin.password}
-              variant="outlined"
-              style={{ width: '100%' }}
-              onChange={(e) => {
-                setChangeAdmin({
-                  ...changeAdmin,
-                  password: e.target.value,
-                });
-              }}
-            />
-          </DialogContentText>
-          <DialogContentText
-            id="alert-dialog-description"
-            sx={{ marginTop: 2 }}
-          >
-            <TextField
-              label="手机号"
-              value={changeAdmin.phoneNum}
-              variant="outlined"
-              style={{ width: '100%' }}
-              onChange={(e) => {
-                setChangeAdmin({
-                  ...changeAdmin,
-                  phoneNum: e.target.value,
-                });
-              }}
-            />
-          </DialogContentText>
+          {changeAdmin && (
+            <>
+              <DialogContentText
+                id="alert-dialog-description"
+                sx={{ marginTop: 2 }}
+              >
+                <TextField
+                  label="昵称"
+                  value={changeAdmin.nickname}
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  onChange={(e) => {
+                    setChangeAdmin({
+                      ...changeAdmin,
+                      nickname: e.target.value,
+                    });
+                  }}
+                />
+              </DialogContentText>
+              <DialogContentText
+                id="alert-dialog-description"
+                sx={{ marginTop: 2 }}
+              >
+                <TextField
+                  label="头像链接"
+                  value={changeAdmin.avatarUrl}
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  onChange={(e) => {
+                    setChangeAdmin({
+                      ...changeAdmin,
+                      avatarUrl: e.target.value,
+                    });
+                  }}
+                />
+              </DialogContentText>
+              <DialogContentText
+                id="alert-dialog-description"
+                sx={{ marginTop: 2 }}
+              >
+                <TextField
+                  label="密码"
+                  value={changeAdmin.password}
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  onChange={(e) => {
+                    setChangeAdmin({
+                      ...changeAdmin,
+                      password: e.target.value,
+                    });
+                  }}
+                />
+              </DialogContentText>
+              <DialogContentText
+                id="alert-dialog-description"
+                sx={{ marginTop: 2 }}
+              >
+                <TextField
+                  label="手机号"
+                  value={changeAdmin.phoneNum}
+                  variant="outlined"
+                  style={{ width: '100%' }}
+                  onChange={(e) => {
+                    setChangeAdmin({
+                      ...changeAdmin,
+                      phoneNum: e.target.value,
+                    });
+                  }}
+                />
+              </DialogContentText>
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen({ ...open, changeAdmin: false })}>
@@ -291,10 +306,9 @@ export function ManageAdmin() {
             type="text"
             fullWidth
             variant="standard"
-            value={addAdmin.nickname}
             onChange={(e) => {
               setAddAdmin({
-                ...addAdmin,
+                ...addAdmin!,
                 nickname: e.target.value,
               });
             }}
@@ -305,10 +319,9 @@ export function ManageAdmin() {
             type="text"
             fullWidth
             variant="standard"
-            value={addAdmin.avatarUrl}
             onChange={(e) => {
               setAddAdmin({
-                ...addAdmin,
+                ...addAdmin!,
                 avatarUrl: e.target.value,
               });
             }}
@@ -319,10 +332,9 @@ export function ManageAdmin() {
             type="password"
             fullWidth
             variant="standard"
-            value={addAdmin.password}
             onChange={(e) => {
               setAddAdmin({
-                ...addAdmin,
+                ...addAdmin!,
                 password: e.target.value,
               });
             }}
@@ -333,10 +345,9 @@ export function ManageAdmin() {
             type="text"
             fullWidth
             variant="standard"
-            value={addAdmin.phoneNum}
             onChange={(e) => {
               setAddAdmin({
-                ...addAdmin,
+                ...addAdmin!,
                 phoneNum: e.target.value,
               });
             }}
@@ -361,7 +372,8 @@ export function ManageAdmin() {
         <DialogTitle>删除管理员</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            选择删除后接管任务的管理员 {deleteAdmin.nickName}
+            选择删除后接管任务的管理员
+            {(deleteAdmin && deleteAdmin.nickname) || ` `}
           </DialogContentText>
           <List>
             {data.map((item) => (
@@ -369,9 +381,9 @@ export function ManageAdmin() {
                 <ListItemButton
                   onClick={() =>
                     setDeleteAdmin({
-                      ...deleteAdmin,
+                      ...deleteAdmin!,
                       replaceManager: item.accountId,
-                      nickName: item.nickname,
+                      nickname: item.nickname,
                     })
                   }
                 >
