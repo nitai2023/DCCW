@@ -124,7 +124,7 @@ export function Commodity() {
   const [expiringBatch, setExpiringBatch] = useState<IExpiringBatch[]>([]);
   const [expiredBatch, setExpiredBatch] = useState<IExpiredBatch[]>([]);
   const [warnTotal, setWarnTotal] = useState<number>(0);
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   useEffect(() => {
@@ -139,7 +139,7 @@ export function Commodity() {
     getManagerInfoAPI().then((res) => {
       setAdminInfo(res.data);
     });
-  }, []);
+  }, [warnTotal]);
   useEffect(() => {
     if (select.SearchKeyWord) {
       getSearchKeyWordsAPI({ searchKeyword: select.SearchKeyWord }).then(
@@ -152,7 +152,17 @@ export function Commodity() {
   useEffect(() => {
     if (select.option) {
       //分类查询商品
-      getCommodity();
+      getCommodityAPI({
+        from: select.from,
+        size: select.size,
+        mod: select.mod,
+      }).then((res) => {
+        setCommodity(res.data.commodityPreviewVoList);
+        setSelect({
+          ...select,
+          total: res.data.total,
+        });
+      });
     } else {
       //通过目录查询商品
       getCommodityByCategoryAPI({
@@ -167,20 +177,8 @@ export function Commodity() {
         });
       });
     }
-  }, [select.mod, select.from, select.size, select.category, select.option]);
-  function getCommodity() {
-    getCommodityAPI({
-      from: select.from,
-      size: select.size,
-      mod: select.mod,
-    }).then((res) => {
-      setCommodity(res.data.commodityPreviewVoList);
-      setSelect({
-        ...select,
-        total: res.data.total,
-      });
-    });
-  }
+  }, [select]);
+
   useEffect(() => {
     getCategoryAPI().then((res) => {
       setCategoryList(res.data);
@@ -359,7 +357,7 @@ export function Commodity() {
               display: 'flex',
               justifyContent: 'center',
             }}
-            onChange={(e, page) => {
+            onChange={(_, page) => {
               setSelect({ ...select, from: (page - 1) * 8 + 1 });
             }}
           />

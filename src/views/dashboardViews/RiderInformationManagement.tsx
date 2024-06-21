@@ -57,28 +57,25 @@ export function RiderInformationManagement() {
   const [riderApply, setRiderApply] = useState<IRidersApply[]>([]);
   const [rider, setRider] = useState<IRiders | null>(null);
   useEffect(() => {
-    select ? getRiderInfo() : getApplyInfo();
-  }, [select]);
-
-  function getRiderInfo() {
-    axios
-      .get(
-        `http://182.92.128.37:8501//rider/getAllRiders/${page.pageNum}/${page.pageSize}`
-      )
-      .then((res) => {
-        setRiders(res.data.data.list);
-        setPage({ ...page, total: res.data.data.total });
-      });
-  }
-  function getApplyInfo() {
-    axios
-      .get(
-        `http://182.92.128.37:8501//rider/getApplyInfo/${page.pageNum}/${page.pageSize}`
-      )
-      .then((res) => {
-        setRiderApply(res.data.data.list);
-      });
-  }
+    if (select) {
+      axios
+        .get(
+          `http://182.92.128.37:8501//rider/getAllRiders/${page.pageNum}/${page.pageSize}`
+        )
+        .then((res) => {
+          setRiders(res.data.data.list);
+          setPage({ ...page, total: res.data.data.total });
+        });
+    } else {
+      axios
+        .get(
+          `http://182.92.128.37:8501//rider/getApplyInfo/${page.pageNum}/${page.pageSize}`
+        )
+        .then((res) => {
+          setRiderApply(res.data.data.list);
+        });
+    }
+  }, [select, page]);
   function updateRider() {
     axios.post(`http://182.92.128.37:8501//rider/updateRider`, rider);
   }

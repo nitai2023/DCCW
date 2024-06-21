@@ -79,7 +79,7 @@ export function SpecificationDialog({
     getSaleSpecificationsAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
-  }, []);
+  }, [commodityId]);
   function handleSubmit() {
     if (editSpecification) {
       alterSaleSpecificationsAPI(editSpecification).then(() => {
@@ -443,7 +443,7 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
     getCommodityBatchAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
-  }, []);
+  }, [commodityId]);
   function handleSubmit() {
     if (editBatch) {
       alterCommodityBatchAPI(editBatch);

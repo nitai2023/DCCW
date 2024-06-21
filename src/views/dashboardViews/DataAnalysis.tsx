@@ -37,12 +37,12 @@ export function DataAnalysis() {
   const [addressData, setAddressData] = useState<SalesData[]>([]);
   const [consumptionData, setConsumptionData] = useState<SalesData[]>([]);
   const [ordersData, setOrdersData] = useState<SalesData[]>([]);
-  const handleChange = (event: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
 
   const handleTime = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newTime: string | null
   ) => {
     if (newTime !== null) {
@@ -51,7 +51,7 @@ export function DataAnalysis() {
   };
 
   const handleGraphicType = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newGraphicType: string | null
   ) => {
     if (newGraphicType !== null) {
@@ -59,7 +59,7 @@ export function DataAnalysis() {
     }
   };
   const handleGranularity = (
-    event: React.MouseEvent<HTMLElement>,
+    _: React.MouseEvent<HTMLElement>,
     newGranularity: string | null
   ) => {
     if (newGranularity !== null) {
@@ -143,7 +143,7 @@ export function DataAnalysis() {
         }
       }
     );
-  }, [graphicType, time, value]);
+  }, [graphicType, time, value, granularity]);
 
   return (
     <Box>

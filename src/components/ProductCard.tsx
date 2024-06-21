@@ -38,7 +38,7 @@ export function ProductCard({
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('1');
 
-  const handleChange = (e: React.SyntheticEvent, newValue: string) => {
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
   return (
