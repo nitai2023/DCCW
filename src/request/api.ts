@@ -31,6 +31,7 @@ import {
   getSearchKeyWordsForm,
   publishCommodityForm,
   deleteManagerForm,
+  alterCommodityForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -312,5 +313,25 @@ export const deleteManagerAPI = (form: deleteManagerForm) => {
     method: 'DELETE',
     url: '/manager/deleteManager',
     params: form,
+  });
+};
+export const alterCommodityAPI = (form: alterCommodityForm) => {
+  return service({
+    method: 'PUT',
+    url: '/commodity/alterCommodity',
+    data: form,
+  });
+};
+export const getCommodityInfoAPI = (form: getCommodityBatchForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/getCommodityInfo',
+    params: form,
+  });
+};
+export const getStockShortAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getStockShort',
   });
 };

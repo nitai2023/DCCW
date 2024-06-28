@@ -19,24 +19,31 @@ import {
   getOrdersIntervalAPI,
 } from '../../request/api';
 
-interface SalesData {
+interface SalesBarData {
   commodityName: string;
   totalSales: number;
 }
-
+interface SalespieData {
+  value: number;
+  name: string;
+}
 export function DataAnalysis() {
-  const [salesData, setSalesData] = useState<SalesData[]>([]);
-  const [clothesData, setClothesData] = useState<SalesData[]>([]);
+  const [salesData, setSalesData] = useState<SalesBarData[] | SalespieData[]>(
+    []
+  );
+  const [clothesData, setClothesData] = useState<
+    SalesBarData[] | SalespieData[]
+  >([]);
   const [value, setValue] = useState('1');
   const [time, setTime] = useState<string>('day');
   const [granularity, setGranularity] = useState<string>('15min');
   const [graphicType, setGraphicType] = useState('bar');
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const [userData, setUserData] = useState<SalesData[]>([]);
-  const [addressData, setAddressData] = useState<SalesData[]>([]);
-  const [consumptionData, setConsumptionData] = useState<SalesData[]>([]);
-  const [ordersData, setOrdersData] = useState<SalesData[]>([]);
+  const [userData, setUserData] = useState<SalesBarData[]>([]);
+  const [addressData, setAddressData] = useState([]);
+  const [consumptionData, setConsumptionData] = useState([]);
+  const [ordersData, setOrdersData] = useState([]);
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
@@ -66,45 +73,27 @@ export function DataAnalysis() {
       setGranularity(newGranularity);
     }
   };
+  function convertFormat(data) {
+    //转换数据格式
+    if (graphicType === 'bar') {
+      return Object.keys(data).map((key) => ({
+        totalSales: data[key].totalSales,
+        commodityName: data[key].commodityName,
+      }));
+    } else {
+      return Object.keys(data).map((key) => ({
+        value: data[key],
+        name: key,
+      }));
+    }
+  }
   useEffect(() => {
-    setLoading(true);
-    getCommodityAnalysisAPI({ graphicType, span: time })
-      .then((res) => {
-        console.log(graphicType);
-        if (res && res.data) {
-          setSalesData(res.data);
-          setError(null);
-        } else {
-          setSalesData([]);
-          setError('No data found');
-        }
-      })
-      .catch((error) => {
-        setSalesData([]);
-        setError('Error fetching data');
-        console.error('Error fetching sales data:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
-    getClothesAPI({ graphicType, span: time })
-      .then((res) => {
-        if (res && res.data) {
-          setClothesData(res.data);
-          setError(null);
-        } else {
-          setClothesData([]);
-          setError('No data found');
-        }
-      })
-      .catch((error) => {
-        setSalesData([]);
-        setError('Error fetching data');
-        console.error('Error fetching sales data:', error);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+    getCommodityAnalysisAPI({ graphicType, span: time }).then((res) => {
+      setSalesData(convertFormat(res.data));
+    });
+    getClothesAPI({ graphicType, span: time }).then((res) => {
+      setClothesData(convertFormat(res.data));
+    });
     getUserAPI({ span: time }).then((res) => {
       if (res && res.data) {
         setUserData(res.data);
@@ -190,56 +179,57 @@ export function DataAnalysis() {
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {salesData ? (
-              <Box key={graphicType}>
-                {/* 使用 key 属性强制重绘 */}
-                <ReactECharts
-                  option={
-                    graphicType === 'bar'
-                      ? {
-                          title: {
-                            text: '商品销售数据',
-                          },
-                          tooltip: {},
-                          legend: {
-                            data: ['销售量'],
-                          },
-                          xAxis: {
-                            data: salesData.map((item) => item.commodityName),
-                          },
-                          yAxis: {},
-                          series: [
-                            {
-                              name: '销售量',
-                              type: 'bar',
-                              data: salesData.map((item) => item.totalSales),
-                            },
-                          ],
-                        }
-                      : {
-                          title: {
-                            text: '商品销售数据',
-                          },
-                          tooltip: {
-                            trigger: 'item',
-                          },
-                          series: [
-                            {
-                              name: '销售量',
-                              type: 'pie',
-                              data: Object.keys(salesData).map((key) => ({
-                                value: salesData[Number(key)],
-                                name: key,
-                              })),
-                            },
-                          ],
-                        }
-                  }
-                  style={{ height: 400, width: '100%' }}
-                />
+            {graphicType == 'bar' ? (
+              <Box>
+                {salesData && (
+                  <ReactECharts
+                    option={{
+                      title: {
+                        text: '商品销售数据',
+                      },
+                      tooltip: {},
+                      legend: {
+                        data: ['销售量'],
+                      },
+                      xAxis: {
+                        data: salesData.map((item) => item.commodityName),
+                      },
+                      yAxis: {},
+                      series: [
+                        {
+                          name: '销售量',
+                          type: 'bar',
+                          data: salesData.map((item) => item.totalSales),
+                        },
+                      ],
+                    }}
+                    style={{ height: 400, width: '100%' }}
+                  />
+                )}
               </Box>
             ) : (
-              <Typography variant="body1">暂无数据</Typography>
+              <Box>
+                {salesData && (
+                  <ReactECharts
+                    option={{
+                      title: {
+                        text: '商品销售数据',
+                      },
+                      tooltip: {
+                        trigger: 'item',
+                      },
+                      series: [
+                        {
+                          name: '销售量',
+                          type: 'pie',
+                          data: salesData,
+                        },
+                      ],
+                    }}
+                    style={{ height: 400, width: '100%' }}
+                  />
+                )}
+              </Box>
             )}
           </TabPanel>
           <TabPanel value="2">
@@ -274,58 +264,56 @@ export function DataAnalysis() {
                 </ToggleButton>
               </ToggleButtonGroup>
             </Box>
-            {loading ? (
-              <Typography>加载中...</Typography>
-            ) : error ? (
-              <Typography>{error}</Typography>
+            {graphicType == 'bar' ? (
+              <Box>
+                {salesData && (
+                  <ReactECharts
+                    option={{
+                      title: {
+                        text: '商品销售数据',
+                      },
+                      tooltip: {},
+                      legend: {
+                        data: ['销售量'],
+                      },
+                      xAxis: {
+                        data: clothesData.map((item) => item.commodityName),
+                      },
+                      yAxis: {},
+                      series: [
+                        {
+                          name: '销售量',
+                          type: 'bar',
+                          data: clothesData.map((item) => item.totalSales),
+                        },
+                      ],
+                    }}
+                    style={{ height: 400, width: '100%' }}
+                  />
+                )}
+              </Box>
             ) : (
-              <Box key={graphicType}>
-                {' '}
-                {/* 使用 key 属性强制重绘 */}
-                <ReactECharts
-                  option={
-                    graphicType === 'bar'
-                      ? {
-                          title: {
-                            text: '服装销售数据',
-                          },
-                          tooltip: {},
-                          legend: {
-                            data: ['销售量'],
-                          },
-                          xAxis: {
-                            data: clothesData.map((item) => item.commodityName),
-                          },
-                          yAxis: {},
-                          series: [
-                            {
-                              name: '销售量',
-                              type: 'bar',
-                              data: clothesData.map((item) => item.totalSales),
-                            },
-                          ],
-                        }
-                      : {
-                          title: {
-                            text: '服装销售数据',
-                          },
-                          tooltip: {
-                            trigger: 'item',
-                          },
-                          series: [
-                            {
-                              name: '销售量',
-                              type: 'pie',
-                              data: Object.keys(clothesData).map((key) => ({
-                                value: clothesData[Number(key)],
-                                name: key,
-                              })),
-                            },
-                          ],
-                        }
-                  }
-                  style={{ height: 400, width: '100%' }}
-                />
+              <Box>
+                {salesData && (
+                  <ReactECharts
+                    option={{
+                      title: {
+                        text: '商品销售数据',
+                      },
+                      tooltip: {
+                        trigger: 'item',
+                      },
+                      series: [
+                        {
+                          name: '销售量',
+                          type: 'pie',
+                          data: clothesData,
+                        },
+                      ],
+                    }}
+                    style={{ height: 400, width: '100%' }}
+                  />
+                )}
               </Box>
             )}
           </TabPanel>
@@ -392,7 +380,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(addressData).map((key) => ({
-                      value: addressData[Number(key)],
+                      value: addressData[key],
                       name: key,
                     })),
                   },
@@ -413,7 +401,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(consumptionData).map((key) => ({
-                      value: consumptionData[Number(key)],
+                      value: consumptionData[key],
                       name: key,
                     })),
                   },
@@ -455,35 +443,30 @@ export function DataAnalysis() {
                 3h
               </ToggleButton>
             </ToggleButtonGroup>
-            {ordersData?.length > 0 && (
+            {ordersData ? (
               <ReactECharts
                 option={{
                   title: {
-                    text: '数据折线图',
+                    text: '订单的下单时间分布情况',
                   },
                   tooltip: {
-                    trigger: 'axis',
-                  },
-                  xAxis: {
-                    type: 'category',
-                    data: ordersData.map((_, index) => index + 1),
-                    name: '天数',
-                  },
-                  yAxis: {
-                    type: 'value',
-                    name: '数值',
+                    trigger: 'item',
                   },
                   series: [
                     {
-                      name: '数值',
-                      type: 'line',
-                      data: userData,
-                      smooth: true,
+                      name: '销售量',
+                      type: 'pie',
+                      data: Object.keys(ordersData).map((key) => ({
+                        value: ordersData[key],
+                        name: key,
+                      })),
                     },
                   ],
                 }}
-                style={{ height: 400, width: '100%' }}
+                style={{ height: 400, width: '50%' }}
               />
+            ) : (
+              <>暂无数据</>
             )}
           </TabPanel>
         </TabContext>

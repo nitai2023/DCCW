@@ -48,6 +48,7 @@ import {
   getSearchKeyWordsAPI,
   getManagerInfoAPI,
   publishCommodityAPI,
+  getStockShortAPI,
 } from '../../request/api';
 import { publishCommodityForm } from '../../request/model';
 //商品
@@ -99,6 +100,13 @@ interface IExpiringBatch {
   position: string;
   timeLeft: string;
 }
+interface IStockShort {
+  commodityName: string;
+  commodityId: string;
+  position1: null;
+  position2: null;
+  stock: number;
+}
 export function Commodity() {
   //查询商品
   const [adminInfo, setAdminInfo] = useState<IAdminInfo | null>(null);
@@ -123,6 +131,7 @@ export function Commodity() {
   const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
   const [expiringBatch, setExpiringBatch] = useState<IExpiringBatch[]>([]);
   const [expiredBatch, setExpiredBatch] = useState<IExpiredBatch[]>([]);
+  const [stockShort, setStockShort] = useState<IStockShort[]>([]);
   const [warnTotal, setWarnTotal] = useState<number>(0);
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
@@ -139,7 +148,11 @@ export function Commodity() {
     getManagerInfoAPI().then((res) => {
       setAdminInfo(res.data);
     });
-  }, [warnTotal]);
+    getStockShortAPI().then((res) => {
+      setWarnTotal(res.data.length + warnTotal);
+      setStockShort(res.data);
+    });
+  }, []);
   useEffect(() => {
     if (select.SearchKeyWord) {
       getSearchKeyWordsAPI({ searchKeyword: select.SearchKeyWord }).then(
@@ -152,17 +165,7 @@ export function Commodity() {
   useEffect(() => {
     if (select.option) {
       //分类查询商品
-      getCommodityAPI({
-        from: select.from,
-        size: select.size,
-        mod: select.mod,
-      }).then((res) => {
-        setCommodity(res.data.commodityPreviewVoList);
-        setSelect({
-          ...select,
-          total: res.data.total,
-        });
-      });
+      getCommodity();
     } else {
       //通过目录查询商品
       getCommodityByCategoryAPI({
@@ -177,8 +180,20 @@ export function Commodity() {
         });
       });
     }
-  }, [select]);
-
+  }, [select.mod, select.from, select.size, select.category, select.option]);
+  function getCommodity() {
+    getCommodityAPI({
+      from: select.from,
+      size: select.size,
+      mod: select.mod,
+    }).then((res) => {
+      setCommodity(res.data.commodityPreviewVoList);
+      setSelect({
+        ...select,
+        total: res.data.total,
+      });
+    });
+  }
   useEffect(() => {
     getCategoryAPI().then((res) => {
       setCategoryList(res.data);
@@ -378,6 +393,7 @@ export function Commodity() {
               >
                 <Tab label="即将过期商品" value="1" />
                 <Tab label="已经过期商品" value="2" />
+                <Tab label="库存较少商品" value="3" />
               </TabList>
             </Box>
             <TabPanel value="1">
@@ -393,23 +409,24 @@ export function Commodity() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {expiringBatch.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.managerId}</TableCell>
-                        <TableCell>{row.position}</TableCell>
-                        <TableCell>{row.commodityName}</TableCell>
-                        <TableCell>{row.timeLeft}</TableCell>
-                        <TableCell
-                          onClick={() => {
-                            removeExpiringBatchAPI({ batchId: row.batchId });
-                          }}
-                        >
-                          <IconButton color="error">
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {expiredBatch &&
+                      expiringBatch.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.managerId}</TableCell>
+                          <TableCell>{row.position}</TableCell>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.timeLeft}</TableCell>
+                          <TableCell
+                            onClick={() => {
+                              removeExpiringBatchAPI({ batchId: row.batchId });
+                            }}
+                          >
+                            <IconButton color="error">
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -428,24 +445,50 @@ export function Commodity() {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {expiredBatch.map((row, index) => (
-                      <TableRow key={index}>
-                        <TableCell>{row.managerId}</TableCell>
-                        <TableCell>{row.position}</TableCell>
-                        <TableCell>{row.commodityName}</TableCell>
-                        <TableCell>{row.timeLeft}</TableCell>
-                        <TableCell>
-                          <IconButton
-                            color="error"
-                            onClick={() => {
-                              removeExpiredBatchAPI({ batchId: row.batchId });
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-                        </TableCell>
-                      </TableRow>
-                    ))}
+                    {expiredBatch &&
+                      expiredBatch.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.managerId}</TableCell>
+                          <TableCell>{row.position}</TableCell>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.timeLeft}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              color="error"
+                              onClick={() => {
+                                removeExpiredBatchAPI({ batchId: row.batchId });
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+            <TabPanel value="3">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>商品名称</TableCell>
+                      <TableCell>位置1</TableCell>
+                      <TableCell>位置2</TableCell>
+                      <TableCell>库存</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {stockShort &&
+                      stockShort.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.position1}</TableCell>
+                          <TableCell>{row.position2}</TableCell>
+                          <TableCell>{row.stock}</TableCell>
+                        </TableRow>
+                      ))}
                   </TableBody>
                 </Table>
               </TableContainer>
@@ -535,6 +578,19 @@ export function Commodity() {
               setAddCommodity({
                 ...addCommodity!,
                 weight: Number(e.target.value),
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="最低阈值"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                minimumThreshold: Number(e.target.value),
               })
             }
           />

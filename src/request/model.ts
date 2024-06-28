@@ -138,8 +138,20 @@ export interface publishCommodityForm {
   brand: string;
   taste: string;
   weight: number;
+  minimumThreshold: number;
 }
 export interface deleteManagerForm {
   deleteManager: string;
   replaceManager: string;
+}
+export interface alterCommodityForm {
+  commodityId: string;
+  commodityName: string;
+  secondCategoryCode: string;
+  title: string;
+  pictureUrls: string;
+  brand: string;
+  taste: string;
+  weight: number;
+  minimumThreshold: number;
 }

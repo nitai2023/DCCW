@@ -80,7 +80,7 @@ export function Order() {
         total: res.data.total,
       });
     });
-  }, [pages]);
+  }, [pages.pageNumber]);
   const handleOpen = (ordersId: string) => {
     getOrderDetailsAPI({ orderId: ordersId }).then((res) => {
       setOrder(res.data);

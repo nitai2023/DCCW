@@ -75,7 +75,7 @@ export function RiderInformationManagement() {
           setRiderApply(res.data.data.list);
         });
     }
-  }, [select, page]);
+  }, [select]);
   function updateRider() {
     axios.post(`http://182.92.128.37:8501//rider/updateRider`, rider);
   }

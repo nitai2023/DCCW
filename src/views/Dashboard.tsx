@@ -35,7 +35,6 @@ export function Dashboard() {
   const [admin, setAdmin] = useState<IAdmin | null>(null);
   useEffect(() => {
     getManagerInfoAPI().then((res) => {
-      console.log(res.data);
       setAdmin(res.data);
     });
   }, []);

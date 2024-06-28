@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   Card,
   CardContent,
@@ -10,8 +10,16 @@ import {
   Box,
   Dialog,
   DialogContent,
+  DialogTitle,
+  DialogActions,
+  TextField,
 } from '@mui/material';
-import { deleteCommodityByIdAPI } from '../request/api';
+import {
+  deleteCommodityByIdAPI,
+  alterCommodityAPI,
+  getCommodityInfoAPI,
+} from '../request/api';
+import { alterCommodityForm } from '../request/model';
 import { SpecificationDialog, BatchDialog } from './SaleSpecifications';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
@@ -35,12 +43,30 @@ export function ProductCard({
   discount,
   unit,
 }: ProductCardProps) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState<boolean>(false);
+  const [editOpen, setEditOpen] = useState<boolean>(false);
   const [value, setValue] = useState('1');
-
+  const [alterCommodity, setAlterCommodity] =
+    useState<alterCommodityForm | null>(null);
   const handleChange = (_: React.SyntheticEvent, newValue: string) => {
     setValue(newValue);
   };
+  useEffect(() => {
+    getCommodityInfoAPI({ commodityId: commodityId }).then((res) => {
+      setAlterCommodity({
+        ...alterCommodity,
+        commodityId: res.data.commodityId,
+        commodityName: res.data.commodityName,
+        secondCategoryCode: res.data.secondCategoryCode,
+        title: res.data.title,
+        pictureUrls: res.data.pictureUrls,
+        brand: res.data.brand,
+        taste: res.data.taste,
+        weight: res.data.weight,
+        minimumThreshold: res.data.minimumThreshold,
+      });
+    });
+  }, []);
   return (
     <Card
       sx={{
@@ -112,7 +138,7 @@ export function ProductCard({
               variant="contained"
               color="primary"
               onClick={() => {
-                console.log(commodityId);
+                setEditOpen(true);
               }}
             >
               修改
@@ -142,6 +168,120 @@ export function ProductCard({
             </TabPanel>
           </DialogContent>
         </TabContext>
+      </Dialog>
+      <Dialog open={editOpen} onClose={() => setEditOpen(false)}>
+        <DialogTitle>修改商品</DialogTitle>
+        {alterCommodity && (
+          <DialogContent>
+            <TextField
+              margin="dense"
+              label="商品名称"
+              name="commodityName"
+              type="text"
+              fullWidth
+              value={alterCommodity.commodityName}
+              onChange={(e) =>
+                setAlterCommodity({
+                  ...alterCommodity!,
+                  commodityName: e.target.value,
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="标题"
+              name="title"
+              type="text"
+              fullWidth
+              value={alterCommodity.title}
+              onChange={(e) =>
+                setAlterCommodity({ ...alterCommodity!, title: e.target.value })
+              }
+            />
+
+            <TextField
+              margin="dense"
+              label="图片地址"
+              name="pictureUrls"
+              type="text"
+              fullWidth
+              value={alterCommodity.pictureUrls}
+              onChange={(e) =>
+                setAlterCommodity({
+                  ...alterCommodity!,
+                  pictureUrls: e.target.value,
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="品牌"
+              name="brand"
+              type="text"
+              fullWidth
+              value={alterCommodity.brand}
+              onChange={(e) =>
+                setAlterCommodity({ ...alterCommodity!, brand: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="味道"
+              name="taste"
+              type="text"
+              fullWidth
+              value={alterCommodity.taste}
+              onChange={(e) =>
+                setAlterCommodity({ ...alterCommodity!, taste: e.target.value })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="重量"
+              name="weight"
+              type="number"
+              fullWidth
+              value={alterCommodity.weight}
+              onChange={(e) =>
+                setAlterCommodity({
+                  ...alterCommodity!,
+                  weight: Number(e.target.value),
+                })
+              }
+            />
+            <TextField
+              margin="dense"
+              label="商品阈值"
+              name="minimumThreshold"
+              type="number"
+              fullWidth
+              value={alterCommodity.minimumThreshold}
+              onChange={(e) =>
+                setAlterCommodity({
+                  ...alterCommodity!,
+                  minimumThreshold: Number(e.target.value),
+                })
+              }
+            />
+          </DialogContent>
+        )}
+
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setEditOpen(false);
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button
+            onClick={() => alterCommodityAPI(alterCommodity!)}
+            color="primary"
+          >
+            添加
+          </Button>
+        </DialogActions>
       </Dialog>
     </Card>
   );
