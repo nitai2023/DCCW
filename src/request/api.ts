@@ -15,6 +15,23 @@ import {
   changeUpgradeConditionForm,
   deleteAdviseByIdForm,
   searchCommoditiesForm,
+  addManagerForm,
+  getCommodityBatchForm,
+  addSaleSpecificationForm,
+  alterSaleSpecificationsForm,
+  deleteSaleSpecificationByIdForm,
+  deleteCommodityBatchByIdForm,
+  alterCommodityBatchForm,
+  addCommodityBatchForm,
+  removeExpiredBatchForm,
+  removeExpiringBatchForm,
+  getClothesForm,
+  getUserForm,
+  getOrdersIntervalForm,
+  getSearchKeyWordsForm,
+  publishCommodityForm,
+  deleteManagerForm,
+  alterCommodityForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -148,5 +165,173 @@ export const searchCommoditiesAPI = (form: searchCommoditiesForm) => {
     method: 'GET',
     url: '/commodity/searchCommodities',
     params: form,
+  });
+};
+export const addManagerAPI = (form: addManagerForm) => {
+  return service({
+    method: 'POST',
+    url: '/manager/addManager',
+    data: form,
+  });
+};
+export const getCommodityBatchAPI = (form: getCommodityBatchForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getCommodityBatch',
+    params: form,
+  });
+};
+export const addSaleSpecificationAPI = (form: addSaleSpecificationForm) => {
+  return service({
+    method: 'POST',
+    url: '/sale-specification/addSaleSpecification',
+    data: form,
+  });
+};
+export const alterSaleSpecificationsAPI = (
+  form: alterSaleSpecificationsForm
+) => {
+  return service({
+    method: 'PUT',
+    url: '/sale-specification/alterSaleSpecifications',
+    data: form,
+  });
+};
+export const deleteSaleSpecificationByIdAPI = (
+  form: deleteSaleSpecificationByIdForm
+) => {
+  return service({
+    method: 'DELETE',
+    url: '/sale-specification/deleteSaleSpecification',
+    params: form,
+  });
+};
+export const alterCommodityBatchAPI = (form: alterCommodityBatchForm) => {
+  return service({
+    method: 'PUT',
+    url: '/commodity-batch/alterCommodityBatch',
+    data: form,
+  });
+};
+export const deleteCommodityBatchByIdAPI = (
+  form: deleteCommodityBatchByIdForm
+) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/deleteCommodityBatch',
+    params: form,
+  });
+};
+export const addCommodityBatchAPI = (form: addCommodityBatchForm) => {
+  return service({
+    method: 'POST',
+    url: '/commodity-batch/addCommodityBatch',
+    data: form,
+  });
+};
+export const getExpiringBatchAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getExpiringBatch',
+  });
+};
+export const getExpiredBatchAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getExpiredBatch',
+  });
+};
+export const removeExpiredBatchAPI = (form: removeExpiredBatchForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/removeExpiredBatch',
+    params: form,
+  });
+};
+export const removeExpiringBatchAPI = (form: removeExpiringBatchForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/commodity-batch/removeExpiringBatch',
+    params: form,
+  });
+};
+export const getClothesAPI = (form: getClothesForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getClothes',
+    params: form,
+  });
+};
+export const getUserAPI = (form: getUserForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getUser',
+    params: form,
+  });
+};
+export const getAddressInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getAddressInfo',
+  });
+};
+export const getConsumptionInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getConsumptionInfo',
+  });
+};
+export const getOrdersIntervalAPI = (form: getOrdersIntervalForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getOrdersInterval',
+    params: form,
+  });
+};
+export const getSearchKeyWordsAPI = (form: getSearchKeyWordsForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/getSearchKeyWords',
+    params: form,
+  });
+};
+export const getManagerInfoAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/manager/getManagerInfo',
+  });
+};
+export const publishCommodityAPI = (form: publishCommodityForm) => {
+  return service({
+    method: 'POST',
+    url: '/commodity/publishCommodity',
+    data: form,
+  });
+};
+export const deleteManagerAPI = (form: deleteManagerForm) => {
+  return service({
+    method: 'DELETE',
+    url: '/manager/deleteManager',
+    params: form,
+  });
+};
+export const alterCommodityAPI = (form: alterCommodityForm) => {
+  return service({
+    method: 'PUT',
+    url: '/commodity/alterCommodity',
+    data: form,
+  });
+};
+export const getCommodityInfoAPI = (form: getCommodityBatchForm) => {
+  return service({
+    method: 'GET',
+    url: '/commodity/getCommodityInfo',
+    params: form,
+  });
+};
+export const getStockShortAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/commodity-batch/getStockShort',
   });
 };

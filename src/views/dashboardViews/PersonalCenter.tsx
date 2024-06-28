@@ -1,11 +1,11 @@
-import { Typography } from '@mui/material';
+import { Typography, Box } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Outlet } from 'react-router-dom';
 //个人中心
 export function PersonalCenter() {
   return (
-    <div
-      style={{
+    <Box
+      sx={{
         width: '100%',
         display: 'flex',
         height: '100%',
@@ -13,8 +13,8 @@ export function PersonalCenter() {
         alignItems: 'center',
       }}
     >
-      <div
-        style={{
+      <Box
+        sx={{
           width: '100%',
           display: 'flex',
           alignItems: 'center',
@@ -34,12 +34,12 @@ export function PersonalCenter() {
         <Typography variant="h6" noWrap>
           ID:11111
         </Typography>
-      </div>
-      <div
+      </Box>
+      <Box
         style={{ width: '100%', height: '100%', backgroundColor: '#F1F1F1 ' }}
       >
         <Outlet></Outlet>
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

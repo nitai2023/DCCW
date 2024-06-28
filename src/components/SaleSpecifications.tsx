@@ -1,4 +1,20 @@
-import { getSaleSpecificationsAPI } from '../request/api';
+import {
+  getSaleSpecificationsAPI,
+  getCommodityBatchAPI,
+  addSaleSpecificationAPI,
+  alterSaleSpecificationsAPI,
+  deleteSaleSpecificationByIdAPI,
+  alterCommodityBatchAPI,
+  deleteCommodityBatchByIdAPI,
+  addCommodityBatchAPI,
+} from '../request/api';
+import {
+  getSaleSpecificationsForm,
+  alterCommodityBatchForm,
+  alterSaleSpecificationsForm,
+  addSaleSpecificationForm,
+  addCommodityBatchForm,
+} from '../request/model';
 import { useEffect, useState } from 'react';
 import {
   Table,
@@ -21,74 +37,100 @@ import {
 } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-const initialData = [
-  {
-    specificationId: 'fce631bb-922e-4f95-a939-b58e96df9bd6',
-    commodityId: 'f3f5d2eb-d0ed-446b-b28e-9d5cca28575f',
-    originalPrice: 4.0,
-    price: 3.0,
-    discount: 0.75,
-    unit: '1桶',
-    remark: '备注0',
-    saleOrRent: true,
-    sortNum: 1712805122826,
-    isDefault: true,
-    purchaseLimit: 999999,
-    deleted: false,
-  },
-];
-//商品详情
-export function DataDialog({ open, handleClose, commodityId }) {
-  const [data, setData] = useState(initialData);
+import AddIcon from '@mui/icons-material/Add';
+
+interface IData {
+  specificationId: string;
+  commodityId: string;
+  originalPrice: number;
+  price: number;
+  discount: number;
+  unit: string;
+  remark: string;
+  saleOrRent: boolean;
+  sortNum: number;
+  isDefault: boolean;
+  purchaseLimit: number;
+  deleted: boolean;
+}
+interface IBatchData {
+  batchId: string;
+  position: string;
+  commodityId: string;
+  produceTime: string;
+  expiredTime: string;
+  stock: number;
+}
+//售卖规格
+export function SpecificationDialog({
+  commodityId,
+}: getSaleSpecificationsForm) {
+  const [data, setData] = useState<IData[]>([]);
   const [dialog, setDialog] = useState({
     index: 0,
     edit: false,
     add: false,
   });
-  const [specification, setSpecification] = useState({
-    ssId: '',
-    originalPrice: 0,
-    price: 0,
-    unit: '',
-    saleOrRent: true,
-    isDefault: true,
-    purchaseLimit: 0,
-    remark: '',
-  });
+  const [editSpecification, setEditSpecification] =
+    useState<alterSaleSpecificationsForm | null>(null);
+  const [addSpecification, setAddSpecification] =
+    useState<addSaleSpecificationForm | null>(null);
   useEffect(() => {
     getSaleSpecificationsAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
   }, []);
-  function handleChange() {
-    console.log(666);
-  }
   function handleSubmit() {
-    console.log(555);
+    if (editSpecification) {
+      alterSaleSpecificationsAPI(editSpecification).then(() => {
+        setDialog({
+          index: 0,
+          edit: false,
+          add: false,
+        });
+      });
+    }
+  }
+  function handleAdd() {
+    if (addSpecification) {
+      addSaleSpecificationAPI(addSpecification).then(() => {
+        setDialog({
+          index: 0,
+          edit: false,
+          add: false,
+        });
+      });
+    }
   }
   return (
-    <Dialog open={open} onClose={handleClose} maxWidth={false} fullWidth>
-      <DialogTitle>商品规格详情</DialogTitle>
-      {/* 商品规格 */}
-      <DialogContent>
-        <TableContainer component={Paper}>
-          <Table>
-            <TableHead>
-              <TableRow>
-                <TableCell>原价</TableCell>
-                <TableCell>价格</TableCell>
-                <TableCell>折扣</TableCell>
-                <TableCell>单位</TableCell>
-                <TableCell>备注</TableCell>
-                <TableCell>出售或出租</TableCell>
-                <TableCell>排序号</TableCell>
-                <TableCell>是否默认</TableCell>
-                <TableCell>购买限制</TableCell>
-                <TableCell>操作</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {data.map((row, index) => (
+    <Box>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={() => setDialog({ ...dialog, add: true })}
+      >
+        添加规格
+      </Button>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>原价</TableCell>
+              <TableCell>价格</TableCell>
+              <TableCell>折扣</TableCell>
+              <TableCell>单位</TableCell>
+              <TableCell>备注</TableCell>
+              <TableCell>出售或出租</TableCell>
+              <TableCell>排序号</TableCell>
+              <TableCell>是否默认</TableCell>
+              <TableCell>购买限制</TableCell>
+              <TableCell>操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data &&
+              data.map((row, index) => (
                 <TableRow key={row.specificationId}>
                   <TableCell>{row.originalPrice}</TableCell>
                   <TableCell>{row.price}</TableCell>
@@ -104,7 +146,7 @@ export function DataDialog({ open, handleClose, commodityId }) {
                       color="primary"
                       onClick={() => {
                         setDialog({ ...dialog, index: index, edit: true });
-                        setSpecification(() => ({
+                        setEditSpecification(() => ({
                           ssId: row.specificationId,
                           originalPrice: row.originalPrice,
                           price: row.price,
@@ -121,7 +163,9 @@ export function DataDialog({ open, handleClose, commodityId }) {
                     <IconButton
                       color="error"
                       onClick={() => {
-                        console.log('删除');
+                        deleteSaleSpecificationByIdAPI({
+                          ssId: row.specificationId,
+                        });
                       }}
                     >
                       <DeleteIcon />
@@ -129,18 +173,9 @@ export function DataDialog({ open, handleClose, commodityId }) {
                   </TableCell>
                 </TableRow>
               ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-      </DialogContent>
-      <DialogActions>
-        <Button onClick={handleClose} color="success">
-          添加
-        </Button>
-        <Button onClick={handleClose} color="primary">
-          关闭
-        </Button>
-      </DialogActions>
+          </TableBody>
+        </Table>
+      </TableContainer>
       <Dialog
         open={dialog.edit}
         onClose={() => {
@@ -148,6 +183,136 @@ export function DataDialog({ open, handleClose, commodityId }) {
         }}
       >
         <DialogTitle>Edit Item</DialogTitle>
+        {editSpecification && (
+          <>
+            <DialogContent>
+              <TextField
+                margin="dense"
+                label="Original Price"
+                name="originalPrice"
+                type="number"
+                fullWidth
+                value={editSpecification.originalPrice}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    originalPrice: Number(e.target.value),
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Price"
+                name="price"
+                type="number"
+                fullWidth
+                value={editSpecification.price}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    price: Number(e.target.value),
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Unit"
+                name="unit"
+                fullWidth
+                value={editSpecification.unit}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    unit: e.target.value,
+                  });
+                }}
+              />
+              <TextField
+                margin="dense"
+                label="Remark"
+                name="remark"
+                fullWidth
+                value={editSpecification.remark}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    remark: e.target.value,
+                  });
+                }}
+              />
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="saleOrRent"
+                      checked={editSpecification.saleOrRent}
+                      onChange={(e) => {
+                        setEditSpecification({
+                          ...editSpecification,
+                          saleOrRent: e.target.checked,
+                        });
+                      }}
+                    />
+                  }
+                  label="Sale or Rent"
+                />
+              </Box>
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="isDefault"
+                      checked={editSpecification.isDefault}
+                      onChange={(e) => {
+                        setEditSpecification({
+                          ...editSpecification,
+                          isDefault: e.target.checked,
+                        });
+                      }}
+                    />
+                  }
+                  label="Default"
+                />
+              </Box>
+              <TextField
+                margin="dense"
+                label="Purchase Limit"
+                name="purchaseLimit"
+                type="number"
+                fullWidth
+                value={editSpecification.purchaseLimit}
+                onChange={(e) => {
+                  setEditSpecification({
+                    ...editSpecification,
+                    purchaseLimit: Number(e.target.value),
+                  });
+                }}
+              />
+            </DialogContent>
+          </>
+        )}
+
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialog({ ...dialog, edit: false });
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button onClick={handleSubmit} color="primary">
+            保存
+          </Button>
+        </DialogActions>
+      </Dialog>
+      <Dialog
+        open={dialog.add}
+        onClose={() => {
+          setDialog({ ...dialog, edit: false });
+        }}
+      >
+        <DialogTitle>添加规格</DialogTitle>
         <DialogContent>
           <TextField
             margin="dense"
@@ -155,8 +320,12 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="originalPrice"
             type="number"
             fullWidth
-            value={specification.originalPrice}
-            onChange={handleChange}
+            onChange={(e) => {
+              setAddSpecification({
+                ...addSpecification!,
+                originalPrice: Number(e.target.value),
+              });
+            }}
           />
           <TextField
             margin="dense"
@@ -164,32 +333,48 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="price"
             type="number"
             fullWidth
-            value={specification.price}
-            onChange={handleChange}
+            onChange={(e) => {
+              setAddSpecification({
+                ...addSpecification!,
+                price: Number(e.target.value),
+              });
+            }}
           />
           <TextField
             margin="dense"
             label="Unit"
             name="unit"
             fullWidth
-            value={specification.unit}
-            onChange={handleChange}
+            onChange={(e) => {
+              setAddSpecification({
+                ...addSpecification!,
+                unit: e.target.value,
+              });
+            }}
           />
           <TextField
             margin="dense"
             label="Remark"
             name="remark"
             fullWidth
-            value={specification.remark}
-            onChange={handleChange}
+            onChange={(e) => {
+              setAddSpecification({
+                ...addSpecification!,
+                remark: e.target.value,
+              });
+            }}
           />
           <Box>
             <FormControlLabel
               control={
                 <Checkbox
                   name="saleOrRent"
-                  checked={specification.saleOrRent}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setAddSpecification({
+                      ...addSpecification!,
+                      saleOrRent: e.target.checked,
+                    });
+                  }}
                 />
               }
               label="Sale or Rent"
@@ -200,8 +385,12 @@ export function DataDialog({ open, handleClose, commodityId }) {
               control={
                 <Checkbox
                   name="isDefault"
-                  checked={specification.isDefault}
-                  onChange={handleChange}
+                  onChange={(e) => {
+                    setAddSpecification({
+                      ...addSpecification!,
+                      isDefault: e.target.checked,
+                    });
+                  }}
                 />
               }
               label="Default"
@@ -213,9 +402,192 @@ export function DataDialog({ open, handleClose, commodityId }) {
             name="purchaseLimit"
             type="number"
             fullWidth
-            value={specification.purchaseLimit}
-            onChange={handleChange}
+            onChange={(e) => {
+              setAddSpecification({
+                ...addSpecification!,
+                purchaseLimit: Number(e.target.value),
+              });
+            }}
           />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialog({ ...dialog, edit: false });
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button onClick={handleAdd} color="primary">
+            添加
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
+  );
+}
+//商品批次
+export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
+  const [data, setData] = useState<IBatchData[]>([]);
+  const [dialog, setDialog] = useState({
+    index: 0,
+    edit: false,
+    add: false,
+  });
+  const [addBatch, setAddBatch] = useState<addCommodityBatchForm | null>(null);
+  const [editBatch, setEditBatch] = useState<alterCommodityBatchForm | null>(
+    null
+  );
+  useEffect(() => {
+    getCommodityBatchAPI({ commodityId: commodityId }).then((res) => {
+      setData(res.data);
+    });
+  }, []);
+  function handleSubmit() {
+    if (editBatch) {
+      alterCommodityBatchAPI(editBatch);
+    }
+  }
+  function handleAdd() {
+    if (addBatch) {
+      addCommodityBatchAPI(addBatch);
+    }
+  }
+  return (
+    <Box>
+      <Button
+        variant="contained"
+        color="primary"
+        startIcon={<AddIcon />}
+        onClick={() => {
+          setDialog({ ...dialog, add: true });
+          setAddBatch({
+            commodityId: commodityId,
+            position: '',
+            produceTime: '',
+            expiredTime: '',
+            stock: 0,
+          });
+        }}
+      >
+        添加批次
+      </Button>
+      <TableContainer component={Paper}>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>批次ID</TableCell>
+              <TableCell>位置</TableCell>
+              <TableCell>建立时间</TableCell>
+              <TableCell>到期时间</TableCell>
+              <TableCell>库存</TableCell>
+              <TableCell>操作</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {data.map((row, index) => (
+              <TableRow key={row.batchId}>
+                <TableCell>{row.batchId}</TableCell>
+                <TableCell>{row.position}</TableCell>
+                <TableCell>{row.produceTime}</TableCell>
+                <TableCell>{row.expiredTime}</TableCell>
+                <TableCell>{row.stock}</TableCell>
+                <TableCell>
+                  <IconButton
+                    color="primary"
+                    onClick={() => {
+                      setDialog({ ...dialog, index: index, edit: true });
+                      setEditBatch(() => ({
+                        commodityBatchId: row.batchId,
+                        position: row.position,
+                        produceTime: row.produceTime,
+                        expiredTime: row.expiredTime,
+                        changeStock: row.stock,
+                      }));
+                    }}
+                  >
+                    <EditIcon />
+                  </IconButton>
+                  <IconButton
+                    color="error"
+                    onClick={() => {
+                      deleteCommodityBatchByIdAPI({
+                        commodityBatchId: row.batchId,
+                      });
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+      <Dialog
+        open={dialog.edit}
+        onClose={() => {
+          setDialog({ ...dialog, edit: false });
+        }}
+      >
+        <DialogTitle>更改批次</DialogTitle>
+        <DialogContent>
+          {editBatch && (
+            <>
+              <TextField
+                margin="dense"
+                label="位置"
+                name="originalPrice"
+                type="text"
+                fullWidth
+                value={editBatch.position}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, position: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="开始时间"
+                type="date"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={editBatch.produceTime}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, produceTime: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="结束时间"
+                type="date"
+                fullWidth
+                InputLabelProps={{
+                  shrink: true,
+                }}
+                value={editBatch.expiredTime}
+                onChange={(e) =>
+                  setEditBatch({ ...editBatch, expiredTime: e.target.value })
+                }
+              />
+              <TextField
+                margin="dense"
+                label="Price"
+                name="price"
+                type="number"
+                fullWidth
+                value={editBatch.changeStock}
+                onChange={(e) =>
+                  setEditBatch({
+                    ...editBatch,
+                    changeStock: Number(e.target.value),
+                  })
+                }
+              />
+            </>
+          )}
         </DialogContent>
         <DialogActions>
           <Button
@@ -231,6 +603,73 @@ export function DataDialog({ open, handleClose, commodityId }) {
           </Button>
         </DialogActions>
       </Dialog>
-    </Dialog>
+      <Dialog
+        open={dialog.add}
+        onClose={() => {
+          setDialog({ ...dialog, add: false });
+        }}
+      >
+        <DialogTitle>添加批次</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="位置"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddBatch({ ...addBatch!, position: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="开始时间"
+            type="date"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) =>
+              setAddBatch({ ...addBatch!, produceTime: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="结束时间"
+            type="date"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            onChange={(e) =>
+              setAddBatch({ ...addBatch!, expiredTime: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="Price"
+            name="price"
+            type="number"
+            fullWidth
+            onChange={(e) =>
+              setAddBatch({ ...addBatch!, stock: Number(e.target.value) })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setDialog({ ...dialog, add: false });
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button onClick={handleAdd} color="primary">
+            添加
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Box>
   );
 }

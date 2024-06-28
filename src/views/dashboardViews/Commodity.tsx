@@ -12,17 +12,111 @@ import {
   FormControlLabel,
   Switch,
   Box,
+  Badge,
+  Dialog,
+  Tab,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  IconButton,
+  Autocomplete,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
+import parse from 'html-react-parser';
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import TabContext from '@mui/lab/TabContext';
+import TabList from '@mui/lab/TabList';
+import TabPanel from '@mui/lab/TabPanel';
+import DeleteIcon from '@mui/icons-material/Delete';
+import AddIcon from '@mui/icons-material/Add';
 import {
   getCommodityAPI,
   getCategoryAPI,
   getCommodityByCategoryAPI,
   searchCommoditiesAPI,
+  getExpiredBatchAPI,
+  getExpiringBatchAPI,
+  removeExpiredBatchAPI,
+  removeExpiringBatchAPI,
+  getSearchKeyWordsAPI,
+  getManagerInfoAPI,
+  publishCommodityAPI,
+  getStockShortAPI,
 } from '../../request/api';
+import { publishCommodityForm } from '../../request/model';
 //商品
+interface IAdminInfo {
+  accountId: string;
+  nickname: string;
+  avatarUrl: string;
+  account: string;
+  phoneNum: string;
+  createTime: string;
+  accountTypeCode: string;
+}
+interface ICommodity {
+  commodityId: string;
+  monthSales: number;
+  title: string;
+  score: number;
+  pictureUrl: string;
+  deleted: boolean;
+  originalPrice: number;
+  discount: number;
+  price: number;
+  unit: string;
+  purchaseLimit: number | null;
+}
+interface ISecondCategory {
+  secondCategoryCode: string;
+  secondCategory: string;
+}
+interface ICategoryList {
+  firstCategoryCode: string;
+  firstCategory: string;
+  pic: string;
+  secondCategoryVoList: ISecondCategory[];
+}
+interface IExpiredBatch {
+  managerId: string;
+  commodityId: string;
+  batchId: string;
+  commodityName: string;
+  position: string;
+  timeLeft: string;
+}
+interface IExpiringBatch {
+  managerId: string;
+  commodityId: string;
+  batchId: string;
+  commodityName: string;
+  position: string;
+  timeLeft: string;
+}
+interface IStockShort {
+  commodityName: string;
+  commodityId: string;
+  position1: null;
+  position2: null;
+  stock: number;
+}
 export function Commodity() {
   //查询商品
+  const [adminInfo, setAdminInfo] = useState<IAdminInfo | null>(null);
+  const [addDialog, setAddDialog] = useState<boolean>(false);
+  const [addCommodity, setAddCommodity] = useState<publishCommodityForm | null>(
+    null
+  );
+  const [value, setValue] = useState<string>('1');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
   const [select, setSelect] = useState({
     from: 1,
     size: 8,
@@ -32,8 +126,42 @@ export function Commodity() {
     total: 0,
     SearchKeyWord: '',
   });
-  const [commodity, setCommodity] = useState([]);
-  const [categoryList, setCategoryList] = useState([]);
+  const [warnDialog, setWarnDialog] = useState<boolean>(false);
+  const [commodity, setCommodity] = useState<ICommodity[]>([]);
+  const [categoryList, setCategoryList] = useState<ICategoryList[]>([]);
+  const [expiringBatch, setExpiringBatch] = useState<IExpiringBatch[]>([]);
+  const [expiredBatch, setExpiredBatch] = useState<IExpiredBatch[]>([]);
+  const [stockShort, setStockShort] = useState<IStockShort[]>([]);
+  const [warnTotal, setWarnTotal] = useState<number>(0);
+  const handleChange = (_: React.SyntheticEvent, newValue: string) => {
+    setValue(newValue);
+  };
+  useEffect(() => {
+    getExpiringBatchAPI().then((res) => {
+      setExpiringBatch(res.data);
+      setWarnTotal(res.data.length);
+    });
+    getExpiredBatchAPI().then((res) => {
+      setExpiredBatch(res.data);
+      setWarnTotal(res.data.length + warnTotal);
+    });
+    getManagerInfoAPI().then((res) => {
+      setAdminInfo(res.data);
+    });
+    getStockShortAPI().then((res) => {
+      setWarnTotal(res.data.length + warnTotal);
+      setStockShort(res.data);
+    });
+  }, []);
+  useEffect(() => {
+    if (select.SearchKeyWord) {
+      getSearchKeyWordsAPI({ searchKeyword: select.SearchKeyWord }).then(
+        (res) => {
+          setSuggestions(res.data);
+        }
+      );
+    }
+  }, [select.SearchKeyWord]);
   useEffect(() => {
     if (select.option) {
       //分类查询商品
@@ -71,6 +199,13 @@ export function Commodity() {
       setCategoryList(res.data);
     });
   }, []);
+  function handleAdd() {
+    if (addCommodity) {
+      publishCommodityAPI(addCommodity).then(() => {
+        setAddCommodity(null);
+      });
+    }
+  }
   return (
     <Box
       style={{
@@ -91,6 +226,16 @@ export function Commodity() {
           商品列表
         </Typography>
         <Box style={{ display: 'flex', alignItems: 'center' }}>
+          {adminInfo && adminInfo.accountTypeCode == 'AT0002' ? (
+            <Badge
+              badgeContent={warnTotal}
+              color="error"
+              sx={{ mr: 3 }}
+              onClick={() => setWarnDialog(true)}
+            >
+              <ShoppingCartIcon color="primary" />
+            </Badge>
+          ) : null}
           <FormControlLabel
             control={
               <Switch
@@ -145,15 +290,25 @@ export function Commodity() {
               </Select>
             </FormControl>
           )}
+          <Autocomplete
+            options={suggestions}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                label="商品名称"
+                style={{ width: '200px' }}
+                value={select.SearchKeyWord}
+                onChange={(e) => {
+                  setSelect({ ...select, SearchKeyWord: e.target.value });
+                }}
+              ></TextField>
+            )}
+            renderOption={(props, option) => (
+              <li {...props}>{parse(option)}</li>
+            )}
+            getOptionLabel={(option) => option.replace(/<[^>]+>/g, '')}
+          />
 
-          <TextField
-            label="商品名称"
-            style={{ width: '200px' }}
-            value={select.SearchKeyWord}
-            onChange={(e) => {
-              setSelect({ ...select, SearchKeyWord: e.target.value });
-            }}
-          ></TextField>
           <Button
             variant="contained"
             color="primary"
@@ -174,7 +329,11 @@ export function Commodity() {
           <Button
             variant="contained"
             color="success"
-            style={{ height: '56px', width: '100px' }}
+            style={{ height: '56px', width: '130px' }}
+            startIcon={<AddIcon />}
+            onClick={() => {
+              setAddDialog(true);
+            }}
           >
             添加商品
           </Button>
@@ -213,12 +372,243 @@ export function Commodity() {
               display: 'flex',
               justifyContent: 'center',
             }}
-            onChange={(e, page) => {
+            onChange={(_, page) => {
               setSelect({ ...select, from: (page - 1) * 8 + 1 });
             }}
           />
         )}
       </Box>
+      {adminInfo && adminInfo.accountTypeCode == 'AT0002' ? (
+        <Dialog
+          open={warnDialog}
+          onClose={() => setWarnDialog(false)}
+          fullWidth
+          maxWidth={'xl'}
+        >
+          <TabContext value={value}>
+            <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+              <TabList
+                onChange={handleChange}
+                aria-label="lab API tabs example"
+              >
+                <Tab label="即将过期商品" value="1" />
+                <Tab label="已经过期商品" value="2" />
+                <Tab label="库存较少商品" value="3" />
+              </TabList>
+            </Box>
+            <TabPanel value="1">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>批次ID</TableCell>
+                      <TableCell>位置</TableCell>
+                      <TableCell>商品名称</TableCell>
+                      <TableCell>到期剩余时间</TableCell>
+                      <TableCell>操作</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {expiredBatch &&
+                      expiringBatch.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.managerId}</TableCell>
+                          <TableCell>{row.position}</TableCell>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.timeLeft}</TableCell>
+                          <TableCell
+                            onClick={() => {
+                              removeExpiringBatchAPI({ batchId: row.batchId });
+                            }}
+                          >
+                            <IconButton color="error">
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+
+            <TabPanel value="2">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>批次ID</TableCell>
+                      <TableCell>位置</TableCell>
+                      <TableCell>商品名称</TableCell>
+                      <TableCell>已过期时间</TableCell>
+                      <TableCell>操作</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {expiredBatch &&
+                      expiredBatch.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.managerId}</TableCell>
+                          <TableCell>{row.position}</TableCell>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.timeLeft}</TableCell>
+                          <TableCell>
+                            <IconButton
+                              color="error"
+                              onClick={() => {
+                                removeExpiredBatchAPI({ batchId: row.batchId });
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          </TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+            <TabPanel value="3">
+              <TableContainer component={Paper}>
+                <Table>
+                  <TableHead>
+                    <TableRow>
+                      <TableCell>商品名称</TableCell>
+                      <TableCell>位置1</TableCell>
+                      <TableCell>位置2</TableCell>
+                      <TableCell>库存</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    {stockShort &&
+                      stockShort.map((row, index) => (
+                        <TableRow key={index}>
+                          <TableCell>{row.commodityName}</TableCell>
+                          <TableCell>{row.position1}</TableCell>
+                          <TableCell>{row.position2}</TableCell>
+                          <TableCell>{row.stock}</TableCell>
+                        </TableRow>
+                      ))}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </TabPanel>
+          </TabContext>
+        </Dialog>
+      ) : (
+        <></>
+      )}
+      <Dialog open={addDialog} onClose={setAddDialog}>
+        <DialogTitle>添加商品</DialogTitle>
+        <DialogContent>
+          <TextField
+            margin="dense"
+            label="商品名称"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                commodityName: e.target.value,
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="二级目录"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                secondCategoryCode: e.target.value,
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="标题"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, title: e.target.value })
+            }
+          />
+
+          <TextField
+            margin="dense"
+            label="图片地址"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, pictureUrls: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="品牌"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, brand: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="味道"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({ ...addCommodity!, taste: e.target.value })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="重量"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                weight: Number(e.target.value),
+              })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="最低阈值"
+            name="price"
+            type="text"
+            fullWidth
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                minimumThreshold: Number(e.target.value),
+              })
+            }
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setAddDialog(false);
+            }}
+            color="error"
+          >
+            取消
+          </Button>
+          <Button onClick={handleAdd} color="primary">
+            添加
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 }
