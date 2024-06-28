@@ -32,6 +32,8 @@ import {
   publishCommodityForm,
   deleteManagerForm,
   alterCommodityForm,
+  getDictForm,
+  getAdvisesForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -147,10 +149,11 @@ export const changeUpgradeConditionAPI = (form: changeUpgradeConditionForm) => {
     data: form,
   });
 };
-export const getAdvisesAPI = () => {
+export const getAdvisesAPI = (form: getAdvisesForm) => {
   return service({
     method: 'GET',
     url: '/advise/getAdvises',
+    params: form,
   });
 };
 export const deleteAdviseByIdAPI = (form: deleteAdviseByIdForm) => {
@@ -333,5 +336,12 @@ export const getStockShortAPI = () => {
   return service({
     method: 'GET',
     url: '/commodity-batch/getStockShort',
+  });
+};
+export const getDictAPI = (form: getDictForm) => {
+  return service({
+    method: 'GET',
+    url: '/dict/getDict',
+    params: form,
   });
 };

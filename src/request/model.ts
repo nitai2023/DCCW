@@ -155,3 +155,9 @@ export interface alterCommodityForm {
   weight: number;
   minimumThreshold: number;
 }
+export interface getDictForm {
+  dictKey: string;
+}
+export interface getAdvisesForm {
+  adviseStatusCode?: string;
+}
