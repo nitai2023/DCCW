@@ -275,7 +275,10 @@ export function ProductCard({
             取消
           </Button>
           <Button
-            onClick={() => alterCommodityAPI(alterCommodity!)}
+            onClick={() => {
+              alterCommodityAPI(alterCommodity!);
+              window.location.reload();
+            }}
             color="primary"
           >
             添加

@@ -170,6 +170,7 @@ export function SpecificationDialog({
                         deleteSaleSpecificationByIdAPI({
                           ssId: row.specificationId,
                         });
+                        window.location.reload();
                       }}
                     >
                       <DeleteIcon />
@@ -305,7 +306,13 @@ export function SpecificationDialog({
           >
             取消
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button
+            onClick={() => {
+              handleSubmit;
+              setDialog({ ...dialog, edit: false });
+            }}
+            color="primary"
+          >
             保存
           </Button>
         </DialogActions>
@@ -423,7 +430,13 @@ export function SpecificationDialog({
           >
             取消
           </Button>
-          <Button onClick={handleAdd} color="primary">
+          <Button
+            onClick={() => {
+              handleAdd;
+              setDialog({ ...dialog, add: false });
+            }}
+            color="primary"
+          >
             添加
           </Button>
         </DialogActions>
@@ -519,6 +532,7 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
                       deleteCommodityBatchByIdAPI({
                         commodityBatchId: row.batchId,
                       });
+                      window.location.reload();
                     }}
                   >
                     <DeleteIcon />
@@ -602,7 +616,13 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
           >
             取消
           </Button>
-          <Button onClick={handleSubmit} color="primary">
+          <Button
+            onClick={() => {
+              handleSubmit;
+              setDialog({ ...dialog, edit: false });
+            }}
+            color="primary"
+          >
             保存
           </Button>
         </DialogActions>

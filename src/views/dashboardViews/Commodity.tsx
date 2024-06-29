@@ -628,7 +628,14 @@ export function Commodity() {
           >
             取消
           </Button>
-          <Button onClick={handleAdd} color="primary">
+          <Button
+            onClick={() => {
+              handleAdd;
+              setAddDialog(false);
+              window.location.reload();
+            }}
+            color="primary"
+          >
             添加
           </Button>
         </DialogActions>
