@@ -503,13 +503,24 @@ export function Commodity() {
         <DialogTitle>添加商品</DialogTitle>
         <DialogContent>
           <FileUpload
-            onUploadSuccess={(url: string) =>
+            onUploadSuccess={(url: string) => {
               setAddCommodity({
                 ...addCommodity!,
                 pictureUrls: url,
-              })
-            }
+              });
+            }}
           ></FileUpload>
+          <TextField
+            margin="dense"
+            label="图片地址"
+            name="originalPrice"
+            type="text"
+            fullWidth
+            InputLabelProps={{
+              shrink: true,
+            }}
+            value={addCommodity?.pictureUrls}
+          />
           <TextField
             margin="dense"
             label="商品名称"
