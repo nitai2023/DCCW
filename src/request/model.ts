@@ -155,3 +155,15 @@ export interface alterCommodityForm {
   weight: number;
   minimumThreshold: number;
 }
+export interface getDictForm {
+  dictKey: string;
+}
+export interface getAdvisesForm {
+  adviseStatusCode?: string;
+}
+export interface rollbackMysqlForm {
+  date: string;
+}
+export interface uploadFileForm {
+  file: File;
+}

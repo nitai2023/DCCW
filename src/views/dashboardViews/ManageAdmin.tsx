@@ -28,6 +28,7 @@ import {
   ListItem,
   ListItemButton,
 } from '@mui/material';
+import FileUpload from '../../components/ImageUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import AddIcon from '@mui/icons-material/Add';
@@ -210,6 +211,25 @@ export function ManageAdmin() {
                 id="alert-dialog-description"
                 sx={{ marginTop: 2 }}
               >
+                <Typography>头像</Typography>
+                <img
+                  src={changeAdmin.avatarUrl || 'default-avatar.png'}
+                  alt="Avatar"
+                  style={{ width: 50, height: 50 }}
+                />
+                <FileUpload
+                  onUploadSuccess={(url: string) => {
+                    setChangeAdmin({
+                      ...changeAdmin,
+                      avatarUrl: url,
+                    });
+                  }}
+                ></FileUpload>
+              </DialogContentText>
+              <DialogContentText
+                id="alert-dialog-description"
+                sx={{ marginTop: 2 }}
+              >
                 <TextField
                   label="昵称"
                   value={changeAdmin.nickname}
@@ -223,23 +243,7 @@ export function ManageAdmin() {
                   }}
                 />
               </DialogContentText>
-              <DialogContentText
-                id="alert-dialog-description"
-                sx={{ marginTop: 2 }}
-              >
-                <TextField
-                  label="头像链接"
-                  value={changeAdmin.avatarUrl}
-                  variant="outlined"
-                  style={{ width: '100%' }}
-                  onChange={(e) => {
-                    setChangeAdmin({
-                      ...changeAdmin,
-                      avatarUrl: e.target.value,
-                    });
-                  }}
-                />
-              </DialogContentText>
+
               <DialogContentText
                 id="alert-dialog-description"
                 sx={{ marginTop: 2 }}
@@ -296,9 +300,17 @@ export function ManageAdmin() {
         open={open.addAdmin}
         onClose={() => setOpen({ ...open, addAdmin: false })}
       >
-        <DialogTitle>添加用户</DialogTitle>
+        <DialogTitle>添加管理员</DialogTitle>
         <DialogContent>
-          <DialogContentText>请填写以下信息以添加新用户。</DialogContentText>
+          <DialogContentText>请填写以下信息以添加新管理员。</DialogContentText>
+          <FileUpload
+            onUploadSuccess={(url: string) => {
+              setAddAdmin({
+                ...addAdmin!,
+                avatarUrl: url,
+              });
+            }}
+          ></FileUpload>
           <TextField
             autoFocus
             margin="dense"
@@ -310,19 +322,6 @@ export function ManageAdmin() {
               setAddAdmin({
                 ...addAdmin!,
                 nickname: e.target.value,
-              });
-            }}
-          />
-          <TextField
-            margin="dense"
-            label="头像 URL"
-            type="text"
-            fullWidth
-            variant="standard"
-            onChange={(e) => {
-              setAddAdmin({
-                ...addAdmin!,
-                avatarUrl: e.target.value,
               });
             }}
           />

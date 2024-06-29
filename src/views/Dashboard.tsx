@@ -19,6 +19,7 @@ import PeopleIcon from '@mui/icons-material/People';
 import CreateIcon from '@mui/icons-material/Create';
 import DirectionsBikeIcon from '@mui/icons-material/DirectionsBike';
 import AssignmentIcon from '@mui/icons-material/Assignment';
+import BackupTableIcon from '@mui/icons-material/BackupTable';
 import { getManagerInfoAPI } from '../request/api';
 import { useEffect, useState } from 'react';
 const drawerWidth = 240;
@@ -176,6 +177,17 @@ export function Dashboard() {
                       </ListItemButton>
                     </ListItem>
                   </Link>
+                  <Link to="/dashboard/database">
+                    <ListItem>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <BackupTableIcon color="success" fontSize="large" />
+                        </ListItemIcon>
+                        数据库备份
+                        <ListItemText />
+                      </ListItemButton>
+                    </ListItem>
+                  </Link>
                 </List>
               ) : (
                 <List>
@@ -235,6 +247,17 @@ export function Dashboard() {
                           <AssignmentIcon color="success" fontSize="large" />
                         </ListItemIcon>
                         订单
+                        <ListItemText />
+                      </ListItemButton>
+                    </ListItem>
+                  </Link>
+                  <Link to="/dashboard/database">
+                    <ListItem>
+                      <ListItemButton>
+                        <ListItemIcon>
+                          <BackupTableIcon color="success" fontSize="large" />
+                        </ListItemIcon>
+                        数据库备份
                         <ListItemText />
                       </ListItemButton>
                     </ListItem>

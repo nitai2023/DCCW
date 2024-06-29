@@ -32,6 +32,10 @@ import {
   publishCommodityForm,
   deleteManagerForm,
   alterCommodityForm,
+  getDictForm,
+  getAdvisesForm,
+  rollbackMysqlForm,
+  uploadFileForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -147,10 +151,11 @@ export const changeUpgradeConditionAPI = (form: changeUpgradeConditionForm) => {
     data: form,
   });
 };
-export const getAdvisesAPI = () => {
+export const getAdvisesAPI = (form: getAdvisesForm) => {
   return service({
     method: 'GET',
     url: '/advise/getAdvises',
+    params: form,
   });
 };
 export const deleteAdviseByIdAPI = (form: deleteAdviseByIdForm) => {
@@ -333,5 +338,38 @@ export const getStockShortAPI = () => {
   return service({
     method: 'GET',
     url: '/commodity-batch/getStockShort',
+  });
+};
+export const getDictAPI = (form: getDictForm) => {
+  return service({
+    method: 'GET',
+    url: '/dict/getDict',
+    params: form,
+  });
+};
+export const getMysqlBackupListAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/mysql-backup/getMysqlBackupList',
+  });
+};
+export const rollbackMysqlAPI = (form: rollbackMysqlForm) => {
+  return service({
+    method: 'POST',
+    url: '/mysql-backup/rollbackMysql',
+    data: form,
+  });
+};
+export const uploadFileAPI = (form) => {
+  return service({
+    method: 'POST',
+    url: '/file/uploadFile',
+    data: form,
+    params: {
+      compressionQuality: 0.7,
+    },
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };

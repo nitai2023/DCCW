@@ -38,8 +38,6 @@ export function DataAnalysis() {
   const [time, setTime] = useState<string>('day');
   const [granularity, setGranularity] = useState<string>('15min');
   const [graphicType, setGraphicType] = useState('bar');
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
   const [userData, setUserData] = useState<SalesBarData[]>([]);
   const [addressData, setAddressData] = useState([]);
   const [consumptionData, setConsumptionData] = useState([]);
@@ -73,7 +71,7 @@ export function DataAnalysis() {
       setGranularity(newGranularity);
     }
   };
-  function convertFormat(data) {
+  function convertFormat(data: SalesBarData[] | SalespieData[]) {
     //转换数据格式
     if (graphicType === 'bar') {
       return Object.keys(data).map((key) => ({
@@ -97,10 +95,8 @@ export function DataAnalysis() {
     getUserAPI({ span: time }).then((res) => {
       if (res && res.data) {
         setUserData(res.data);
-        setError(null);
       } else {
         setUserData([]);
-        setError('No data found');
       }
     });
     getAddressInfoAPI().then((res) => {
@@ -109,26 +105,21 @@ export function DataAnalysis() {
         setError(null);
       } else {
         setAddressData([]);
-        setError('No data found');
       }
     });
     getConsumptionInfoAPI().then((res) => {
       if (res && res.data) {
         setConsumptionData(res.data);
-        setError(null);
       } else {
         setConsumptionData([]);
-        setError('No data found');
       }
     });
     getOrdersIntervalAPI({ span: time, granularity: granularity }).then(
       (res) => {
         if (res && res.data) {
           setOrdersData(res.data);
-          setError(null);
         } else {
           setOrdersData([]);
-          setError('No data found');
         }
       }
     );
@@ -380,7 +371,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(addressData).map((key) => ({
-                      value: addressData[key],
+                      value: addressData[Number(key)],
                       name: key,
                     })),
                   },
@@ -401,7 +392,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(consumptionData).map((key) => ({
-                      value: consumptionData[key],
+                      value: consumptionData[Number(key)],
                       name: key,
                     })),
                   },
@@ -457,7 +448,7 @@ export function DataAnalysis() {
                       name: '销售量',
                       type: 'pie',
                       data: Object.keys(ordersData).map((key) => ({
-                        value: ordersData[key],
+                        value: ordersData[Number(key)],
                         name: key,
                       })),
                     },

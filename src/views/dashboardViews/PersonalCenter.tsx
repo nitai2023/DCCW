@@ -1,8 +1,25 @@
 import { Typography, Box } from '@mui/material';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import { Outlet } from 'react-router-dom';
+import { getManagerInfoAPI } from '../../request/api';
+import { useEffect, useState } from 'react';
+interface IAdmin {
+  accountId: string;
+  nickname: string;
+  avatarUrl: string;
+  account: string;
+  phoneNum: string;
+  createTime: string;
+  accountTypeCode: string;
+}
 //个人中心
 export function PersonalCenter() {
+  const [admin, setAdmin] = useState<IAdmin | null>(null);
+  useEffect(() => {
+    getManagerInfoAPI().then((res) => {
+      setAdmin(res.data);
+    });
+  }, []);
   return (
     <Box
       sx={{
@@ -26,13 +43,19 @@ export function PersonalCenter() {
           style={{ width: '150px', height: '150px' }}
         />
         <Typography variant="h3" noWrap>
-          管理员
+          {admin?.nickname}
+        </Typography>
+        <Typography
+          variant="h6"
+          noWrap
+          sx={{ marginLeft: '10px', marginRight: '20px' }}
+        >
+          管理级别:
+          {admin?.accountTypeCode !== 'AT0001' ? '普通管理员' : '超级管理员'}
         </Typography>
         <Typography variant="h6" noWrap>
-          191****9634
-        </Typography>
-        <Typography variant="h6" noWrap>
-          ID:11111
+          账号:
+          {admin?.account}
         </Typography>
       </Box>
       <Box

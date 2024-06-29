@@ -36,6 +36,7 @@ import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
+import FileUpload from '../../components/ImageUpload';
 import {
   getCommodityAPI,
   getCategoryAPI,
@@ -501,6 +502,14 @@ export function Commodity() {
       <Dialog open={addDialog} onClose={setAddDialog}>
         <DialogTitle>添加商品</DialogTitle>
         <DialogContent>
+          <FileUpload
+            onUploadSuccess={(url: string) =>
+              setAddCommodity({
+                ...addCommodity!,
+                pictureUrls: url,
+              })
+            }
+          ></FileUpload>
           <TextField
             margin="dense"
             label="商品名称"
@@ -538,16 +547,6 @@ export function Commodity() {
             }
           />
 
-          <TextField
-            margin="dense"
-            label="图片地址"
-            name="price"
-            type="text"
-            fullWidth
-            onChange={(e) =>
-              setAddCommodity({ ...addCommodity!, pictureUrls: e.target.value })
-            }
-          />
           <TextField
             margin="dense"
             label="品牌"
