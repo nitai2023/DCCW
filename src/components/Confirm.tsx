@@ -16,7 +16,7 @@ const ConfirmDelete = ({ onDelete }) => {
   };
 
   const handleDelete = () => {
-    // onDelete();
+    onDelete();
     window.location.reload();
     setAnchorEl(null);
   };
