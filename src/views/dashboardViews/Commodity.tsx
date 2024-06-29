@@ -420,6 +420,7 @@ export function Commodity() {
                           <TableCell
                             onClick={() => {
                               removeExpiringBatchAPI({ batchId: row.batchId });
+                              window.location.reload();
                             }}
                           >
                             <IconButton color="error">
@@ -458,6 +459,7 @@ export function Commodity() {
                               color="error"
                               onClick={() => {
                                 removeExpiredBatchAPI({ batchId: row.batchId });
+                                window.location.reload();
                               }}
                             >
                               <DeleteIcon />
