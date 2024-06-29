@@ -23,7 +23,8 @@ import {
   Grid,
   Switch,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
+
+import ConfirmDeletev from '../../components/Confirm';
 import EditIcon from '@mui/icons-material/Edit';
 // 骑手信息管理
 interface IRiders {
@@ -82,6 +83,11 @@ export function RiderInformationManagement() {
   function processApply(id: string, isApply: number) {
     axios.post(`http://182.92.128.37:8501//rider/processApply`, {
       isApply: isApply,
+      riderId: id,
+    });
+  }
+  function handleDelete(id: string) {
+    axios.post(`http://182.92.128.37:8501//rider/deleteRider`, {
       riderId: id,
     });
   }
@@ -149,14 +155,9 @@ export function RiderInformationManagement() {
                       >
                         <EditIcon />
                       </IconButton>
-                      <IconButton
-                        color="error"
-                        onClick={() => {
-                          console.log('删除');
-                        }}
-                      >
-                        <DeleteIcon />
-                      </IconButton>
+                      <ConfirmDeletev
+                        onDelete={() => handleDelete(user.id)}
+                      ></ConfirmDeletev>
                     </TableCell>
                   </TableCell>
                 </TableRow>
@@ -187,7 +188,7 @@ export function RiderInformationManagement() {
                   <TableCell>{user.isStudent}</TableCell>
                   <TableCell>{user.phone}</TableCell>
                   <TableCell>{user.studentIdCode}</TableCell>
-                  <TableCell>
+                  <TableCell sx={{ display: 'flex', justifyContent: 'center' }}>
                     <Button
                       onClick={() => {
                         processApply(user.riderId, 1);

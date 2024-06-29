@@ -119,7 +119,7 @@ export function Commodity() {
   const [suggestions, setSuggestions] = useState<string[]>([]);
 
   const [select, setSelect] = useState({
-    from: 1,
+    from: 0,
     size: 8,
     mod: 1,
     category: '',
@@ -523,19 +523,33 @@ export function Commodity() {
               })
             }
           />
-          <TextField
-            margin="dense"
-            label="二级目录"
-            name="originalPrice"
-            type="text"
-            fullWidth
-            onChange={(e) =>
-              setAddCommodity({
-                ...addCommodity!,
-                secondCategoryCode: e.target.value,
-              })
-            }
-          />
+          <FormControl sx={{ marginTop: 1, width: '100%' }}>
+            <InputLabel htmlFor="grouped-native-select">二级目录</InputLabel>
+            <Select
+              native
+              defaultValue=""
+              id="grouped-native-select"
+              label="二级目录"
+              value={addCommodity?.secondCategoryCode}
+              onChange={(e) => {
+                setAddCommodity({
+                  ...addCommodity!,
+                  secondCategoryCode: e.target.value,
+                });
+              }}
+            >
+              <option aria-label="None" value="" />
+              {categoryList.map((item) => (
+                <optgroup label={item.firstCategory}>
+                  {item.secondCategoryVoList.map((secondItem) => (
+                    <option value={secondItem.secondCategoryCode}>
+                      {secondItem.secondCategory}
+                    </option>
+                  ))}
+                </optgroup>
+              ))}
+            </Select>
+          </FormControl>
           <TextField
             margin="dense"
             label="标题"

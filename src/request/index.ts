@@ -29,8 +29,8 @@ service.interceptors.request.use(
       config.headers['Authorization'] = token;
     }
     // //设置请求头
-    // config.headers['Content-Type'] =
-    config.headers['Content-Type'] = 'application/json';
+
+    // config.headers['Content-Type'] = 'application/json';
     return config;
   },
   (error) => {

@@ -356,7 +356,15 @@ export function ManageAdmin() {
           <Button onClick={() => setOpen({ ...open, addAdmin: false })}>
             取消
           </Button>
-          <Button onClick={() => addManager()}>添加</Button>
+          <Button
+            onClick={() => {
+              addManager();
+              setOpen({ ...open, addAdmin: false });
+              window.location.reload();
+            }}
+          >
+            添加
+          </Button>
         </DialogActions>
       </Dialog>
       <Dialog
@@ -375,33 +383,42 @@ export function ManageAdmin() {
             {(deleteAdmin && deleteAdmin.nickname) || ` `}
           </DialogContentText>
           <List>
-            {data.map((item) => (
-              <ListItem>
-                <ListItemButton
-                  onClick={() =>
-                    setDeleteAdmin({
-                      ...deleteAdmin!,
-                      replaceManager: item.accountId,
-                      nickname: item.nickname,
-                    })
-                  }
-                >
-                  <img
-                    src={item.avatarUrl || 'default-avatar.png'}
-                    alt="Avatar"
-                    style={{ width: 50, height: 50 }}
-                  />
-                  {item.nickname}
-                </ListItemButton>
-              </ListItem>
-            ))}
+            {data.map(
+              (item) =>
+                deleteAdmin?.deleteManager !== item.accountId && (
+                  <ListItem>
+                    <ListItemButton
+                      onClick={() =>
+                        setDeleteAdmin({
+                          ...deleteAdmin!,
+                          replaceManager: item.accountId,
+                          nickname: item.nickname,
+                        })
+                      }
+                    >
+                      <img
+                        src={item.avatarUrl || 'default-avatar.png'}
+                        alt="Avatar"
+                        style={{ width: 50, height: 50 }}
+                      />
+                      {item.nickname}
+                    </ListItemButton>
+                  </ListItem>
+                )
+            )}
           </List>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen({ ...open, deleteAdmin: false })}>
             取消
           </Button>
-          <Button color="error" onClick={() => deleteManager()}>
+          <Button
+            color="error"
+            onClick={() => {
+              deleteManager();
+              window.location.reload();
+            }}
+          >
             删除
           </Button>
         </DialogActions>

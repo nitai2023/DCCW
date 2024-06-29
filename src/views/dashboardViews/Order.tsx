@@ -20,6 +20,7 @@ import {
   DialogActions,
 } from '@mui/material';
 import { getOrdersAPI, getOrderDetailsAPI } from '../../request/api';
+
 //订单
 interface IOrderItems {
   saleNum: number;
@@ -63,7 +64,7 @@ interface IOrders {
 export function Order() {
   const [pages, setPage] = useState({
     pageSize: 8,
-    pageNumber: 1,
+    pageNumber: 0,
     total: 0,
   });
   const [orders, setOrders] = useState<IOrders[]>([]);
