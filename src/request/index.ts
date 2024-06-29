@@ -40,10 +40,20 @@ service.interceptors.request.use(
 //响应拦截器
 service.interceptors.response.use((response) => {
   if (response.status == 200) {
-    return response.data;
+    if (response.data.success == false) {
+      showSnackbar(response.data.errorMsg);
+    } else {
+      return response.data;
+    }
   } else {
     return response;
   }
 });
+let showSnackbar: (message: string) => void;
+
+export const setSnackbarHandler = (handler: (message: string) => void) => {
+  showSnackbar = handler;
+};
+
 //最后把封装好的axios导出
 export default service;

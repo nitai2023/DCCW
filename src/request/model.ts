@@ -161,3 +161,9 @@ export interface getDictForm {
 export interface getAdvisesForm {
   adviseStatusCode?: string;
 }
+export interface rollbackMysqlForm {
+  date: string;
+}
+export interface uploadFileForm {
+  file: File;
+}

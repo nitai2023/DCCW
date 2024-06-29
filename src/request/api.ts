@@ -34,6 +34,8 @@ import {
   alterCommodityForm,
   getDictForm,
   getAdvisesForm,
+  rollbackMysqlForm,
+  uploadFileForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -343,5 +345,31 @@ export const getDictAPI = (form: getDictForm) => {
     method: 'GET',
     url: '/dict/getDict',
     params: form,
+  });
+};
+export const getMysqlBackupListAPI = () => {
+  return service({
+    method: 'GET',
+    url: '/mysql-backup/getMysqlBackupList',
+  });
+};
+export const rollbackMysqlAPI = (form: rollbackMysqlForm) => {
+  return service({
+    method: 'POST',
+    url: '/mysql-backup/rollbackMysql',
+    data: form,
+  });
+};
+export const uploadFileAPI = (form) => {
+  return service({
+    method: 'POST',
+    url: '/file/uploadFile',
+    data: form,
+    params: {
+      compressionQuality: 0.7,
+    },
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };

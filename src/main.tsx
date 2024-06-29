@@ -16,6 +16,8 @@ import { VipCenter } from './views/dashboardViews/VipCenter';
 import { RiderInformationManagement } from './views/dashboardViews/RiderInformationManagement';
 import { Chat } from './views/dashboardViews/chat/Chat';
 import { Order } from './views/dashboardViews/Order';
+import { Database } from './views/dashboardViews/Database';
+import { SnackbarProvider } from './components/SnackbarProvider';
 const router = createBrowserRouter([
   {
     path: '/',
@@ -75,11 +77,17 @@ const router = createBrowserRouter([
         path: '/dashboard/order',
         element: <Order></Order>,
       },
+      {
+        path: '/dashboard/database',
+        element: <Database></Database>,
+      },
     ],
   },
 ]);
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <SnackbarProvider>
+      <RouterProvider router={router} />
+    </SnackbarProvider>
   </React.StrictMode>
 );
