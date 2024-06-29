@@ -192,6 +192,7 @@ export function RiderInformationManagement() {
                     <Button
                       onClick={() => {
                         processApply(user.riderId, 1);
+                        window.location.reload();
                       }}
                     >
                       通过
@@ -199,6 +200,7 @@ export function RiderInformationManagement() {
                     <Button
                       onClick={() => {
                         processApply(user.riderId, -1);
+                        window.location.reload();
                       }}
                     >
                       拒绝
@@ -343,6 +345,7 @@ export function RiderInformationManagement() {
             onClick={() => {
               updateRider();
               setOpen(false);
+              window.location.reload();
             }}
             color="primary"
           >

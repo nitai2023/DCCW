@@ -160,6 +160,7 @@ export function VipCenter() {
             onClick={() => {
               setOpen(false);
               handleChange();
+              window.location.reload();
             }}
           >
             修改
