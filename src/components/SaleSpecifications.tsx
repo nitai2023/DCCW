@@ -79,6 +79,10 @@ export function SpecificationDialog({
     getSaleSpecificationsAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
+    setAddSpecification({
+      ...addSpecification!,
+      commodityId: commodityId,
+    });
   }, []);
   function handleSubmit() {
     if (editSpecification) {
@@ -309,7 +313,7 @@ export function SpecificationDialog({
       <Dialog
         open={dialog.add}
         onClose={() => {
-          setDialog({ ...dialog, edit: false });
+          setDialog({ ...dialog, add: false });
         }}
       >
         <DialogTitle>添加规格</DialogTitle>
@@ -413,7 +417,7 @@ export function SpecificationDialog({
         <DialogActions>
           <Button
             onClick={() => {
-              setDialog({ ...dialog, edit: false });
+              setDialog({ ...dialog, add: false });
             }}
             color="error"
           >

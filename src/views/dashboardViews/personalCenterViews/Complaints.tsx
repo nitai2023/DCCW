@@ -20,6 +20,7 @@ import {
   getAdvisesAPI,
   deleteAdviseByIdAPI,
   getDictAPI,
+  deleteAllAdvisesAPI,
 } from '../../../request/api';
 interface IData {
   adviseId: string;
@@ -88,12 +89,20 @@ export function Complaints() {
               ))}
             </Select>
           </FormControl>
-          <Button variant="contained" color="error" style={{ height: '56px' }}>
+          <Button
+            variant="contained"
+            color="error"
+            style={{ height: '56px' }}
+            onClick={() => {
+              deleteAllAdvisesAPI();
+              window.location.reload();
+            }}
+          >
             删除所有
           </Button>
         </Box>
       </Box>
-      <Box style={{ width: '100%', marginTop: 20 }}>
+      <Box style={{ width: '100%', marginTop: 20, maxHeight: '500px' }}>
         {data ? (
           data.map((item, index) => (
             <Accordion key={item.adviseId}>
@@ -108,12 +117,16 @@ export function Complaints() {
               <AccordionDetails>
                 <Grid container spacing={2}>
                   <Grid item xs={12} sm={6}>
-                    <Avatar
-                      alt="Advise Image"
-                      src={item.adviseImages}
-                      style={{ width: 60, height: 60 }}
-                      variant="rounded"
-                    />
+                    {item.adviseImages.split(',').map((image, index) => (
+                      <Grid item xs={12} sm={6} md={4} key={index}>
+                        <Avatar
+                          alt="Advise Image"
+                          src={image.trim()}
+                          style={{ width: 60, height: 60 }}
+                          variant="rounded"
+                        />
+                      </Grid>
+                    ))}
                     <Typography variant="subtitle1">
                       用户名称: {item.adviserName}
                     </Typography>{' '}
@@ -136,6 +149,7 @@ export function Complaints() {
                       color="error"
                       onClick={() => {
                         deleteAdvise(item.adviseId);
+                        window.location.reload();
                       }}
                     >
                       删除

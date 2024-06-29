@@ -13,17 +13,21 @@ import {
   DialogTitle,
   DialogActions,
   TextField,
+  IconButton,
 } from '@mui/material';
 import {
   deleteCommodityByIdAPI,
   alterCommodityAPI,
   getCommodityInfoAPI,
 } from '../request/api';
+import ConfirmDeletev from './Confirm';
 import { alterCommodityForm } from '../request/model';
 import { SpecificationDialog, BatchDialog } from './SaleSpecifications';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+import EditIcon from '@mui/icons-material/Edit';
+
 //商品卡片
 interface ProductCardProps {
   commodityId: string;
@@ -123,26 +127,21 @@ export function ProductCard({
             </Button>
           </Grid>
           <Grid item xs={4}>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={() => {
+            <ConfirmDeletev
+              onDelete={() => {
                 deleteCommodityByIdAPI({ commodityId: commodityId });
               }}
-            >
-              删除
-            </Button>
+            ></ConfirmDeletev>
           </Grid>
           <Grid item xs={4}>
-            <Button
-              variant="contained"
+            <IconButton
               color="primary"
               onClick={() => {
                 setEditOpen(true);
               }}
             >
-              修改
-            </Button>
+              <EditIcon />
+            </IconButton>
           </Grid>
         </Grid>
       </CardContent>

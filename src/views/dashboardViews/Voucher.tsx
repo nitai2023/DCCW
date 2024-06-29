@@ -13,7 +13,6 @@ import {
   TableRow,
   Paper,
   Button,
-  IconButton,
   TextField,
   Dialog,
   DialogActions,
@@ -21,9 +20,8 @@ import {
   DialogTitle,
   Box,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
-
+import ConfirmDeletev from '../../components/Confirm';
 //优惠卷
 interface IDiscounts {
   couponId: string;
@@ -60,9 +58,20 @@ export function Voucher() {
   const handleAddDiscount = () => {
     addCouponAPI(newDiscount!).then(() => {
       setUpdate(!update);
+      setNewDiscount(null);
+      setOpen(false);
       setOpen(false);
     });
   };
+  const getTodayDate = () => {
+    const today = new Date();
+    const yyyy = today.getFullYear();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
+  const todayDate = getTodayDate();
   return (
     <Box sx={{ p: 2 }}>
       <TableContainer component={Paper}>
@@ -97,12 +106,9 @@ export function Voucher() {
                   <TableCell>{discount.limitPerUser}</TableCell>
                   <TableCell>{discount.stock}</TableCell>
                   <TableCell>
-                    <IconButton
-                      onClick={() => handleDelete(discount.couponId)}
-                      color="secondary"
-                    >
-                      <DeleteIcon />
-                    </IconButton>
+                    <ConfirmDeletev
+                      onDelete={() => handleDelete(discount.couponId)}
+                    ></ConfirmDeletev>
                   </TableCell>
                 </TableRow>
               ))
@@ -161,6 +167,9 @@ export function Voucher() {
               fullWidth
               InputLabelProps={{
                 shrink: true,
+              }}
+              inputProps={{
+                min: todayDate,
               }}
               onChange={(e) =>
                 setNewDiscount({ ...newDiscount!, endTime: e.target.value })

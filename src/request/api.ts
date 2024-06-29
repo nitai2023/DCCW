@@ -360,7 +360,7 @@ export const rollbackMysqlAPI = (form: rollbackMysqlForm) => {
     data: form,
   });
 };
-export const uploadFileAPI = (form) => {
+export const uploadFileAPI = (form: uploadFileForm) => {
   return service({
     method: 'POST',
     url: '/file/uploadFile',
@@ -371,5 +371,11 @@ export const uploadFileAPI = (form) => {
     headers: {
       'Content-Type': 'multipart/form-data',
     },
+  });
+};
+export const deleteAllAdvisesAPI = () => {
+  return service({
+    method: 'DELETE',
+    url: '/advise/deleteAll',
   });
 };
