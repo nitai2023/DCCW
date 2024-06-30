@@ -201,9 +201,11 @@ export function Commodity() {
     });
   }, []);
   function handleAdd() {
+    console.log(addCommodity);
     if (addCommodity) {
       publishCommodityAPI(addCommodity).then(() => {
         setAddCommodity(null);
+        window.location.reload();
       });
     }
   }
@@ -522,6 +524,12 @@ export function Commodity() {
               shrink: true,
             }}
             value={addCommodity?.pictureUrls}
+            onChange={(e) =>
+              setAddCommodity({
+                ...addCommodity!,
+                pictureUrls: e.target.value,
+              })
+            }
           />
           <TextField
             margin="dense"
@@ -632,9 +640,8 @@ export function Commodity() {
           </Button>
           <Button
             onClick={() => {
-              handleAdd;
+              handleAdd();
               setAddDialog(false);
-              window.location.reload();
             }}
             color="primary"
           >
