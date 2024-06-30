@@ -117,7 +117,6 @@ export function Commodity() {
   );
   const [value, setValue] = useState<string>('1');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-
   const [select, setSelect] = useState({
     from: 0,
     size: 8,
@@ -138,20 +137,22 @@ export function Commodity() {
     setValue(newValue);
   };
   useEffect(() => {
-    getExpiringBatchAPI().then((res) => {
-      setExpiringBatch(res.data);
-      setWarnTotal(res.data.length);
-    });
-    getExpiredBatchAPI().then((res) => {
-      setExpiredBatch(res.data);
-      setWarnTotal(res.data.length + warnTotal);
-    });
-    getManagerInfoAPI().then((res) => {
-      setAdminInfo(res.data);
-    });
+    if (adminInfo && adminInfo.accountTypeCode == 'AT0002') {
+      getExpiringBatchAPI().then((res) => {
+        setExpiringBatch(res.data);
+        setWarnTotal(res.data.length);
+      });
+      getExpiredBatchAPI().then((res) => {
+        setExpiredBatch(res.data);
+        setWarnTotal(res.data.length + warnTotal);
+      });
+    }
     getStockShortAPI().then((res) => {
       setWarnTotal(res.data.length + warnTotal);
       setStockShort(res.data);
+    });
+    getManagerInfoAPI().then((res) => {
+      setAdminInfo(res.data);
     });
   }, []);
   useEffect(() => {

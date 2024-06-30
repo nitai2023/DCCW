@@ -78,18 +78,30 @@ export function RiderInformationManagement() {
     }
   }, [select]);
   function updateRider() {
-    axios.post(`http://182.92.128.37:8501//rider/updateRider`, rider);
+    axios
+      .post(`http://182.92.128.37:8501//rider/updateRider`, rider)
+      .then(() => {
+        window.location.reload();
+      });
   }
   function processApply(id: string, isApply: number) {
-    axios.post(`http://182.92.128.37:8501//rider/processApply`, {
-      isApply: isApply,
-      riderId: id,
-    });
+    axios
+      .post(`http://182.92.128.37:8501//rider/processApply`, {
+        isApply: isApply,
+        riderId: id,
+      })
+      .then(() => {
+        window.location.reload();
+      });
   }
   function handleDelete(id: string) {
-    axios.post(`http://182.92.128.37:8501//rider/deleteRider`, {
-      riderId: id,
-    });
+    axios
+      .post(`http://182.92.128.37:8501//rider/deleteRider`, {
+        riderId: id,
+      })
+      .then(() => {
+        window.location.reload();
+      });
   }
   return (
     <Box
@@ -192,7 +204,6 @@ export function RiderInformationManagement() {
                     <Button
                       onClick={() => {
                         processApply(user.riderId, 1);
-                        window.location.reload();
                       }}
                     >
                       通过
@@ -200,7 +211,6 @@ export function RiderInformationManagement() {
                     <Button
                       onClick={() => {
                         processApply(user.riderId, -1);
-                        window.location.reload();
                       }}
                     >
                       拒绝
@@ -345,7 +355,6 @@ export function RiderInformationManagement() {
             onClick={() => {
               updateRider();
               setOpen(false);
-              window.location.reload();
             }}
             color="primary"
           >

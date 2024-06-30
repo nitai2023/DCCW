@@ -102,7 +102,6 @@ export function DataAnalysis() {
     getAddressInfoAPI().then((res) => {
       if (res && res.data) {
         setAddressData(res.data);
-        setError(null);
       } else {
         setAddressData([]);
       }
@@ -118,6 +117,7 @@ export function DataAnalysis() {
       (res) => {
         if (res && res.data) {
           setOrdersData(res.data);
+          console.log(res.data);
         } else {
           setOrdersData([]);
         }
@@ -371,7 +371,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(addressData).map((key) => ({
-                      value: addressData[Number(key)],
+                      value: addressData[key],
                       name: key,
                     })),
                   },
@@ -392,7 +392,7 @@ export function DataAnalysis() {
                     name: '销售量',
                     type: 'pie',
                     data: Object.keys(consumptionData).map((key) => ({
-                      value: consumptionData[Number(key)],
+                      value: consumptionData[key],
                       name: key,
                     })),
                   },
@@ -448,7 +448,7 @@ export function DataAnalysis() {
                       name: '销售量',
                       type: 'pie',
                       data: Object.keys(ordersData).map((key) => ({
-                        value: ordersData[Number(key)],
+                        value: ordersData[key],
                         name: key,
                       })),
                     },
