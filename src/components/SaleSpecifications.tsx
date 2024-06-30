@@ -83,7 +83,7 @@ export function SpecificationDialog({
       ...addSpecification!,
       commodityId: commodityId,
     });
-  }, []);
+  }, [dialog.edit, dialog.add]);
   function handleSubmit() {
     if (editSpecification) {
       alterSaleSpecificationsAPI(editSpecification).then(() => {
@@ -327,7 +327,7 @@ export function SpecificationDialog({
         <DialogContent>
           <TextField
             margin="dense"
-            label="Original Price"
+            label="原价"
             name="originalPrice"
             type="number"
             fullWidth
@@ -340,7 +340,7 @@ export function SpecificationDialog({
           />
           <TextField
             margin="dense"
-            label="Price"
+            label="价格"
             name="price"
             type="number"
             fullWidth
@@ -353,7 +353,7 @@ export function SpecificationDialog({
           />
           <TextField
             margin="dense"
-            label="Unit"
+            label="折扣"
             name="unit"
             fullWidth
             onChange={(e) => {
@@ -365,7 +365,7 @@ export function SpecificationDialog({
           />
           <TextField
             margin="dense"
-            label="Remark"
+            label="备注"
             name="remark"
             fullWidth
             onChange={(e) => {
@@ -388,7 +388,7 @@ export function SpecificationDialog({
                   }}
                 />
               }
-              label="Sale or Rent"
+              label="出售或出租"
             />
           </Box>
           <Box>
@@ -404,12 +404,12 @@ export function SpecificationDialog({
                   }}
                 />
               }
-              label="Default"
+              label="是否默认"
             />
           </Box>
           <TextField
             margin="dense"
-            label="Purchase Limit"
+            label="购买限制"
             name="purchaseLimit"
             type="number"
             fullWidth
@@ -460,7 +460,7 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
     getCommodityBatchAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
-  }, []);
+  }, [dialog.edit, dialog.add]);
   function handleSubmit() {
     if (editBatch) {
       alterCommodityBatchAPI(editBatch);
@@ -532,7 +532,6 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
                       deleteCommodityBatchByIdAPI({
                         commodityBatchId: row.batchId,
                       });
-                      window.location.reload();
                     }}
                   >
                     <DeleteIcon />
@@ -671,8 +670,8 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
           />
           <TextField
             margin="dense"
-            label="Price"
-            name="price"
+            label="库存"
+            name="库存"
             type="number"
             fullWidth
             onChange={(e) =>

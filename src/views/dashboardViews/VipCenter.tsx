@@ -36,9 +36,11 @@ export function VipCenter() {
     getVipListAPI().then((res) => {
       setRows(res.data);
     });
-  }, [changeVip]);
+  }, [changeVip, open]);
   const handleChange = () => {
-    changeUpgradeConditionAPI(changeVip!);
+    changeUpgradeConditionAPI(changeVip!).then(() => {
+      setOpen(false);
+    });
   };
   return (
     <div>
@@ -158,9 +160,7 @@ export function VipCenter() {
         <DialogActions>
           <Button
             onClick={() => {
-              setOpen(false);
               handleChange();
-              window.location.reload();
             }}
           >
             修改
