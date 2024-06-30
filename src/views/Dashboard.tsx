@@ -251,17 +251,6 @@ export function Dashboard() {
                       </ListItemButton>
                     </ListItem>
                   </Link>
-                  <Link to="/dashboard/database">
-                    <ListItem>
-                      <ListItemButton>
-                        <ListItemIcon>
-                          <BackupTableIcon color="success" fontSize="large" />
-                        </ListItemIcon>
-                        数据库备份
-                        <ListItemText />
-                      </ListItemButton>
-                    </ListItem>
-                  </Link>
                 </List>
               )
             ) : (
