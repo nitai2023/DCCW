@@ -83,7 +83,7 @@ export function SpecificationDialog({
       ...addSpecification!,
       commodityId: commodityId,
     });
-  }, []);
+  }, [dialog.edit, dialog.add]);
   function handleSubmit() {
     if (editSpecification) {
       alterSaleSpecificationsAPI(editSpecification).then(() => {
@@ -460,7 +460,7 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
     getCommodityBatchAPI({ commodityId: commodityId }).then((res) => {
       setData(res.data);
     });
-  }, []);
+  }, [dialog.edit, dialog.add]);
   function handleSubmit() {
     if (editBatch) {
       alterCommodityBatchAPI(editBatch);
@@ -532,7 +532,6 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
                       deleteCommodityBatchByIdAPI({
                         commodityBatchId: row.batchId,
                       });
-                      window.location.reload();
                     }}
                   >
                     <DeleteIcon />
@@ -671,8 +670,8 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
           />
           <TextField
             margin="dense"
-            label="Price"
-            name="price"
+            label="库存"
+            name="库存"
             type="number"
             fullWidth
             onChange={(e) =>

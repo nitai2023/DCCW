@@ -18,7 +18,6 @@ const ConfirmDelete = ({ onDelete }) => {
   const handleDelete = () => {
     onDelete();
     setAnchorEl(null);
-    window.location.reload();
   };
 
   const open = Boolean(anchorEl);

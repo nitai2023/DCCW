@@ -22,6 +22,8 @@ import {
   Avatar,
   Grid,
   Switch,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 
 import ConfirmDeletev from '../../components/Confirm';
@@ -116,15 +118,32 @@ export function RiderInformationManagement() {
       <Box sx={{ display: 'flex', justifyContent: 'space-between', mb: 2 }}>
         <Typography variant="h3">骑手信息</Typography>
         <Box>
-          <FormControlLabel
-            control={
-              <Switch
-                checked={select}
-                onChange={(e) => setSelect(e.target.checked)}
-              />
-            }
-            label={select ? '骑手信息' : '认证查询'}
-          />
+          <ToggleButtonGroup
+            value={select}
+            exclusive
+            onChange={(
+              _: React.MouseEvent<HTMLElement>,
+              newAlignment: string | null
+            ) => {
+              if (newAlignment !== '骑手信息') {
+                setSelect(false);
+              } else {
+                setSelect(true);
+              }
+            }}
+            aria-label="text alignment"
+          >
+            <ToggleButton value="骑手信息">
+              <Button variant="contained" color="primary">
+                骑手信息
+              </Button>
+            </ToggleButton>
+            <ToggleButton value="认证查询">
+              <Button variant="contained" color="primary">
+                认证查询
+              </Button>
+            </ToggleButton>
+          </ToggleButtonGroup>
         </Box>
       </Box>
       {select ? (

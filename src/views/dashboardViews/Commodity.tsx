@@ -27,6 +27,8 @@ import {
   DialogActions,
   DialogContent,
   DialogTitle,
+  ToggleButtonGroup,
+  ToggleButton,
 } from '@mui/material';
 import { ProductCard } from '../../components/ProductCard';
 import parse from 'html-react-parser';
@@ -182,7 +184,14 @@ export function Commodity() {
         });
       });
     }
-  }, [select.mod, select.from, select.size, select.category, select.option]);
+  }, [
+    select.mod,
+    select.from,
+    select.size,
+    select.category,
+    select.option,
+    addDialog,
+  ]);
   function getCommodity() {
     getCommodityAPI({
       from: select.from,
@@ -240,18 +249,32 @@ export function Commodity() {
               <ShoppingCartIcon color="primary" />
             </Badge>
           ) : null}
-          <FormControlLabel
-            control={
-              <Switch
-                defaultChecked
-                value={select.option}
-                onChange={(e) =>
-                  setSelect({ ...select, option: e.target.checked })
-                }
-              />
-            }
-            label={select.option ? '类型查询' : '目录查询'}
-          />
+          <ToggleButtonGroup
+            value={select}
+            exclusive
+            onChange={(
+              _: React.MouseEvent<HTMLElement>,
+              newAlignment: string | null
+            ) => {
+              if (newAlignment !== '类型查询') {
+                setSelect({ ...select, option: false });
+              } else {
+                setSelect({ ...select, option: true });
+              }
+            }}
+            aria-label="text alignment"
+          >
+            <ToggleButton value="类型查询">
+              <Button variant="contained" color="primary">
+                类型查询
+              </Button>
+            </ToggleButton>
+            <ToggleButton value="目录查询">
+              <Button variant="contained" color="primary">
+                目录查询
+              </Button>
+            </ToggleButton>
+          </ToggleButtonGroup>
           {select.option ? (
             <TextField
               id="outlined-select-currency"
