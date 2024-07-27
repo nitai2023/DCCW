@@ -65,22 +65,22 @@ export function VipCenter() {
           <TableHead>
             <TableRow>
               <TableCell align="left" style={{ width: '10%' }}>
-                vipLevelCode
+                会员等级码
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                vipLevelName
+                会员等级名
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                discountRate
+                折扣力度
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                spendMin
+                最低消费
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                spendMax
+                最高消费
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
-                description
+                简介
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
                 操作

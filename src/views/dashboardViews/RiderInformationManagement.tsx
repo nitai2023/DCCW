@@ -133,15 +133,33 @@ export function RiderInformationManagement() {
             }}
             aria-label="text alignment"
           >
-            <ToggleButton value="骑手信息">
-              <Button variant="contained" color="primary">
-                骑手信息
-              </Button>
+            <ToggleButton
+              value="骑手信息"
+              sx={{
+                backgroundColor: select === true ? '#1976d2' : '',
+                color: select === true ? 'white' : 'black',
+                marginBottom: 0,
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor: '#1976d2',
+                },
+              }}
+            >
+              骑手信息
             </ToggleButton>
-            <ToggleButton value="认证查询">
-              <Button variant="contained" color="primary">
-                认证查询
-              </Button>
+            <ToggleButton
+              value="认证查询"
+              sx={{
+                backgroundColor: select === false ? '#1976d2' : '',
+                color: select === false ? 'white' : 'black',
+                marginBottom: 0,
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor: '#1976d2',
+                },
+              }}
+            >
+              认证查询
             </ToggleButton>
           </ToggleButtonGroup>
         </Box>

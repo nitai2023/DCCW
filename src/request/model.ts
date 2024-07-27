@@ -66,6 +66,7 @@ export interface addManagerForm {
   avatarUrl: string;
   password: string;
   phoneNum: string;
+  managerType: number;
 }
 export interface getCommodityBatchForm {
   commodityId: string;
@@ -106,6 +107,7 @@ export interface addCommodityBatchForm {
   produceTime: string;
   expiredTime: string;
   stock: number;
+  purchasePrice: number;
 }
 export interface deleteCommodityBatchByIdForm {
   commodityBatchId: string;
@@ -166,4 +168,28 @@ export interface rollbackMysqlForm {
 }
 export interface uploadFileForm {
   file: File;
+}
+export interface getProfitForm {
+  timeInterval: string;
+  mod: string;
+}
+export interface getAllowTimeSlotForm {
+  mod: number;
+}
+export interface getTotalSaleAndTotalSaleNumForm {
+  from: string;
+  to: string;
+  mod: string;
+}
+export interface getInventoryTurnoverForm {
+  interval: string;
+}
+export interface getUserCompositionForm {
+  type: string;
+}
+export interface getPresignedUrlForOssUploadForm {
+  suffix: string;
+}
+export interface auditPicLawfulForm {
+  picUrl: string;
 }

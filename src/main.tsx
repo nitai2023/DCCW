@@ -1,5 +1,6 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
+import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import './index.css';
 import { Home } from './views/Home';
@@ -18,6 +19,63 @@ import { Chat } from './views/dashboardViews/chat/Chat';
 import { Order } from './views/dashboardViews/Order';
 import { Database } from './views/dashboardViews/Database';
 import { SnackbarProvider } from './components/SnackbarProvider';
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: '#1976d2', // 你可以根据需要调整 primary 颜色
+    },
+  },
+  components: {
+    MuiToggleButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            border: '1px solid transparent', // 去掉选中状态的黑边
+            backgroundColor: '#1976d2', // 选中状态的背景色
+            color: 'white', // 选中状态的文本色
+            minwith: '200px', // 设置按钮的最小宽度
+
+            '&:hover': {
+              backgroundColor: '#115293', // 选中状态悬停的背景色
+              border: '1px solid transparent',
+            },
+          },
+          marginBottom: 4, // 设置按钮的底部外边距
+          '&:hover': {
+            border: '1px solid transparent', // 去掉悬停状态的黑边
+            backgroundColor: 'lightgray', // 未选中状态悬停的背景色
+          },
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+    MuiTab: {
+      styleOverrides: {
+        root: {
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+    MuiButton: {
+      styleOverrides: {
+        root: {
+          '&.Mui-selected': {
+            border: '1px solid transparent', // 去掉选中状态的黑边
+            backgroundColor: '#1976d2', // 选中状态的背景色
+            color: 'white', // 选中状态的文本色
+          },
+          '&:focus': {
+            outline: 'none',
+          },
+        },
+      },
+    },
+  },
+});
 const router = createBrowserRouter([
   {
     path: '/',
@@ -87,7 +145,9 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SnackbarProvider>
-      <RouterProvider router={router} />
+      <ThemeProvider theme={theme}>
+        <RouterProvider router={router} />
+      </ThemeProvider>
     </SnackbarProvider>
   </React.StrictMode>
 );

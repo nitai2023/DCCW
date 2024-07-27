@@ -9,8 +9,6 @@ import {
   Select,
   InputLabel,
   FormControl,
-  FormControlLabel,
-  Switch,
   Box,
   Badge,
   Dialog,
@@ -215,7 +213,7 @@ export function Commodity() {
     if (addCommodity) {
       publishCommodityAPI(addCommodity).then(() => {
         setAddCommodity(null);
-        window.location.reload();
+        setAddDialog(false);
       });
     }
   }
@@ -263,16 +261,35 @@ export function Commodity() {
               }
             }}
             aria-label="text alignment"
+            sx={{ height: 56, marginBottom: 0 }}
           >
-            <ToggleButton value="类型查询">
-              <Button variant="contained" color="primary">
-                类型查询
-              </Button>
+            <ToggleButton
+              value="类型查询"
+              sx={{
+                backgroundColor: select.option === true ? '#1976d2' : '',
+                color: select.option === true ? 'white' : 'black',
+                marginBottom: 0,
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor: '#1976d2',
+                },
+              }}
+            >
+              类型查询
             </ToggleButton>
-            <ToggleButton value="目录查询">
-              <Button variant="contained" color="primary">
-                目录查询
-              </Button>
+            <ToggleButton
+              value="目录查询"
+              sx={{
+                backgroundColor: select.option === false ? '#1976d2' : '',
+                color: select.option === false ? 'white' : 'black',
+                marginBottom: 0,
+                '&:hover': {
+                  color: 'white',
+                  backgroundColor: '#1976d2',
+                },
+              }}
+            >
+              目录查询
             </ToggleButton>
           </ToggleButtonGroup>
           {select.option ? (
@@ -280,7 +297,7 @@ export function Commodity() {
               id="outlined-select-currency"
               select
               label="查询类型"
-              style={{ width: '200px' }}
+              sx={{ width: '200px', m: 1 }}
               value={select.mod}
               onChange={(e) => {
                 setSelect({ ...select, mod: Number(e.target.value) });
@@ -353,24 +370,26 @@ export function Commodity() {
           >
             查询
           </Button>
-          <Button
-            variant="contained"
-            color="success"
-            style={{ height: '56px', width: '130px' }}
-            startIcon={<AddIcon />}
-            onClick={() => {
-              setAddDialog(true);
-            }}
-          >
-            添加商品
-          </Button>
+          {adminInfo && adminInfo.accountTypeCode == 'AT0002' ? (
+            <Button
+              variant="contained"
+              color="success"
+              style={{ height: '56px', width: '130px' }}
+              startIcon={<AddIcon />}
+              onClick={() => {
+                setAddDialog(true);
+              }}
+            >
+              添加商品
+            </Button>
+          ) : null}
         </Box>
       </Box>
       <Grid
         container
         spacing={4}
         alignItems="center"
-        justifyContent="center"
+        justifyContent="flex-start"
         sx={{ width: '100%', marginLeft: '0', marginTop: '-10px' }}
       >
         {commodity.map((product, index) => (
@@ -665,7 +684,6 @@ export function Commodity() {
           <Button
             onClick={() => {
               handleAdd();
-              setAddDialog(false);
             }}
             color="primary"
           >

@@ -468,7 +468,9 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
   }
   function handleAdd() {
     if (addBatch) {
-      addCommodityBatchAPI(addBatch);
+      addCommodityBatchAPI(addBatch).then(() => {
+        setDialog({ ...dialog, add: false });
+      });
     }
   }
   return (
@@ -485,6 +487,7 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
             produceTime: '',
             expiredTime: '',
             stock: 0,
+            purchasePrice: 0,
           });
         }}
       >
@@ -674,8 +677,22 @@ export function BatchDialog({ commodityId }: getSaleSpecificationsForm) {
             name="库存"
             type="number"
             fullWidth
+            inputProps={{ min: 10 }}
             onChange={(e) =>
               setAddBatch({ ...addBatch!, stock: Number(e.target.value) })
+            }
+          />
+          <TextField
+            margin="dense"
+            label="进货单价"
+            name="进货单价"
+            type="number"
+            fullWidth
+            onChange={(e) =>
+              setAddBatch({
+                ...addBatch!,
+                purchasePrice: Number(e.target.value),
+              })
             }
           />
         </DialogContent>

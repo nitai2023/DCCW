@@ -17,7 +17,6 @@ export function Login() {
     const res = (await userLoginAPI(loginForm)).data;
     window.localStorage.setItem('userToken', res);
     navigate('/dashboard');
-    console.log(res);
   }
   return (
     <div className={styles.body}>

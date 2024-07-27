@@ -27,6 +27,7 @@ import {
   List,
   ListItem,
   ListItemButton,
+  MenuItem,
 } from '@mui/material';
 import FileUpload from '../../components/ImageUpload';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -39,6 +40,8 @@ interface IData {
   account: string;
   phoneNum: string;
   createTime: string;
+  accountType: string;
+  managerType: number;
 }
 interface IOpen {
   changeAdmin: boolean;
@@ -49,6 +52,7 @@ interface IDeleteAdmin {
   deleteManager: string;
   replaceManager: string;
   nickname: string;
+  managerType: number;
 }
 
 // 管理员管理
@@ -134,6 +138,9 @@ export function ManageAdmin() {
                 注册时间
               </TableCell>
               <TableCell align="left" style={{ width: '10%' }}>
+                管理类型
+              </TableCell>
+              <TableCell align="left" style={{ width: '10%' }}>
                 操作
               </TableCell>
             </TableRow>
@@ -159,6 +166,9 @@ export function ManageAdmin() {
                 <TableCell align="left">{row.phoneNum}</TableCell>
                 <TableCell align="left">{row.createTime}</TableCell>
                 <TableCell align="left">
+                  {row.managerType == 1 ? '管理零食' : '管理服饰'}
+                </TableCell>
+                <TableCell align="left">
                   <TableCell>
                     <IconButton
                       color="primary"
@@ -182,6 +192,7 @@ export function ManageAdmin() {
                         setDeleteAdmin({
                           ...deleteAdmin!,
                           deleteManager: row.accountId,
+                          managerType: row.managerType,
                         });
                         setOpen({ ...open, deleteAdmin: true });
                       }}
@@ -351,6 +362,21 @@ export function ManageAdmin() {
               });
             }}
           />
+          <TextField
+            id="outlined-select-currency"
+            select
+            label="查询类型"
+            sx={{ width: '100%', marginTop: '10px' }}
+            onChange={(e) => {
+              setAddAdmin({
+                ...addAdmin!,
+                managerType: Number(e.target.value),
+              });
+            }}
+          >
+            <MenuItem value={1}>管理零食</MenuItem>
+            <MenuItem value={2}>管理服饰</MenuItem>
+          </TextField>
         </DialogContent>
         <DialogActions>
           <Button onClick={() => setOpen({ ...open, addAdmin: false })}>
@@ -360,7 +386,6 @@ export function ManageAdmin() {
             onClick={() => {
               addManager();
               setOpen({ ...open, addAdmin: false });
-              window.location.reload();
             }}
           >
             添加
@@ -385,7 +410,8 @@ export function ManageAdmin() {
           <List>
             {data.map(
               (item) =>
-                deleteAdmin?.deleteManager !== item.accountId && (
+                deleteAdmin?.deleteManager !== item.accountId &&
+                deleteAdmin?.managerType == item.managerType && (
                   <ListItem>
                     <ListItemButton
                       onClick={() =>

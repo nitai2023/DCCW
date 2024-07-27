@@ -36,6 +36,13 @@ import {
   getAdvisesForm,
   rollbackMysqlForm,
   uploadFileForm,
+  getProfitForm,
+  getAllowTimeSlotForm,
+  getTotalSaleAndTotalSaleNumForm,
+  getInventoryTurnoverForm,
+  getUserCompositionForm,
+  getPresignedUrlForOssUploadForm,
+  auditPicLawfulForm,
 } from './model';
 export const userLoginAPI = (form: loginForm) => {
   return service({
@@ -377,5 +384,67 @@ export const deleteAllAdvisesAPI = () => {
   return service({
     method: 'DELETE',
     url: '/advise/deleteAll',
+  });
+};
+export const getProfitAPI = (form: getProfitForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getProfit',
+    params: form,
+  });
+};
+export const getAllowTimeSlotAPI = (form: getAllowTimeSlotForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getAllowTimeSlot',
+    params: form,
+  });
+};
+export const getTotalSaleAndTotalSaleNumAPI = (
+  form: getTotalSaleAndTotalSaleNumForm
+) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getTotalSaleAndTotalSaleNum',
+    params: form,
+  });
+};
+export const getTotalSaleAndTotalSaleNumPerCommodityAPI = (
+  form: getTotalSaleAndTotalSaleNumForm
+) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getTotalSaleAndTotalSaleNumPerCommodity',
+    params: form,
+  });
+};
+export const getInventoryTurnoverAPI = (form: getInventoryTurnoverForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getInventoryTurnover',
+    params: form,
+  });
+};
+export const getUserCompositionAPI = (form: getUserCompositionForm) => {
+  return service({
+    method: 'GET',
+    url: '/analysis/getUserComposition',
+    params: form,
+  });
+};
+export const getPresignedUrlForOssUploadAPI = (
+  form: getPresignedUrlForOssUploadForm
+) => {
+  return service({
+    method: 'GET',
+    url: '/file/get_presigned_url_for_oss_upload',
+    params: form,
+  });
+};
+export const auditPicLawfulAPI = (form: auditPicLawfulForm) => {
+  return service({
+    method: 'GET',
+    url: '/file/auditPicLawful',
+    params: form,
   });
 };

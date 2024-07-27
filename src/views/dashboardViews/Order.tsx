@@ -64,7 +64,7 @@ interface IOrders {
 export function Order() {
   const [pages, setPage] = useState({
     pageSize: 8,
-    pageNumber: 0,
+    pageNumber: 1,
     total: 0,
   });
   const [orders, setOrders] = useState<IOrders[]>([]);
@@ -135,7 +135,7 @@ export function Order() {
         </Table>
       </TableContainer>
       <Pagination
-        count={1 + Math.round(pages.total / 8)}
+        count={Math.round(pages.total / 8)}
         variant="outlined"
         color="primary"
         sx={{
