@@ -17,11 +17,9 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  FormControlLabel,
   DialogTitle,
   Avatar,
   Grid,
-  Switch,
   ToggleButtonGroup,
   ToggleButton,
 } from '@mui/material';

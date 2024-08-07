@@ -1,14 +1,14 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom/client';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { createBrowserRouter, RouterProvider } from 'react-router-dom';
+import { createHashRouter, RouterProvider, Navigate } from 'react-router-dom';
+
 import './index.css';
 import { Home } from './views/Home';
 import { Login } from './views/login';
 import { Dashboard } from './views/Dashboard';
 import { PersonalCenter } from './views/dashboardViews/PersonalCenter';
 import { DataAnalysis } from './views/dashboardViews/DataAnalysis';
-import { MyEmail } from './views/dashboardViews/personalCenterViews/MyEmail';
 import { Complaints } from './views/dashboardViews/personalCenterViews/Complaints';
 import { ManageAdmin } from './views/dashboardViews/ManageAdmin';
 import { Voucher } from './views/dashboardViews/Voucher';
@@ -76,7 +76,11 @@ const theme = createTheme({
     },
   },
 });
-const router = createBrowserRouter([
+const PrivateRoute = () => {
+  const token = localStorage.getItem('userToken');
+  return token ? <Dashboard /> : <Navigate to="/login?redirected=true" />;
+};
+const router = createHashRouter([
   {
     path: '/',
     element: <Home></Home>,
@@ -87,16 +91,12 @@ const router = createBrowserRouter([
   },
   {
     path: '/dashboard',
-    element: <Dashboard></Dashboard>,
+    element: <PrivateRoute></PrivateRoute>,
     children: [
       {
         path: '/dashboard/personalcenter',
         element: <PersonalCenter></PersonalCenter>,
         children: [
-          {
-            path: '/dashboard/personalcenter/myemail',
-            element: <MyEmail></MyEmail>,
-          },
           {
             path: '/dashboard/personalcenter/complaints',
             element: <Complaints></Complaints>,
@@ -142,6 +142,7 @@ const router = createBrowserRouter([
     ],
   },
 ]);
+
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
     <SnackbarProvider>

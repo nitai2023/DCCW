@@ -3,9 +3,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Typography,
-  Avatar,
+  ImageList,
   Grid,
-  Divider,
   Box,
   FormControl,
   InputLabel,
@@ -13,8 +12,10 @@ import {
   MenuItem,
   Button,
   SelectChangeEvent,
+  ImageListItem,
 } from '@mui/material';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import { NoData } from '../../../components/NoData';
 import { useEffect, useState } from 'react';
 import {
   getAdvisesAPI,
@@ -46,7 +47,7 @@ export function Complaints() {
   const [Category, setCategory] = useState('');
   const [dict, setDict] = useState<IDict[]>([]);
   const [data, setData] = useState<IData[]>([]);
-
+  const [updata, setUpdata] = useState(false);
   const handleChange = (event: SelectChangeEvent<string>) => {
     setCategory(event.target.value as string);
   };
@@ -57,7 +58,7 @@ export function Complaints() {
     getDictAPI({ dictKey: 'dict:AdviseType' }).then((res) => {
       setDict(res.data);
     });
-  }, []);
+  }, [updata]);
   useEffect(() => {
     getAdvisesAPI({ adviseStatusCode: Category }).then((res) => {
       setData(res.data);
@@ -68,7 +69,13 @@ export function Complaints() {
   };
   return (
     <Box style={{ padding: '20px' }}>
-      <Box style={{ display: 'flex', justifyContent: 'space-between' }}>
+      <Box
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          borderBottom: '1px solid black',
+        }}
+      >
         <Typography variant="h3" gutterBottom>
           投诉列表
         </Typography>
@@ -95,14 +102,20 @@ export function Complaints() {
             style={{ height: '56px' }}
             onClick={() => {
               deleteAllAdvisesAPI();
-              window.location.reload();
+              setUpdata(!updata);
             }}
           >
             删除所有
           </Button>
         </Box>
       </Box>
-      <Box style={{ width: '100%', marginTop: 20, maxHeight: '500px' }}>
+      <Box
+        style={{
+          width: '100%',
+          marginTop: 20,
+          maxHeight: '900px',
+        }}
+      >
         {data ? (
           data.map((item, index) => (
             <Accordion key={item.adviseId}>
@@ -110,33 +123,34 @@ export function Complaints() {
                 expandIcon={<ExpandMoreIcon />}
                 aria-controls={`panel${index}-content`}
                 id={`panel${index}-header`}
+                sx={{
+                  '& .MuiAccordionSummary-content': {
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                  },
+                }}
               >
-                <Typography>用户建议详情 {index + 1}</Typography>
-              </AccordionSummary>{' '}
-              <Divider variant="middle" style={{ margin: '20px 0' }} />
+                <Typography variant="h5">{item.adviserName}的建议</Typography>
+                <Button
+                  variant="contained"
+                  color="error"
+                  onClick={() => {
+                    deleteAdvise(item.adviseId);
+                    setUpdata(!updata);
+                  }}
+                  sx={{ marginRight: '20px' }}
+                >
+                  删除
+                </Button>
+              </AccordionSummary>
               <AccordionDetails>
-                <Grid container spacing={2}>
-                  <Grid item xs={12} sm={6}>
-                    {item.adviseImages.split(',').map((image, index) => (
-                      <Grid item xs={12} sm={6} md={4} key={index}>
-                        <Avatar
-                          alt="Advise Image"
-                          src={image.trim()}
-                          style={{ width: 60, height: 60 }}
-                          variant="rounded"
-                        />
-                      </Grid>
-                    ))}
+                <Grid container spacing={3}>
+                  <Grid item xs>
                     <Typography variant="subtitle1">
                       用户名称: {item.adviserName}
-                    </Typography>{' '}
+                    </Typography>
                     <Typography variant="subtitle1">
                       性别: {item.gender ? '男' : '女'}
-                    </Typography>
-                  </Grid>
-                  <Grid item xs={12} sm={6}>
-                    <Typography variant="body1" gutterBottom>
-                      建议内容: {item.adviseContent}
                     </Typography>
                     <Typography variant="subtitle1">
                       联系电话: {item.phoneNum}
@@ -144,23 +158,55 @@ export function Complaints() {
                     <Typography variant="subtitle1">
                       提交时间: {new Date(item.submitTime).toLocaleString()}
                     </Typography>
-                    <Button
-                      variant="contained"
-                      color="error"
-                      onClick={() => {
-                        deleteAdvise(item.adviseId);
-                        window.location.reload();
-                      }}
+                  </Grid>
+                  <Grid item xs={4}>
+                    <ImageList cols={item.adviseImages.split(',').length}>
+                      {item.adviseImages.split(',').map((image, index) => (
+                        <ImageListItem key={index}>
+                          <img
+                            alt="Advise Image"
+                            src={image.trim()}
+                            key={index}
+                          />
+                        </ImageListItem>
+                      ))}
+                    </ImageList>
+                    {/* <Grid item xs={12} sm={6} md={4} spacing={2} container>
+                      {item.adviseImages.split(',').map((image, index) => (
+                        <>
+                          <Grid
+                            xs={4}
+                            style={{ width: 100, height: 100 }}
+                          ></Grid>
+                          <Grid xs={4} style={{ width: 100, height: 100 }}>
+                            <img
+                              alt="Advise Image"
+                              src={image.trim()}
+                              key={index}
+                            />
+                          </Grid>
+                        </>
+                      ))}
+                    </Grid> */}
+                  </Grid>
+
+                  <Grid item xs>
+                    <Typography gutterBottom>建议内容:</Typography>
+                    <Typography
+                      border={0.5}
+                      p={1}
+                      borderRadius={1}
+                      minHeight={50}
                     >
-                      删除
-                    </Button>
+                      {item.adviseContent}
+                    </Typography>
                   </Grid>
                 </Grid>
               </AccordionDetails>
             </Accordion>
           ))
         ) : (
-          <Box>无数据</Box>
+          <NoData></NoData>
         )}
       </Box>
     </Box>

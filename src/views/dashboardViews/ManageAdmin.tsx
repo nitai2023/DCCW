@@ -365,7 +365,7 @@ export function ManageAdmin() {
           <TextField
             id="outlined-select-currency"
             select
-            label="查询类型"
+            label="管理类型"
             sx={{ width: '100%', marginTop: '10px' }}
             onChange={(e) => {
               setAddAdmin({

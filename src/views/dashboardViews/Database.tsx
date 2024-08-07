@@ -30,11 +30,8 @@ export function Database() {
   const handleClick = (date: string) => {
     setSelectedDate(date);
     setAnchorEl(null);
-    rollbackMysqlAPI({ date: date }).then((res) => {
-      console.log(res);
-    });
+    rollbackMysqlAPI({ date: date });
   };
-
   const handleButtonClick = (
     event: React.MouseEvent<HTMLElement>,
     date: string
@@ -42,11 +39,9 @@ export function Database() {
     setSelectedDate(date);
     setAnchorEl(event.currentTarget);
   };
-
   const handleClose = () => {
     setAnchorEl(null);
   };
-
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popper' : undefined;
   return (
@@ -67,7 +62,17 @@ export function Database() {
         ))
       ) : (
         <TableContainer component={Paper} sx={{ maxHeight: 770 }}>
-          <Table>
+          <Table
+            sx={{
+              margin: '1%',
+              width: '98%',
+              border: '1px solid #ccc',
+              borderRadius: '5px',
+              height: '98%',
+            }}
+            stickyHeader
+            // aria-label="text alignment"
+          >
             <TableHead sx={{ backgroundColor: '	#DCDCDC' }}>
               <TableRow>
                 <TableCell>序号</TableCell>

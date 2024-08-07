@@ -9,7 +9,7 @@ import {
   DialogContent,
   TextField,
   MenuItem,
-  Button,
+  Grid,
 } from '@mui/material';
 import ReactECharts from 'echarts-for-react';
 import TabContext from '@mui/lab/TabContext';
@@ -35,12 +35,12 @@ import {
   getUserCompositionForm,
 } from '../../request/model';
 interface SalesBarData {
-  commodityName: string;
-  totalSales: number;
+  commodityName?: string;
+  totalSales?: number;
 }
 interface SalespieData {
-  value: number;
-  name: string;
+  value?: number;
+  name?: string;
 }
 interface IProfitVo {
   cost: number;
@@ -92,10 +92,10 @@ export function DataAnalysis() {
   const [time, setTime] = useState<string>('day');
   const [granularity, setGranularity] = useState<string>('15min');
   const [graphicType, setGraphicType] = useState('bar');
-  const [userData, setUserData] = useState<SalesBarData[]>([]);
-  const [addressData, setAddressData] = useState([]);
-  const [consumptionData, setConsumptionData] = useState([]);
-  const [ordersData, setOrdersData] = useState([]);
+  const [userData, setUserData] = useState<SalesBarData[] | SalespieData[]>([]);
+  const [addressData, setAddressData] = useState({});
+  const [consumptionData, setConsumptionData] = useState({});
+  const [ordersData, setOrdersData] = useState({});
   const [recentData, setRecentData] = useState<IProfitVo[]>([]);
   const [open, setOpen] = useState(false);
   const [profitData, setProfitData] = useState<ICommodityData[]>([]);
@@ -168,22 +168,24 @@ export function DataAnalysis() {
   function convertFormat(data: SalesBarData[] | SalespieData[]) {
     //转换数据格式
     if (graphicType === 'bar') {
-      return Object.keys(data).map((key) => ({
-        totalSales: data[key].totalSales,
-        commodityName: data[key].commodityName,
+      return (data as SalesBarData[]).map((index) => ({
+        totalSales: index.totalSales,
+        commodityName: index.commodityName,
       }));
     } else {
-      return Object.keys(data).map((key) => ({
-        value: data[key],
+      return Object.entries(data).map(([key, value]) => ({
+        value: value,
         name: key,
       }));
     }
   }
   useEffect(() => {
     getCommodityAnalysisAPI({ graphicType, span: time }).then((res) => {
+      console.log(convertFormat(res.data));
       setSalesData(convertFormat(res.data));
     });
     getClothesAPI({ graphicType, span: time }).then((res) => {
+      console.log(convertFormat(res.data));
       setClothesData(convertFormat(res.data));
     });
     getUserAPI({ span: time }).then((res) => {
@@ -268,9 +270,7 @@ export function DataAnalysis() {
     <Box>
       <Box sx={{ width: '100%', typography: 'body1' }}>
         <TabContext value={value}>
-          <Box
-            sx={{ borderBottom: 1, borderColor: 'divider', marginBottom: 5 }}
-          >
+          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
             <TabList onChange={handleChange} aria-label="data analysis tabs">
               <Tab label="商品销售信息" value="1" />
               <Tab label="服装销售信息" value="2" />
@@ -318,7 +318,7 @@ export function DataAnalysis() {
             </Box>
             {graphicType == 'bar' ? (
               <Box>
-                {salesData.length > 0 ? (
+                {(salesData as SalesBarData[]).length > 0 ? (
                   <ReactECharts
                     key={graphicType}
                     option={{
@@ -330,18 +330,22 @@ export function DataAnalysis() {
                         data: ['销售量'],
                       },
                       xAxis: {
-                        data: salesData.map((item) => item.commodityName),
+                        data: (salesData as SalesBarData[]).map(
+                          (item) => item.commodityName
+                        ),
                       },
                       yAxis: {},
                       series: [
                         {
                           name: '销售量',
                           type: 'bar',
-                          data: salesData.map((item) => item.totalSales),
+                          data: (salesData as SalesBarData[]).map(
+                            (item) => item.totalSales
+                          ),
                         },
                       ],
                     }}
-                    style={{ height: 400, width: '100%' }}
+                    style={{ height: 600, width: '100%' }}
                   />
                 ) : (
                   <NoData></NoData>
@@ -349,7 +353,7 @@ export function DataAnalysis() {
               </Box>
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {salesData.length > 0 ? (
+                {(salesData as SalesBarData[]).length > 0 ? (
                   <ReactECharts
                     option={{
                       title: {
@@ -371,7 +375,7 @@ export function DataAnalysis() {
                         },
                       ],
                     }}
-                    style={{ height: 400, width: 600 }}
+                    style={{ height: 500, width: 600 }}
                   />
                 ) : (
                   <NoData></NoData>
@@ -414,7 +418,7 @@ export function DataAnalysis() {
             </Box>
             {graphicType == 'bar' ? (
               <Box>
-                {salesData.length > 0 ? (
+                {(clothesData as SalesBarData[]).length > 0 ? (
                   <ReactECharts
                     key={graphicType}
                     option={{
@@ -427,18 +431,22 @@ export function DataAnalysis() {
                         data: ['销售量'],
                       },
                       xAxis: {
-                        data: clothesData.map((item) => item.commodityName),
+                        data: (clothesData as SalesBarData[]).map(
+                          (item) => item.commodityName
+                        ),
                       },
                       yAxis: {},
                       series: [
                         {
                           name: '销售量',
                           type: 'bar',
-                          data: clothesData.map((item) => item.totalSales),
+                          data: (clothesData as SalesBarData[]).map(
+                            (item) => item.totalSales
+                          ),
                         },
                       ],
                     }}
-                    style={{ height: 400, width: '100%' }}
+                    style={{ height: 600, width: '100%' }}
                   />
                 ) : (
                   <NoData></NoData>
@@ -446,7 +454,7 @@ export function DataAnalysis() {
               </Box>
             ) : (
               <Box sx={{ display: 'flex', justifyContent: 'center' }}>
-                {salesData.length > 0 ? (
+                {(salesData as SalesBarData[]).length > 0 ? (
                   <ReactECharts
                     option={{
                       title: {
@@ -468,7 +476,7 @@ export function DataAnalysis() {
                         },
                       ],
                     }}
-                    style={{ height: 400, width: 600 }}
+                    style={{ height: 500, width: 600 }}
                   />
                 ) : (
                   <NoData></NoData>
@@ -493,7 +501,7 @@ export function DataAnalysis() {
                 month
               </ToggleButton>
             </ToggleButtonGroup>
-            {userData.length > 0 ? (
+            {(userData as SalesBarData[]).length > 0 ? (
               <ReactECharts
                 option={{
                   title: {
@@ -504,7 +512,9 @@ export function DataAnalysis() {
                   },
                   xAxis: {
                     type: 'category',
-                    data: userData.map((_, index) => index + 1),
+                    data: (userData as SalesBarData[]).map(
+                      (_, index) => index + 1
+                    ),
                     name: '天数',
                   },
                   yAxis: {
@@ -520,7 +530,7 @@ export function DataAnalysis() {
                     },
                   ],
                 }}
-                style={{ height: 400, width: '100%' }}
+                style={{ height: 600, width: '100%' }}
               />
             ) : (
               <NoData></NoData>
@@ -546,14 +556,16 @@ export function DataAnalysis() {
                       {
                         name: '销售量',
                         type: 'pie',
-                        data: Object.keys(addressData).map((key) => ({
-                          value: addressData[key],
-                          name: key,
-                        })),
+                        data: Object.entries(addressData).map(
+                          ([key, value]) => ({
+                            value: value,
+                            name: key,
+                          })
+                        ),
                       },
                     ],
                   }}
-                  style={{ height: 400, width: '50%' }}
+                  style={{ height: 500, width: '50%' }}
                 />
               ) : (
                 <NoData></NoData>
@@ -576,14 +588,16 @@ export function DataAnalysis() {
                       {
                         name: '销售量',
                         type: 'pie',
-                        data: Object.keys(consumptionData).map((key) => ({
-                          value: consumptionData[key],
-                          name: key,
-                        })),
+                        data: Object.entries(consumptionData).map(
+                          ([key, value]) => ({
+                            value: value,
+                            name: key,
+                          })
+                        ),
                       },
                     ],
                   }}
-                  style={{ height: 400, width: '50%' }}
+                  style={{ height: 500, width: '50%' }}
                 />
               ) : (
                 <NoData></NoData>
@@ -652,14 +666,16 @@ export function DataAnalysis() {
                       {
                         name: '销售量',
                         type: 'pie',
-                        data: Object.keys(ordersData).map((key) => ({
-                          value: ordersData[key],
-                          name: key,
-                        })),
+                        data: Object.entries(ordersData).map(
+                          ([key, value]) => ({
+                            value: value,
+                            name: key,
+                          })
+                        ),
                       },
                     ],
                   }}
-                  style={{ height: 400, width: '50%' }}
+                  style={{ height: 600, width: '50%' }}
                 />
               ) : (
                 <NoData></NoData>
@@ -722,7 +738,7 @@ export function DataAnalysis() {
                         const idx = params[0].dataIndex; // 获取数据索引
                         const item = profitData[idx]; // 获取对应的数据项
                         const content = params
-                          .map((item) => {
+                          .map((item: echarts.ECElementEvent) => {
                             return `${item.seriesName}: ${item.value}`;
                           })
                           .join('<br/>');
@@ -758,7 +774,7 @@ export function DataAnalysis() {
                       },
                     ],
                   }}
-                  style={{ height: 400, width: '100%' }}
+                  style={{ height: 600, width: '100%' }}
                   onEvents={{
                     click: (params: echarts.ECElementEvent) => {
                       handleRecentDataChange(
@@ -771,7 +787,6 @@ export function DataAnalysis() {
               ) : (
                 <NoData></NoData>
               )}
-
               {recentData.length > 0 && (
                 <Dialog open={open} onClose={() => setOpen(false)}>
                   <DialogContent>
@@ -968,7 +983,7 @@ export function DataAnalysis() {
                     },
                   ],
                 }}
-                style={{ height: 400, width: '100%' }}
+                style={{ height: 600, width: '100%' }}
               />
             ) : (
               <Box>
@@ -984,7 +999,7 @@ export function DataAnalysis() {
                           const idx = params[0].dataIndex; // 获取数据索引
                           const item = perCommodityData[idx]; // 获取对应的数据项
                           const content = params
-                            .map((item) => {
+                            .map((item: echarts.ECElementEvent) => {
                               return `${item.seriesName}: ${item.value}`;
                             })
                             .join('<br/>');
@@ -1019,7 +1034,7 @@ export function DataAnalysis() {
                         },
                       ],
                     }}
-                    style={{ height: 400, width: '100%' }}
+                    style={{ height: 600, width: '100%' }}
                     onEvents={{
                       click: (params: echarts.ECElementEvent) => {
                         setRecentSaleData(
@@ -1103,7 +1118,7 @@ export function DataAnalysis() {
                       const idx = params[0].dataIndex; // 获取数据索引
                       const item = inventoryTurnoverData[idx]; // 获取对应的数据项
                       const content = params
-                        .map((item) => {
+                        .map((item: echarts.ECElementEvent) => {
                           return `${item.seriesName}: ${item.value}`;
                         })
                         .join('<br/>');
@@ -1132,8 +1147,15 @@ export function DataAnalysis() {
                       ),
                     },
                   ],
+                  animationDuration: 1500, // 初始动画时长
+                  animationEasing: 'cubicInOut', // 初始动画缓动效果
+                  animationDurationUpdate: 1000, // 数据更新动画时长
+                  animationEasingUpdate: 'cubicInOut', // 数据更新动画缓动效果
+                  animationDelayUpdate: function (idx: number) {
+                    return idx * 100; // 数据更新动画延迟时间
+                  },
                 }}
-                style={{ height: 400, width: '100%' }}
+                style={{ height: 600, width: '100%' }}
                 onEvents={{
                   click: (params: echarts.ECElementEvent) => {
                     setRecentTurnoverData(
@@ -1180,12 +1202,13 @@ export function DataAnalysis() {
               )}
             </Box>
           </TabPanel>
-          <TabPanel value="9">
+          <TabPanel value="9" sx={{ padding: 2 }}>
             <Box
               sx={{
                 display: 'flex',
                 alignItems: 'center',
                 flexDirection: 'column',
+                padding: 0,
               }}
             >
               <ToggleButtonGroup
@@ -1212,51 +1235,68 @@ export function DataAnalysis() {
                   <MenuItem value={'total_consume'}>总金额组成</MenuItem>
                 </TextField>
               </ToggleButtonGroup>
-              <Box>
+              <Grid
+                container
+                spacing={{ xs: 2, md: 3 }}
+                columns={{ xs: 4, sm: 8, md: 12 }}
+              >
                 {Object.entries(userCompositionData).length > 0 ? (
-                  Object.entries(userCompositionData).map(([key, value]) => (
-                    <ReactECharts
-                      key={key}
-                      option={{
-                        title: {
-                          text: `${key} 数据`,
-                          left: 'center',
-                        },
-                        tooltip: {
-                          trigger: 'item',
-                        },
-                        legend: {
-                          orient: 'vertical',
-                          left: 'left',
-                        },
-                        series: [
-                          {
-                            name: '数据',
-                            type: 'pie',
-                            radius: '50%',
-                            data: Object.entries(value).map(
-                              ([name, value]) => ({
-                                name,
-                                value,
-                              })
-                            ),
-                            emphasis: {
-                              itemStyle: {
-                                shadowBlur: 10,
-                                shadowOffsetX: 0,
-                                shadowColor: 'rgba(0, 0, 0, 0.5)',
+                  Object.entries(userCompositionData).map(
+                    ([key, value]) =>
+                      Object.entries(value).map(([name, value]) => ({
+                        name,
+                        value,
+                      })).length > 0 && (
+                        <Grid item xs={2} sm={4} md={4} key={key}>
+                          <ReactECharts
+                            key={key}
+                            option={{
+                              title: {
+                                text: `${key} 数据`,
+                                left: 'center',
                               },
-                            },
-                          },
-                        ],
-                      }}
-                      style={{ height: 400, width: 400 }}
-                    />
-                  ))
+                              tooltip: {
+                                trigger: 'item',
+                              },
+                              legend: {
+                                orient: 'vertical',
+                                left: 'left',
+                              },
+                              series: [
+                                {
+                                  name: '数据',
+                                  type: 'pie',
+                                  radius: '50%',
+                                  data: Object.entries(value).map(
+                                    ([name, value]) => ({
+                                      name,
+                                      value,
+                                    })
+                                  ),
+                                  emphasis: {
+                                    itemStyle: {
+                                      shadowBlur: 10,
+                                      shadowOffsetX: 0,
+                                      shadowColor: 'rgba(0, 0, 0, 0.5)',
+                                    },
+                                  },
+                                },
+                              ],
+                            }}
+                            style={{
+                              height:
+                                Object.entries(userCompositionData).length > 3
+                                  ? '300px'
+                                  : '500px',
+                            }}
+                          />
+                        </Grid>
+                      )
+                  )
                 ) : (
                   <NoData></NoData>
                 )}
-              </Box>
+              </Grid>
             </Box>
           </TabPanel>
         </TabContext>

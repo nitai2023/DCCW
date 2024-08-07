@@ -1,6 +1,6 @@
-import { useState } from 'react';
-
-import { Button, FormGroup, TextField } from '@mui/material';
+import { useState, useEffect } from 'react';
+import { useLocation } from 'react-router-dom';
+import { Button, FormGroup, TextField, Alert, Snackbar } from '@mui/material';
 import { Link } from 'react-router-dom';
 import styles from './Login.module.scss';
 import { userLoginAPI } from '../request/api';
@@ -12,7 +12,15 @@ export function Login() {
     username: '',
     password: '',
   });
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const redirected = query.get('redirected');
+  const handleClose = () => setOpen(false);
+  useEffect(() => {
+    if (redirected) setOpen(true);
+  }, []);
   async function handleLogin() {
     const res = (await userLoginAPI(loginForm)).data;
     window.localStorage.setItem('userToken', res);
@@ -20,6 +28,23 @@ export function Login() {
   }
   return (
     <div className={styles.body}>
+      {redirected && (
+        <Snackbar
+          open={open}
+          autoHideDuration={6000}
+          onClose={handleClose}
+          anchorOrigin={{ vertical: 'top', horizontal: 'center' }}
+          sx={{ maxWidth: '600px', width: '100%' }}
+        >
+          <Alert
+            severity="error"
+            onClose={handleClose}
+            sx={{ float: 'right', width: '50%', marginTop: '20px' }}
+          >
+            请先登录
+          </Alert>
+        </Snackbar>
+      )}
       <div className={styles.form}>
         <FormGroup>
           <div className={styles.MuiFormGroup_row}>
